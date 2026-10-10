@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel — Quinta dos Esquilos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+:root { --espresso: #25130b; --bark: #563d27; --taupe: #7c6d5c; --linen: #ece6de; --paper: #f7f3ec; --moss: #4f6a2c; --gold: #c2a068; --line: #d8cdbf; --warn: #8a5a00; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.45 'Hanken Grotesk', system-ui, sans-serif; color: #2a1c13; background: var(--paper); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+h1, h2, h3 { font-family: 'Marcellus', Georgia, serif; font-weight: 400; margin: 0; }
+h2 { font-size: 1.6rem; }
+code { background: #fff; padding: 1px 5px; border-radius: 4px; }
+
+.btn { border: 1.5px solid var(--bark); background: #fff; padding: 9px 16px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--linen); }
+.btn.pri { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+.btn.pri:hover { background: var(--bark); }
+.btn.ghost { border-color: var(--line); background: transparent; }
+.btn.sm { padding: 5px 11px; font-size: .85rem; }
+.btn[disabled] { opacity: .55; cursor: progress; }
+
+.login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.login-box { width: min(380px, 100%); background: #fff; padding: 32px; border-radius: 10px; display: grid; gap: 14px; box-shadow: 0 2px 24px rgba(37, 19, 11, .12); }
+.login-box img { width: 180px; margin: 0 auto; }
+.login-box h1 { font-size: 1.5rem; text-align: center; }
+.login-box label { display: grid; gap: 4px; font-weight: 500; }
+.erro { background: #fbe9e7; color: #8a1c14; padding: 8px 12px; border-radius: 6px; margin: 0; }
+
+.bar { display: flex; align-items: center; gap: 14px; padding: 10px 20px; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; flex-wrap: wrap; }
+.bar-logo { height: 40px; }
+#tabs { display: flex; gap: 4px; margin-right: auto; flex-wrap: wrap; }
+#tabs button { border: 0; background: transparent; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+#tabs button.on { background: var(--linen); font-weight: 700; }
+.demo { margin: 0; padding: 8px 20px; background: #fff3d6; color: var(--warn); font-size: .9rem; }
+
+main { padding: 20px; max-width: 1500px; margin: 0 auto; }
+.head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+.head h2 { margin-right: auto; }
+.head-r { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.head.sticky { position: sticky; top: 62px; z-index: 15; background: var(--paper); padding: 10px 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.sub { color: var(--taupe); margin: 0 0 16px; }
+select, input, textarea { border: 1.5px solid var(--line); border-radius: 6px; padding: 8px 10px; background: #fff; width: 100%; }
+select { width: auto; }
+input[type=checkbox], input[type=radio] { width: auto; }
+
+/* lista */
+.lista { display: grid; gap: 10px; }
+.card { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; text-align: left; cursor: pointer; width: 100%; }
+.card:hover { border-color: var(--bark); }
+.card b { font-size: 1.05rem; }
+.card small { color: var(--taupe); }
+.badge { align-self: start; padding: 3px 10px; border-radius: 999px; font-size: .8rem; background: var(--linen); white-space: nowrap; }
+.badge.novo { background: #dfe8cf; color: #3f5a22; font-weight: 700; }
+.badge.fechado { background: var(--espresso); color: #fff; }
+.badge.perdido { background: #eee; color: #777; }
+.vazio { padding: 40px; text-align: center; color: var(--taupe); background: #fff; border: 1px dashed var(--line); border-radius: 8px; }
+
+/* editor */
+.avisos { background: #fff3d6; color: var(--warn); border-left: 4px solid #e0a100; padding: 10px 14px; margin: 0 0 12px; border-radius: 0 6px 6px 0; }
+.ed { display: grid; grid-template-columns: minmax(340px, 480px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.ed-ctl { display: grid; gap: 10px; min-width: 0; }
+.ed-pv { min-width: 0; }
+.ed-pv { position: sticky; top: 130px; }
+.pv { background: #cfc6b8; padding: 10px; border-radius: 8px; overflow: auto; max-height: calc(100vh - 150px); }
+.pv-in { transform-origin: top left; width: 794px; }
+.pv-in .pg { margin-bottom: 14px; box-shadow: 0 1px 8px rgba(0, 0, 0, .25); }
+details.box { background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+details.box > summary { cursor: pointer; padding: 11px 14px; font-weight: 700; list-style-position: inside; }
+details.box > .in { padding: 4px 14px 14px; display: grid; gap: 10px; }
+.f { display: grid; gap: 3px; }
+.f > label, .lbl { font-size: .82rem; color: var(--taupe); font-weight: 500; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.chk { display: flex; align-items: center; gap: 8px; }
+.hint { font-size: .82rem; color: var(--taupe); margin: 0; }
+.hint.w { color: var(--warn); }
+.sum { background: var(--espresso); color: #fff; border-radius: 8px; padding: 14px; display: grid; gap: 4px; }
+.sum div { display: flex; justify-content: space-between; gap: 10px; }
+.sum .t { font-size: 1.15rem; font-weight: 800; border-top: 1px solid rgba(255, 255, 255, .25); padding-top: 6px; margin-top: 4px; }
+.grp { border: 1px solid var(--line); border-radius: 6px; margin-bottom: 6px; }
+.grp > summary { cursor: pointer; padding: 7px 10px; display: flex; gap: 8px; align-items: center; }
+.grp > summary b { background: var(--linen); width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; flex: none; }
+.grp > summary span { flex: 1; }
+.grp > summary em { font-style: normal; color: var(--moss); font-weight: 700; }
+.ln { display: grid; grid-template-columns: 1fr 62px 96px; gap: 6px; align-items: center; padding: 4px 10px; border-top: 1px solid #eee; }
+.ln label { display: flex; gap: 6px; align-items: center; font-size: .9rem; }
+.ln input[type=number] { padding: 5px 6px; }
+.ln input:disabled { background: #f3f0ea; }
+.crl { display: grid; grid-template-columns: 22px 1fr 78px 78px; gap: 5px; align-items: center; padding: 3px 0; font-size: .88rem; }
+.crl input[type=time] { padding: 4px; }
+.crl.b2 { grid-template-columns: 22px 1fr 78px 78px; margin-top: -2px; }
+.crsec { font-weight: 700; margin-top: 8px; font-size: .8rem; color: var(--taupe); }
+
+/* disponibilidade / tabelas */
+.add { display: flex; gap: 8px; max-width: 360px; margin-bottom: 16px; }
+.disp { display: grid; gap: 6px; max-width: 520px; }
+.dr { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+.dr.off { background: #fbeeee; }
+.tbl { width: 100%; border-collapse: collapse; background: #fff; margin: 8px 0 22px; }
+.tbl th, .tbl td { border: 1px solid var(--line); padding: 4px 6px; text-align: left; }
+.tbl th { background: var(--linen); font-size: .85rem; }
+.tbl input { border: 0; padding: 5px; }
+.tbox { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-bottom: 18px; max-width: 760px; }
+.tbox h3 { margin-bottom: 10px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--espresso); color: #fff; padding: 10px 18px; border-radius: 999px; z-index: 50; }
+.toast.err { background: #8a1c14; }
+
+/* host do PDF (fora da tela) */
+.pdf-host { position: fixed; left: -10000px; top: 0; width: 794px; background: #fff; }
+
+@media (max-width: 1000px) {
+  .ed { grid-template-columns: minmax(0, 1fr); }
+  .ed-pv { position: static; order: -1; }
+  .pv { max-height: 70vh; }
+  .head.sticky { top: 0; position: static; }
+}
+@media print { body.printing .bar, body.printing main { display: none; } }
+
+@media (max-width: 560px) { main { padding: 12px; } .g2, .g3 { grid-template-columns: 1fr; } .bar { gap: 8px; padding: 8px 12px; } .head h2 { font-size: 1.3rem; } .tbl { display: block; overflow-x: auto; } }
+
+/* Orçamento A4 — 794 x 1122 px (96 dpi) */
+.pg, .pg * { box-sizing: border-box; }
+.pg {
+  width: 794px; height: 1122px; padding: 36px 44px; overflow: hidden; position: relative;
+  background: #fff; color: #2b2118; font-family: 'Hanken Grotesk', Calibri, Arial, sans-serif; font-size: 11.5px; line-height: 1.35;
+  page-break-after: always; break-after: page;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.pg:last-child { page-break-after: auto; break-after: auto; }
+.pg p { margin: 0; }
+.pg .red { color: #c0392b; }
+.pg .bold, .pg .bold b { font-weight: 800; }
+
+.pp-bar { font-weight: 800; text-align: center; padding: 5px 8px; letter-spacing: .02em; }
+.pp-bar.big { background: #e7dccb; font-size: 17px; margin: 8px 0 8px; padding: 6px; }
+.pp-bar.green { background: #dfe8cf; color: #3f5a22; }
+.pp-bar.black { background: #1e1510; color: #fff; font-size: 14px; margin: 10px 0 6px; }
+
+/* cabeçalho */
+.pp-head { display: flex; align-items: center; gap: 14px; }
+.pp-logo { width: 118px; height: auto; flex: none; }
+.pp-ttl { flex: 1; text-align: center; }
+.pp-ttl h1 { font-size: 15px; margin: 0 0 2px; font-weight: 800; letter-spacing: .01em; }
+.pp-ttl .co { font-weight: 800; font-size: 13.5px; font-style: italic; }
+.pp-ttl p { font-size: 12px; }
+
+.pp-av { width: 560px; margin: 8px auto 4px; border-collapse: collapse; font-size: 9.5px; text-align: center; table-layout: fixed; }
+.pp-av th { background: #d9cfbf; border: 1px solid #1e1510; font-size: 9px; padding: 1px; }
+.pp-av td { border: 1px solid #1e1510; height: 15px; font-weight: 700; padding: 0; }
+.pp-av td.ok { color: #3f5a22; }
+.pp-av td.no { color: #c0392b; text-decoration: line-through; }
+.pp-meta { display: flex; justify-content: space-between; font-size: 10.5px; font-style: italic; margin: 2px 0 0; }
+.pp-meta span:first-child { flex: 1; text-align: center; padding-left: 90px; }
+
+/* itens do escopo */
+.pp-it { margin-bottom: 7px; }
+.pp-ih { display: flex; align-items: center; border: 1.5px solid #1e1510; background: #e7dccb; font-weight: 800; font-size: 12px; height: 21px; }
+.pp-ih b { width: 22px; text-align: center; border-right: 1.5px solid #1e1510; height: 100%; display: flex; align-items: center; justify-content: center; margin-right: 8px; background: #fff; }
+.pp-ih span { flex: none; }
+.pp-ih em { flex: 1; text-align: right; font-style: italic; color: #3f5a22; font-weight: 700; padding-right: 10px; font-size: 11px; }
+.pp-ck { width: 36px; height: 100%; flex: none; background: #4f8a2b; color: #fff; font-style: normal; display: flex; align-items: center; justify-content: center; font-size: 14px; margin-left: auto; }
+.pp-ih em + .pp-ck { margin-left: 0; }
+.pp-ib { padding: 4px 4px 0 4px; font-style: italic; }
+.pp-ib p { margin: 1px 0; }
+.pp-ib p b { font-weight: 800; }
+.pp-2c { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.pp-cgw { width: 100%; border: 1px solid #1e1510; margin: 2px 0 4px; }
+.pp-cgt { background: #d9cfbf; text-align: center; font-weight: 800; border-bottom: 1px solid #1e1510; }
+.pp-cg { display: grid; grid-template-columns: repeat(5, auto); gap: 1px 8px; padding: 2px 6px; font-size: 11px; }
+.pp-cg .sel { color: #c0392b; font-weight: 800; }
+.chopp { font-weight: 700; }
+.chopp .gap { display: inline-block; width: 28px; }
+.pp-sub, .pp-tot { margin-left: auto; }
+.pp-sub { width: 270px; display: flex; justify-content: space-between; background: #e7dccb; border: 1.5px solid #1e1510; font-weight: 800; font-size: 13px; padding: 4px 10px; margin-top: 10px; }
+.pp-tema { font-style: italic; margin-top: 6px; text-align: right; }
+
+/* serviços complementares */
+.pp-g { margin-bottom: 6px; }
+.pp-gh { display: flex; align-items: center; border: 1.5px solid #1e1510; font-weight: 800; color: #3f5a22; font-size: 12.5px; height: 21px; }
+.pp-gh b { width: 22px; text-align: center; border-right: 1.5px solid #1e1510; height: 100%; display: flex; align-items: center; justify-content: center; margin-right: 8px; background: #dfe8cf; }
+.pp-gh span { flex: 1; }
+.pp-gh em { font-style: normal; width: 128px; text-align: center; height: 100%; display: flex; align-items: center; justify-content: center; background: #eef2e6; color: #55633e; }
+.pp-gh em.on { background: #4f8a2b; color: #fff; }
+.pp-gl { padding: 3px 2px 0; }
+.pp-gl.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.pp-l { display: grid; grid-template-columns: 14px 1fr auto auto; gap: 6px; align-items: center; padding: 1.5px 2px; font-size: 11px; }
+.pp-l .bx { width: 12px; height: 12px; border: 1.2px solid #7c6d5c; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 10px; line-height: 1; color: #fff; }
+.pp-l.on { background: #eaf1dd; font-weight: 700; }
+.pp-l.on .bx { background: #4f8a2b; border-color: #4f8a2b; }
+.pp-l .n small { font-weight: 400; font-size: 8.5px; color: #6b5d4e; }
+.pp-l .v { font-style: italic; white-space: nowrap; text-align: right; }
+.pp-l .t { white-space: nowrap; font-size: 10.5px; min-width: 0; text-align: right; }
+.pp-l .t:empty { display: none; }
+.pp-gl.cols .pp-l { grid-template-columns: 14px 1fr auto; }
+.pp-gl.cols .pp-l .t { display: none; }
+.pp-gi { font-style: italic; padding: 0 4px; font-size: 10.5px; color: #3d3226; }
+.pp-gn { font-style: italic; font-weight: 700; padding: 0 4px; font-size: 10.5px; }
+.pp-foot { margin-top: 8px; font-size: 9.5px; font-style: italic; color: #6b5d4e; }
+
+/* totais */
+.pp-tot { width: 270px; border-collapse: collapse; margin: 0 0 6px auto; font-weight: 800; font-size: 13px; }
+.pp-tot td { border: 1.5px solid #1e1510; padding: 3px 10px; }
+.pp-tot td:first-child { text-align: right; width: 55%; }
+.pp-tot td:last-child { text-align: left; }
+.pp-tot .a td { background: #e7dccb; } .pp-tot .b td { background: #dfe8cf; color: #3f5a22; }
+.pp-tot .c td { background: #b8aa97; } .pp-tot .d td { background: #e7dccb; color: #c0392b; }
+
+/* pagamento */
+.pp-pg { display: grid; grid-template-columns: 1.05fr 1.2fr 1.25fr; gap: 10px; font-size: 10.5px; }
+.pp-ph { background: #d9cfbf; border: 1px solid #1e1510; text-align: center; font-weight: 800; padding: 2px; }
+.pp-ph small { font-weight: 600; }
+.pp-ob { display: flex; border: 1px solid #1e1510; margin-top: 10px; min-height: 38px; }
+.pp-ob b { width: 22px; background: #d9cfbf; border-right: 1px solid #1e1510; display: flex; align-items: center; justify-content: center; flex: none; }
+.pp-ob span { padding: 3px 6px; font-style: italic; display: flex; align-items: center; }
+.pp-t { width: 100%; border-collapse: collapse; text-align: center; }
+.pp-t th { background: #d9cfbf; border: 1px solid #1e1510; font-weight: 800; padding: 2px; }
+.pp-t td { border: 1px solid #1e1510; padding: 2px 3px; font-style: italic; height: 18px; }
+.pp-t .tt td { font-weight: 800; font-style: normal; background: #e7dccb; }
+.pp-pc .sm { font-size: 9px; font-weight: 700; font-style: italic; margin-top: 2px; }
+
+/* contrato / contatos */
+.pp-cc { display: grid; grid-template-columns: 1fr 1.1fr; gap: 14px; margin-top: 4px; }
+.pp-ct { margin: 4px 0 0; padding-left: 18px; font-style: italic; }
+.pp-ct li { padding: 4px 0; border-bottom: 1px dotted #b8aa97; }
+.pp-cn { padding-top: 4px; font-size: 11px; }
+.pp-cn p { margin: 2px 0; }
+.pp-cn .two { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 4px; }
+.pp-loc { text-align: center; font-style: italic; line-height: 1.45; }
+.pp-loc a { color: #1d4ed8; }
+
+/* cronograma */
+.cr { border: 1px solid #1e1510; margin-top: 4px; }
+.cr-hd { display: grid; grid-template-columns: 150px 1fr; background: #ddd; border-bottom: 1px solid #1e1510; }
+.cr-corner { display: flex; align-items: center; justify-content: center; padding: 3px; background: #fff; border-right: 1px solid #1e1510; }
+.cr-corner img { height: 38px; width: auto; }
+.cr-hours { display: grid; grid-template-columns: repeat(11, 1fr); font-size: 8.5px; font-weight: 800; }
+.cr-hours span { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; padding: 3px 0; border-left: 1px solid #aaa; height: 42px; }
+.cr-body { position: relative; }
+.cr-sec { background: #1e1510; color: #fff; text-align: center; font-weight: 800; font-style: italic; font-size: 11px; padding: 1px; }
+.cr-row { display: grid; grid-template-columns: 150px 1fr; height: 31px; border-bottom: 1px solid #eee; }
+.cr-lab { display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 800; font-size: 11px; border-right: 1px solid #1e1510; padding: 0 4px; line-height: 1.1; }
+.cr-lab.off { text-decoration: line-through; color: #555; }
+.cr-tl { position: relative; background-image: linear-gradient(to right, #b9b9b9 1px, transparent 1px); background-size: calc(100% / 11) 100%; }
+.cr-bar { position: absolute; top: 3px; height: 13px; }
+.cr-bar.on { background: #4f8a2b; } .cr-bar.off { background: #c9c9c9; }
+.cr-tm { position: absolute; top: 18px; line-height: 1.1; font-size: 8px; white-space: nowrap; font-weight: 600; background: rgba(255,255,255,.85); padding: 0 1px; }
+.cr-tm.off { text-decoration: line-through; color: #777; }
+.cr-ov { position: absolute; top: 0; bottom: 0; left: 150px; right: 0; pointer-events: none; }
+.cr-ov i { position: absolute; top: 0; bottom: 0; border-left: 2.5px dashed #e11d1d; }
+.cr-leg { display: flex; align-items: center; gap: 14px; border: 1px solid #1e1510; margin-top: 6px; padding: 3px 8px; font-size: 10.5px; }
+.cr-leg i { display: inline-block; width: 44px; height: 9px; margin-right: 5px; vertical-align: middle; }
+.cr-leg i.g { background: #4f8a2b; } .cr-leg i.y { background: #c9c9c9; }
+.cr-leg .ig { margin-left: auto; font-style: italic; font-weight: 700; }
+.pp-obs { margin-top: 10px; font-size: 11px; line-height: 1.5; }
+.pp-ph3 { position: absolute; left: 44px; right: 44px; bottom: 34px; display: grid; grid-template-columns: 1.45fr 1fr 1fr; grid-template-rows: 118px; gap: 8px; height: 118px; }
+.pp-ph3 img { display: block; width: 100%; height: 118px; object-fit: cover; }
+
+/* impressão (usado por "Imprimir / Salvar PDF") */
+#printRoot { display: none; }
+@media print {
+  @page { size: A4; margin: 0; }
+  body.printing > *:not(#printRoot) { display: none !important; }
+  body.printing #printRoot { display: block !important; }
+  body.printing { background: #fff !important; margin: 0 !important; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Login (só aparece quando o Firebase está configurado) -->
+<section id="login" class="login" hidden>
+  <form id="loginForm" class="login-box">
+    <img src="logo-marrom.png" alt="Quinta dos Esquilos">
+    <h1>Entrar no painel</h1>
+    <label>E-mail<input id="lgEmail" type="email" autocomplete="username" required></label>
+    <label>Senha<input id="lgSenha" type="password" autocomplete="current-password" required></label>
+    <p id="lgErro" class="erro" role="alert" hidden></p>
+    <button class="btn pri" type="submit">Entrar</button>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <header class="bar">
+    <img src="logo-marrom.png" alt="Quinta dos Esquilos" class="bar-logo">
+    <nav id="tabs">
+      <button data-v="lista" class="on">Solicitações</button>
+      <button data-v="disp">Disponibilidade</button>
+      <button data-v="tab">Tabelas e preços</button>
+    </nav>
+    <a class="btn ghost" href="index.html" target="_blank" rel="noopener">Ver site</a>
+    <button id="sair" class="btn ghost">Sair</button>
+  </header>
+  <p id="demo" class="demo" hidden>Modo demonstração: os dados ficam salvos só neste navegador. Preencha o <code>config.js</code> com o seu Firebase para receber os pedidos do site de verdade.</p>
+
+  <main>
+    <!-- Lista -->
+    <section id="v-lista" class="view">
+      <div class="head">
+        <h2>Solicitações de orçamento</h2>
+        <div class="head-r">
+          <select id="fStatus" aria-label="Filtrar por status"><option value="">Todos os status</option></select>
+          <button id="novo" class="btn pri">Nova solicitação manual</button>
+        </div>
+      </div>
+      <div id="lista" class="lista"></div>
+    </section>
+
+    <!-- Editor -->
+    <section id="v-edit" class="view" hidden>
+      <div class="head sticky">
+        <button id="voltar" class="btn ghost">Voltar</button>
+        <h2 id="edTitulo">Orçamento</h2>
+        <div class="head-r">
+          <select id="edStatus" aria-label="Status"></select>
+          <button id="salvar" class="btn">Salvar</button>
+          <button id="pdf" class="btn pri">Baixar PDF</button>
+          <button id="imprimir" class="btn ghost">Imprimir</button>
+        </div>
+      </div>
+      <p id="avisos" class="avisos" hidden></p>
+      <div class="ed">
+        <div class="ed-ctl" id="ctl"></div>
+        <div class="ed-pv"><div id="pv" class="pv"><div id="pvIn" class="pv-in"></div></div></div>
+      </div>
+    </section>
+
+    <!-- Disponibilidade -->
+    <section id="v-disp" class="view" hidden>
+      <div class="head"><h2>Datas disponíveis</h2>
+        <div class="head-r"><button id="dispLimpa" class="btn ghost">Remover datas passadas</button><button id="dispSalvar" class="btn pri">Salvar disponibilidade</button></div></div>
+      <p class="sub">Esta tabela aparece no orçamento em PDF e as datas livres aparecem para o cliente no formulário do site.</p>
+      <div class="add"><input type="date" id="dispNova" aria-label="Nova data"><button id="dispAdd" class="btn">Adicionar data</button></div>
+      <div id="dispLista" class="disp"></div>
+    </section>
+
+    <!-- Tabelas -->
+    <section id="v-tab" class="view" hidden>
+      <div class="head"><h2>Tabelas e preços</h2><div class="head-r"><button id="tabSalvar" class="btn pri">Salvar tudo</button></div></div>
+      <div id="tabBody"></div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="printRoot"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="config.js"></script>
+<script>
+/* ==========================================================================
+   Quinta dos Esquilos — núcleo (regras de preço + dados + banco)
+   Funciona no navegador e no Node (para testes).
+   ========================================================================== */
+(function (root) {
+  'use strict';
+  const QE = {};
+
+  /* ---------- Contatos fixos ---------- */
+  QE.CONTATOS = {
+    rodrigo: '(11) 98199-9926',
+    ana: '(11) 97983-2412',
+    rodrigoWa: '5511981999926',
+    anaWa: '5511979832412',
+    email: 'quintadosesquilos@gmail.com',
+    site: 'www.quintadosesquilos.com.br',
+    insta: '@quintadosesquilos',
+    cnpj: '47.131.561/0001-93',
+    endereco: 'Travessa Yoshinaga, 07 - Bairro Aguassaí - CEP 06720-000 - Cotia - SP',
+    mapsNome: 'Chácara Quinta dos Esquilos',
+    mapsLink: 'https://maps.app.goo.gl/QAAUgdxak5EZWuup7?g_st=iw'
+  };
+
+  /* ---------- Tabela de valores 2026 (foto 1) ---------- */
+  QE.TABELA = [
+    { q: 20, pacote: 22800, cafe: 95, doces: 66.5 },
+    { q: 30, pacote: 24300, cafe: 95, doces: 66.5 },
+    { q: 40, pacote: 25200, cafe: 90, doces: 63 },
+    { q: 50, pacote: 28100, cafe: 85, doces: 59.5 },
+    { q: 60, pacote: 29900, cafe: 78, doces: 54.6 },
+    { q: 70, pacote: 32500, cafe: 78, doces: 54.6 },
+    { q: 80, pacote: 34500, cafe: 75, doces: 52.5 },
+    { q: 90, pacote: 37850, cafe: 70, doces: 49 },
+    { q: 100, pacote: 39900, cafe: 68, doces: 47.6 },
+    { q: 120, pacote: 42400, cafe: 65, doces: 45.5 },
+    { q: 150, pacote: 47900, cafe: 60, doces: 42 },
+    { q: 200, pacote: 63500, cafe: 58, doces: 40.6 },
+    { q: 250, pacote: 78350, cafe: 57, doces: 39.9 },
+    { q: 300, pacote: 89500, cafe: 55, doces: 38.5 }
+  ];
+
+  /* ---------- Regra de chopp por quantidade de pessoas (foto 2) ----------
+     b50 = barris de 50 L, b30 = barris de 30 L.
+     A faixa de 300 pessoas NÃO estava na foto: valor assumido (6 x 50 L). */
+  QE.CHOPP = [
+    { q: 10, b50: 0, b30: 1 }, { q: 20, b50: 0, b30: 1 }, { q: 30, b50: 0, b30: 1 }, { q: 40, b50: 0, b30: 1 },
+    { q: 50, b50: 1, b30: 0 }, { q: 60, b50: 1, b30: 0 }, { q: 70, b50: 1, b30: 0 },
+    { q: 80, b50: 1, b30: 1 }, { q: 90, b50: 2, b30: 0 }, { q: 100, b50: 2, b30: 0 }, { q: 120, b50: 2, b30: 0 },
+    { q: 150, b50: 3, b30: 0 }, { q: 200, b50: 4, b30: 0 }, { q: 250, b50: 5, b30: 0 }, { q: 300, b50: 6, b30: 0 }
+  ];
+
+  /* ---------- Cardápios ---------- */
+  QE.CARDAPIOS = [
+    { id: 'churrasco', nome: 'Churrasco' },
+    { id: 'finger', nome: 'Finger Food' },
+    { id: 'carnes', nome: 'Carnes e Massas' },
+    { id: 'feijoada', nome: 'Feijoada' },
+    { id: 'pizza', nome: 'Pizza' },
+    { id: 'crepe', nome: 'Crepe' },
+    { id: 'junino', nome: 'Junino' },
+    { id: 'boteco', nome: 'Boteco' },
+    { id: 'personalizado', nome: 'Personalizado' }
+  ];
+  /* Ordem em que aparecem no orçamento (inclui Brasilidades) */
+  QE.CARDAPIOS_ORC = [
+    ['carnes', 'Carnes e Massas'], ['churrasco', 'Churrasco'], ['pizza', 'Pizza'], ['boteco', 'Boteco'], ['personalizado', 'Personalizado'],
+    ['finger', 'Finger Food'], ['feijoada', 'Feijoada'], ['crepe', 'Crepe'], ['brasilidades', 'Brasilidades'], ['junino', 'Junino']
+  ];
+
+  /* ---------- Serviços complementares A–L (preços do orçamento atual) ---------- */
+  const OBS5 = 'até 5% da quantidade total avisado com antecedência';
+  QE.CATALOGO = [
+    { g: 'A', titulo: 'Buffet e serviços (pessoas complementares)', linhas: [
+      { id: 'a1', nome: 'Pessoas complementares', obs: OBS5, preco: 310, un: 'pessoa' },
+      { id: 'a2', nome: 'Crianças 7 a 12 anos', obs: OBS5, preco: 175, un: 'pessoa' },
+      { id: 'a3', nome: 'Staff do cliente (motorista / músico / fotógrafo / etc…)', preco: 130, un: 'pessoa' } ] },
+    { g: 'B', titulo: 'Chopp barril extra', cols: true, nota: '* Barris extra em consignação, somente em caso de opção marca Germânia', linhas: [
+      { id: 'b1', nome: 'Germânia · barril 30 litros', preco: 940, un: 'barril' },
+      { id: 'b2', nome: 'Germânia · barril 50 litros', preco: 1450, un: 'barril' },
+      { id: 'b3', nome: 'Brahma · barril 30 litros', preco: 1150, un: 'barril' },
+      { id: 'b4', nome: 'Brahma · barril 50 litros', preco: 1890, un: 'barril' },
+      { id: 'b5', nome: 'Heineken · barril 30 litros', preco: 1260, un: 'barril' },
+      { id: 'b6', nome: 'Heineken · barril 50 litros', preco: 1970, un: 'barril' } ] },
+    { g: 'C', titulo: 'Café da Manhã', info: ['Período: vide cronograma · Cardápio: anexo'], linhas: [
+      { id: 'c1', nome: 'Café da manhã', un: 'pessoa', auto: 'cafe' } ] },
+    { g: 'D', titulo: 'Mesa de café e doces (opção para o final do evento)', info: ['Período: vide cronograma · Cardápio: anexo'], linhas: [
+      { id: 'd1', nome: 'Mesa de café e doces', un: 'pessoa', auto: 'doces' } ] },
+    { g: 'E', titulo: 'Banda', info: ['Opções: Banda de Samba e Pagode ou Sertanejo + diversos ou Pop Rock', 'Alimentação dos músicos: incluso · Equipamentos de som: incluso'], linhas: [
+      { id: 'e1', nome: 'Banda — 3 horas (intervalo de 30 minutos)', preco: 4180, un: 'fixo' } ] },
+    { g: 'F', titulo: 'Mini Arvorismo', info: ['Para adultos e crianças a partir de 7 anos', 'Em caso de não contratação, o equipamento permanece fechado durante o evento'], linhas: [
+      { id: 'f1', nome: 'Mini arvorismo — 4 horas, 2 monitores', preco: 1980, un: 'fixo' } ] },
+    { g: 'G', titulo: 'Recreador', info: ['Alimentação: incluso'], linhas: [
+      { id: 'g1', nome: 'Recreadores — 2 recreadores, 5 horas', preco: 1780, un: 'fixo' } ] },
+    { g: 'H', titulo: 'Atrações complementares', cols: true, linhas: [
+      { id: 'h1', nome: 'Cabine de foto / Túnel de LED infinito', preco: 2450, un: 'fixo' },
+      { id: 'h2', nome: 'Cama elástica', preco: 1290, un: 'fixo' },
+      { id: 'h3', nome: 'Touro mecânico', preco: 2990, un: 'fixo' },
+      { id: 'h4', nome: 'Guerra de cotonete', preco: 2200, un: 'fixo' },
+      { id: 'h5', nome: 'Giro radical', preco: 2400, un: 'fixo' },
+      { id: 'h6', nome: 'Escorregador gigante', preco: 2780, un: 'fixo' } ] },
+    { g: 'I', titulo: 'Estrutura para apresentação', cols: true, info: ['Escopo: tela com entrada HDMI para apresentação, som externo para áudio e 2 microfones'], linhas: [
+      { id: 'i1', nome: 'Tela 1,45 x 0,80 m', preco: 1300, un: 'fixo' },
+      { id: 'i2', nome: 'Tela 1,55 x 0,90 m', preco: 1490, un: 'fixo' },
+      { id: 'i3', nome: 'Tela 2,00 x 1,10 m', preco: 2100, un: 'fixo' },
+      { id: 'i4', nome: 'Tela 3,00 x 2,00 m', preco: 4500, un: 'fixo' } ] },
+    { g: 'J', titulo: 'Fotografia / Vídeo', info: ['Fotógrafo · videomaker / filmmaker', 'Fotos tratadas do evento · Vídeo final de 20 minutos', 'Teaser final do evento · Vídeos curtos durante o evento para redes sociais'], linhas: [
+      { id: 'j1', nome: 'Fotografia e vídeo', preco: 3500, un: 'fixo' } ] },
+    { g: 'K', titulo: 'Gerador', linhas: [
+      { id: 'k1', nome: 'Gerador externo stand by', preco: 3000, un: 'fixo' } ] },
+    { g: 'L', titulo: 'Backdrop', cols: true, info: ['Escopo: execução da lona, estrutura metálica para backdrop e instalação', '* A empresa deverá fornecer a arte em alta definição'], linhas: [
+      { id: 'l1', nome: 'Backdrop 2,00 x 2,20 m', preco: 780, un: 'fixo' },
+      { id: 'l2', nome: 'Backdrop 3,00 x 2,20 m', preco: 1250, un: 'fixo' },
+      { id: 'l3', nome: 'Backdrop 4,00 x 2,20 m', preco: 1920, un: 'fixo' },
+      { id: 'l4', nome: 'Backdrop 5,00 x 2,20 m', preco: 2380, un: 'fixo' } ] }
+  ];
+
+  /* ---------- Cronograma padrão (do orçamento atual) ----------
+     link: 'incl' = sempre incluso · 'prem' = só no pacote Premium
+           'man' = ligado manualmente · id de linha (c1, d1…) = segue o opcional */
+  QE.CRON = [
+    { id: 'cafe', sec: 'BUFFET / DOCES', nome: 'Café da manhã', ini: '10:00', fim: '11:30', link: 'c1' },
+    { id: 'entradas', sec: 'BUFFET / DOCES', nome: 'Entradas', ini: '12:00', fim: '13:30', link: 'incl' },
+    { id: 'buffet', sec: 'BUFFET / DOCES', nome: 'Buffet', ini: '13:30', fim: '17:00', link: 'incl' },
+    { id: 'sobremesa', sec: 'BUFFET / DOCES', nome: 'Sobremesa', ini: '16:30', fim: '17:30', link: 'incl' },
+    { id: 'doces', sec: 'BUFFET / DOCES', nome: 'Mesa Café e Doces', ini: '16:30', fim: '18:00', link: 'd1' },
+    { id: 'bebidas', sec: 'BEBIDAS', nome: 'Bebidas (água/suco/refrig.)', ini: '11:30', fim: '18:00', link: 'incl' },
+    { id: 'chopp', sec: 'BEBIDAS', nome: 'Chopp', ini: '11:30', fim: '18:00', link: 'prem' },
+    { id: 'bar', sec: 'BEBIDAS', nome: 'Bar de drinks', ini: '13:00', fim: '17:00', link: 'prem' },
+    { id: 'som', sec: 'MÚSICA', nome: 'Som ambiente', ini: '10:00', fim: '14:00', link: 'incl' },
+    { id: 'dj', sec: 'MÚSICA', nome: 'DJ', ini: '14:00', fim: '18:00', link: 'incl' },
+    { id: 'banda', sec: 'MÚSICA', nome: 'Banda', ini: '13:00', fim: '14:00', ini2: '14:30', fim2: '16:00', link: 'e1' },
+    { id: 'foto', sec: 'ATRAÇÕES', nome: 'Fotografia', ini: '11:00', fim: '16:00', link: 'j1' },
+    { id: 'arvorismo', sec: 'ATRAÇÕES', nome: 'Mini Arvorismo', ini: '11:00', fim: '15:00', link: 'f1' },
+    { id: 'cabine', sec: 'ATRAÇÕES', nome: 'Cabine de foto', ini: '12:00', fim: '16:00', link: 'h1' },
+    { id: 'cama', sec: 'ATRAÇÕES', nome: 'Cama elástica', ini: '12:00', fim: '17:00', link: 'h2' },
+    { id: 'touro', sec: 'ATRAÇÕES', nome: 'Touro Mecânico', ini: '12:00', fim: '17:00', link: 'h3' },
+    { id: 'inflaveis', sec: 'ATRAÇÕES', nome: 'Brinquedos Infláveis', ini: '12:00', fim: '17:00', link: 'man' },
+    { id: 'escorregador', sec: 'ATRAÇÕES', nome: 'Escorregador Gigante', ini: '12:00', fim: '17:00', link: 'h6' }
+  ];
+
+  /* ---------- Datas disponíveis (semente, baseada no orçamento atual) ---------- */
+  QE.DISP_PADRAO = [
+    ['2026-11-20', 1], ['2026-11-21', 1], ['2026-11-22', 1], ['2026-11-27', 1], ['2026-11-28', 0], ['2026-11-29', 1],
+    ['2026-12-03', 1], ['2026-12-04', 1], ['2026-12-05', 0], ['2026-12-06', 0], ['2026-12-10', 1], ['2026-12-11', 0],
+    ['2026-12-12', 0], ['2026-12-13', 0], ['2026-12-14', 1], ['2026-12-15', 1], ['2026-12-16', 1], ['2026-12-17', 0],
+    ['2026-12-18', 0], ['2026-12-19', 0], ['2026-12-20', 1], ['2026-12-21', 1]
+  ].map(function (x) { return { d: x[0], livre: !!x[1] }; });
+
+  /* ---------- Configuração padrão ---------- */
+  QE.defaultConfig = function () {
+    return {
+      nfPct: 9,             // nota fiscal = 9% sobre o valor total final
+      descAvista: 2.5,      // desconto à vista (%)
+      validade: 15,         // dias
+      cartao: { m3: null, m6: null, m12: null }, // taxa da operadora (%) — vazio = não calculado
+      tabela: JSON.parse(JSON.stringify(QE.TABELA)),
+      chopp: JSON.parse(JSON.stringify(QE.CHOPP)),
+      precos: {}            // sobrescritas de preço por id de linha
+    };
+  };
+  QE.mergeConfig = function (saved) {
+    const d = QE.defaultConfig();
+    if (!saved) return d;
+    const out = Object.assign({}, d, saved);
+    out.cartao = Object.assign({}, d.cartao, saved.cartao || {});
+    out.tabela = (saved.tabela && saved.tabela.length) ? saved.tabela : d.tabela;
+    out.chopp = (saved.chopp && saved.chopp.length) ? saved.chopp : d.chopp;
+    out.precos = saved.precos || {};
+    return out;
+  };
+
+  /* ---------- Utilitários ---------- */
+  const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const MES3 = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  QE.MESES = MESES;
+  QE.parseData = function (s) {
+    if (!s) return null;
+    const p = String(s).split('-').map(Number);
+    return new Date(p[0], p[1] - 1, p[2]);
+  };
+  QE.hoje = function () {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  };
+  QE.fmtData = function (s) { const d = QE.parseData(s); return d ? String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear() : ''; };
+  QE.fmtDM = function (s) { const d = QE.parseData(s); return d ? String(d.getDate()).padStart(2, '0') + '/' + MES3[d.getMonth()] : ''; };
+  QE.brl = function (n) {
+    n = Number(n) || 0;
+    return 'R$\u00a0' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+  const toMin = function (t) { const p = String(t || '0:0').split(':'); return (+p[0]) * 60 + (+p[1] || 0); };
+  QE.toMin = toMin;
+
+  /* ---------- Faixas ---------- */
+  QE.faixa = function (tabela, q) {
+    const t = tabela.slice().sort(function (a, b) { return a.q - b.q; });
+    let r = t.find(function (x) { return q <= x.q; });
+    const acima = !r;
+    if (!r) r = t[t.length - 1];
+    return Object.assign({}, r, { exato: r.q === q, acima: acima });
+  };
+  QE.faixaChopp = function (regra, q) {
+    const t = regra.slice().sort(function (a, b) { return a.q - b.q; });
+    let r = t.find(function (x) { return q <= x.q; });
+    if (!r) r = t[t.length - 1];
+    return r;
+  };
+
+  /* ---------- Orçamento inicial a partir de uma solicitação ---------- */
+  QE.orcInicial = function (req, cfg) {
+    const sel = {};
+    if (req.cafe) sel.c1 = -1; // -1 = todas as pessoas
+    return {
+      data: QE.hoje(), validade: cfg.validade, bar: 'prata',
+      pacote: null, cafe: null, doces: null, b50: null, b30: null, parcelas: null,
+      sel: sel, preco: {}, cron: {}, janela: ['10:00', '18:00']
+    };
+  };
+
+  /* ---------- Cálculo completo ---------- */
+  QE.calc = function (req, cfg) {
+    cfg = cfg || QE.defaultConfig();
+    const o = req.orc || QE.orcInicial(req, cfg);
+    const q = Math.max(1, Math.round(+req.qtd || 0));
+    const fx = QE.faixa(cfg.tabela, q);
+    const ch = QE.faixaChopp(cfg.chopp, q);
+    const pick = function (v, d) { return (v === null || v === undefined || v === '' || isNaN(v)) ? d : +v; };
+
+    const pacote = pick(o.pacote, fx.pacote);
+    const cafePP = pick(o.cafe, fx.cafe);
+    const docesPP = pick(o.doces, fx.doces);
+    const b50 = pick(o.b50, ch.b50);
+    const b30 = pick(o.b30, ch.b30);
+
+    const sel = o.sel || {};
+    const grupos = QE.CATALOGO.map(function (g) {
+      let total = 0;
+      const linhas = g.linhas.map(function (l) {
+        const raw = sel[l.id];
+        const on = raw !== undefined && raw !== null && raw !== 0 && raw !== false;
+        const qtd = !on ? 0 : (raw === -1 ? q : (+raw || 1));
+        const base = l.auto === 'cafe' ? cafePP : l.auto === 'doces' ? docesPP : pick(cfg.precos && cfg.precos[l.id], l.preco);
+        const unit = pick(o.preco && o.preco[l.id], base);
+        const t = on ? qtd * unit : 0;
+        total += t;
+        return Object.assign({}, l, { on: on, qtd: qtd, unit: unit, total: t, padrao: base });
+      });
+      return Object.assign({}, g, { linhas: linhas, total: total });
+    });
+    const compl = grupos.reduce(function (s, g) { return s + g.total; }, 0);
+    const soma = pacote + compl;
+
+    /* Nota fiscal = 9% sobre o valor total FINAL (soma / (1 - 9%)) */
+    const nfPct = pick(cfg.nfPct, 9);
+    let total = soma, nfVal = 0;
+    if (req.nf) { total = Math.round(soma / (1 - nfPct / 100)); nfVal = total - soma; }
+
+    /* À vista: desconto de 2,5% sobre o total final */
+    const desc = pick(cfg.descAvista, 2.5);
+    const avista = Math.round(total * 100 * (1 - desc / 100) + 1e-6) / 100;
+
+    /* Parcelamento: meses do orçamento até o mês do evento (inclusive) */
+    const dq = QE.parseData(o.data) || new Date();
+    const de = QE.parseData(req.dataEvento);
+    let nAuto = 1;
+    if (de) nAuto = Math.max(1, (de.getFullYear() * 12 + de.getMonth()) - (dq.getFullYear() * 12 + dq.getMonth()) + 1);
+    const n = Math.max(1, Math.round(pick(o.parcelas, nAuto)));
+    const cents = Math.round(total * 100), base = Math.floor(cents / n);
+    const parcelas = [];
+    for (let i = 0; i < n; i++) {
+      const m = (dq.getMonth() + i) % 12;
+      const v = (i === n - 1 ? cents - base * (n - 1) : base) / 100;
+      parcelas.push({ mes: MESES[m], valor: v });
+    }
+    const cartao = [3, 6, 12].map(function (m) {
+      const taxa = cfg.cartao && cfg.cartao['m' + m];
+      const ok = !(taxa === null || taxa === undefined || taxa === '' || isNaN(taxa));
+      const tot = ok ? total * (1 + taxa / 100) : null;
+      return { meses: m, parcela: ok ? tot / m : null, total: tot };
+    });
+
+    /* Cronograma */
+    const prem = req.escopo !== 'standard';
+    const cdp = (QE.CARDAPIOS.find(function (c) { return c.id === req.cardapio; }) || {}).nome || '';
+    const cron = QE.CRON.map(function (it) {
+      const ov = (o.cron && o.cron[it.id]) || {};
+      let on;
+      if (ov.on !== undefined) on = !!ov.on;
+      else if (it.link === 'incl') on = true;
+      else if (it.link === 'prem') on = prem;
+      else if (it.link === 'man') on = false;
+      else on = !!(grupos.reduce(function (a, g) { return a.concat(g.linhas); }, []).find(function (l) { return l.id === it.link; }) || {}).on;
+      const segs = [[ov.ini || it.ini, ov.fim || it.fim]];
+      if (it.ini2) segs.push([ov.ini2 || it.ini2, ov.fim2 || it.fim2]);
+      return Object.assign({}, it, { nome: it.id === 'buffet' ? 'Buffet ' + (cdp || 'Churrasco') : it.nome, on: on, segs: segs });
+    });
+
+    return {
+      q: q, faixa: fx, auto: { pacote: fx.pacote, cafe: fx.cafe, doces: fx.doces, b50: ch.b50, b30: ch.b30, parcelas: nAuto },
+      pacote: pacote, cafePP: cafePP, docesPP: docesPP, b50: b50, b30: b30,
+      grupos: grupos, compl: compl, soma: soma, nfPct: nfPct, nfVal: nfVal, total: total,
+      desc: desc, avista: avista, mesOrc: MESES[dq.getMonth()], parcelas: parcelas, cartao: cartao, cron: cron, prem: prem
+    };
+  };
+
+  /* ---------- Nome do arquivo PDF ---------- */
+  QE.nomeArquivo = function (req) {
+    const limpa = function (s) { return String(s || '').replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, ' ').trim(); };
+    return 'Quinta dos Esquilos - Confraternização Corporativa ' + limpa(req.empresa) + ' - ' + limpa(req.contato) + ' ' + (+req.qtd || 0) + ' pessoas';
+  };
+
+  /* ====================================================================
+     Camada de dados: Firebase (se config.js estiver preenchido) ou
+     modo demonstração (localStorage, só neste navegador).
+     ==================================================================== */
+  if (typeof window !== 'undefined') {
+    const fbCfg = window.QE_FIREBASE;
+    const demo = !(fbCfg && window.firebase);
+    let fs = null, auth = null;
+    if (!demo) { window.firebase.initializeApp(fbCfg); fs = window.firebase.firestore(); auth = window.firebase.auth(); }
+    const LS = 'qe_demo_v1';
+    const ld = function () { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) { return {}; } };
+    const sv = function (o) { localStorage.setItem(LS, JSON.stringify(o)); };
+    const clean = function (x) { return JSON.parse(JSON.stringify(x)); };
+    const uid = function () { return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); };
+
+    QE.db = {
+      demo: demo,
+      async enviar(req) {
+        const data = clean(req); data.status = 'novo';
+        if (demo) { const o = ld(); o.sol = o.sol || {}; const id = uid(); o.sol[id] = Object.assign({ id: id, criadoEm: Date.now() }, data); sv(o); return id; }
+        const ref = await fs.collection('solicitacoes').add(Object.assign({}, data, { criadoEm: window.firebase.firestore.FieldValue.serverTimestamp() }));
+        return ref.id;
+      },
+      async listar() {
+        if (demo) { return Object.values(ld().sol || {}).sort(function (a, b) { return b.criadoEm - a.criadoEm; }); }
+        const s = await fs.collection('solicitacoes').get();
+        return s.docs.map(function (d) {
+          const x = d.data(); x.id = d.id;
+          x.criadoEm = x.criadoEm && x.criadoEm.toMillis ? x.criadoEm.toMillis() : (x.criadoEm || 0);
+          return x;
+        }).sort(function (a, b) { return b.criadoEm - a.criadoEm; });
+      },
+      async criarManual(req) {
+        const data = clean(req);
+        if (demo) { const o = ld(); o.sol = o.sol || {}; const id = uid(); o.sol[id] = Object.assign({ id: id, criadoEm: Date.now() }, data); sv(o); return id; }
+        const ref = await fs.collection('solicitacoes').add(Object.assign({}, data, { criadoEm: window.firebase.firestore.FieldValue.serverTimestamp() }));
+        return ref.id;
+      },
+      async salvar(id, req) {
+        const data = clean(req); delete data.id; delete data.criadoEm;
+        if (demo) { const o = ld(); o.sol[id] = Object.assign({}, o.sol[id], data); sv(o); return; }
+        await fs.collection('solicitacoes').doc(id).set(data, { merge: true });
+      },
+      async excluir(id) {
+        if (demo) { const o = ld(); delete (o.sol || {})[id]; sv(o); return; }
+        await fs.collection('solicitacoes').doc(id).delete();
+      },
+      async disponibilidade() {
+        if (demo) { const o = ld(); return o.disp || QE.DISP_PADRAO; }
+        const d = await fs.collection('publico').doc('disponibilidade').get();
+        return d.exists && d.data().datas ? d.data().datas : QE.DISP_PADRAO;
+      },
+      async salvarDisponibilidade(datas) {
+        if (demo) { const o = ld(); o.disp = clean(datas); sv(o); return; }
+        await fs.collection('publico').doc('disponibilidade').set({ datas: clean(datas) });
+      },
+      async config() {
+        if (demo) return QE.mergeConfig(ld().cfg);
+        const d = await fs.collection('config').doc('geral').get();
+        return QE.mergeConfig(d.exists ? d.data() : null);
+      },
+      async salvarConfig(cfg) {
+        if (demo) { const o = ld(); o.cfg = clean(cfg); sv(o); return; }
+        await fs.collection('config').doc('geral').set(clean(cfg));
+      },
+      onAuth(cb) { if (demo) { cb(true); return; } auth.onAuthStateChanged(function (u) { cb(!!u); }); },
+      login(email, senha) { return auth.signInWithEmailAndPassword(email, senha); },
+      logout() { return demo ? Promise.resolve() : auth.signOut(); }
+    };
+  }
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = QE;
+  else root.QE = QE;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* ==========================================================================
+   Gera o HTML do orçamento corporativo (4 páginas A4) a partir da solicitação
+   ========================================================================== */
+(function (QE) {
+  'use strict';
+  const esc = function (s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  const R = QE.brl;
+  const IMG = (typeof window !== 'undefined' && window.QE_IMG) || {};
+
+  function barrisTxt(n, l) { return n + ' ' + (n === 1 ? 'barril' : 'barris') + ' de ' + l + ' litros'; }
+
+  QE.proposalHTML = function (req, cfg, avail) {
+    const c = QE.calc(req, cfg);
+    const o = req.orc;
+    const prem = c.prem;
+    const cd = req.cardapio;
+    const co = esc(req.empresa) + ' - ' + esc(req.contato);
+
+    /* ---------- Página 1: escopo ---------- */
+    const dias = (avail || []).slice().sort(function (a, b) { return a.d < b.d ? -1 : 1; });
+    const COLS = 11;
+    let av = '<tr><th colspan="' + COLS + '">Datas disponíveis</th></tr>';
+    for (let i = 0; i < dias.length; i += COLS) {
+      av += '<tr>';
+      for (let j = 0; j < COLS; j++) {
+        const x = dias[i + j];
+        av += x ? '<td class="' + (x.livre ? 'ok' : 'no') + '">' + QE.fmtDM(x.d) + '</td>' : '<td></td>';
+      }
+      av += '</tr>';
+    }
+
+    const item = function (t, body, right) {
+      return '<div class="pp-it"><div class="pp-ih"><b>' + t.n + '</b><span>' + t.t + '</span><em>' + (right || '') + '</em><i class="pp-ck">✓</i></div><div class="pp-ib">' + body + '</div></div>';
+    };
+    let n = 0;
+    const T = function (t) { n++; return { n: n, t: t }; };
+    const lab = function (k, v) { return '<p><b>' + k + '</b> ' + v + '</p>'; };
+
+    const cardGrid = '<div class="pp-cg">' + QE.CARDAPIOS_ORC.map(function (x) {
+      const on = x[0] === cd;
+      const nome = (x[0] === 'personalizado' && on && req.cardapioOutro) ? 'Personalizado (' + esc(req.cardapioOutro) + ')' : x[1];
+      return '<span class="' + (on ? 'sel' : '') + '">- ' + nome + '</span>';
+    }).join('') + '</div>';
+
+    let itens = '';
+    itens += item(T('Espaço'), lab('Período:', 'Conforme cronograma do evento no final da proposta') + lab('Quantidade:', '<span class="red"><b>' + c.q + '</b></span> pessoas (adultos / crianças)') + '<p><b>Obs:</b> O horário pode ser ajustado com antecedência e de acordo com a disponibilidade na data</p>');
+    itens += item(T('Buffet'), '<div class="pp-cgw"><div class="pp-cgt">Opções de cardápio</div>' + cardGrid + '</div>' + lab('Cardápio:', 'Anexo'), prem ? 'Cardápio Premium' : 'Cardápio Standard');
+    itens += item(T('Bebidas não alcoólicas'), lab('Escopo:', 'Água / Suco / Refrigerante'));
+    if (prem) {
+      const b = [];
+      if (c.b50 > 0) b.push(barrisTxt(c.b50, 50));
+      if (c.b30 > 0) b.push(barrisTxt(c.b30, 30));
+      itens += item(T('Chopp'), '<p class="chopp">' + (b.join('<span class="gap"></span>') || '—') + '</p><p>- Marca Germânia</p><p>- Deixamos barris extras em consignação só cobrados em caso de uso</p>');
+      itens += item(T('Bar de drinks'), lab('Cardápio:', (o.bar === 'ouro' ? 'Ouro' : 'Prata') + ' (anexo)') +
+        '<p class="' + (o.bar === 'ouro' ? '' : 'bold') + '"><b>Cardápio Prata:</b> Gin Gordon\'s / Vodka Smirnoff</p><p class="' + (o.bar === 'ouro' ? 'bold' : '') + '"><b>Cardápio Ouro:</b> Gin Tanqueray / Vodka Absolut</p>');
+    }
+    itens += item(T('DJ'), '<p>- DJ profissional / Equipamento profissional</p>');
+    itens += prem
+      ? item(T('Pacote decoração'), '<div class="pp-2c"><p>- Decoradora própria</p><p>- Mesa convidados</p><p>- Projeto personalizado</p><p>- Arranjos naturais</p><p>- Mesas e cadeiras padrão buffet</p><p>- Toalhas e guardanapos em tecido</p></div>')
+      : item(T('Decoração básica'), '<div class="pp-2c"><p>- Decoradora própria</p><p>- Decoração básica não tematizada</p><p>- Mesas e cadeiras padrão buffet</p><p>- Toalhas e guardanapos em tecido</p></div>');
+    itens += item(T('Staff (incluso nos itens específicos e no valor do Espaço)'),
+      '<div class="pp-2c"><p>- Gerente para o dia do evento</p><p>- Assistentes bebidas não alcoólicas</p><p>- Recepcionista</p><p>- Equipe Buffet</p><p>- Staff serviços</p><p>- Assistentes do Buffet</p><p>- Chef Cozinha e ajudantes</p>' + (prem ? '<p>- Bartenders / barbacks</p>' : '') + '</div>');
+    const nItens = n;
+
+    const p1 = '<section class="pg">' +
+      '<header class="pp-head"><img class="pp-logo" src="' + (IMG.logo || 'logo-marrom.png') + '" alt="Quinta dos Esquilos"><div class="pp-ttl"><h1>ORÇAMENTO CONFRATERNIZAÇÃO CORPORATIVA</h1><p class="co">' + co + '</p><p>' + QE.CONTATOS.site + '</p><p>Instagram: ' + QE.CONTATOS.insta + '</p></div></header>' +
+      '<table class="pp-av">' + av + '</table>' +
+      '<div class="pp-meta"><span>Validade do orçamento: ' + esc(o.validade || 15) + ' dias</span><span>Atualização: ' + QE.fmtData(o.data) + '</span></div>' +
+      '<div class="pp-bar big">ESCOPO</div>' + itens +
+      '<div class="pp-sub"><span>SUB TOTAL</span><b>' + R(c.pacote) + '</b></div>' +
+      (req.tema && req.tipo === 'tematico' ? '<p class="pp-tema">Tema do evento: ' + esc(req.tema) + '</p>' : '') +
+      '</section>';
+
+    /* ---------- Página 2: serviços complementares ---------- */
+    const grupo = function (g) {
+      const linhas = g.linhas.map(function (l) {
+        const un = l.un === 'pessoa' ? ' /pessoa' : l.un === 'barril' ? ' /barril' : '';
+        const mult = (l.on && l.un !== 'fixo') ? '<span class="t">' + l.qtd + ' × = ' + R(l.total) + '</span>' : '<span class="t"></span>';
+        return '<div class="pp-l ' + (l.on ? 'on' : '') + '"><i class="bx">' + (l.on ? '✓' : '') + '</i><span class="n">' + esc(l.nome) + (l.obs ? ' <small>(' + esc(l.obs) + ')</small>' : '') + '</span><span class="v">' + R(l.unit) + un + '</span>' + mult + '</div>';
+      }).join('');
+      const info = (g.info || []).map(function (t) { return '<p class="pp-gi">' + esc(t) + '</p>'; }).join('');
+      return '<div class="pp-g"><div class="pp-gh"><b>' + g.g + '</b><span>' + esc(g.titulo) + '</span><em class="' + (g.total > 0 ? 'on' : '') + '">' + R(g.total) + '</em></div>' +
+        '<div class="pp-gl' + (g.cols ? ' cols' : '') + '">' + linhas + '</div>' + info + (g.nota ? '<p class="pp-gn">' + esc(g.nota) + '</p>' : '') + '</div>';
+    };
+    const p2 = '<section class="pg"><div class="pp-bar big green">SERVIÇOS COMPLEMENTARES (Opcional)</div>' + c.grupos.map(grupo).join('') +
+      '<p class="pp-foot">Itens marcados com ✓ estão somados ao total. Valores por pessoa dos itens opcionais ficam à vista para consulta e só entram na soma se contratados.</p></section>';
+
+    /* ---------- Página 3: totais, pagamento, contrato, contatos ---------- */
+    const totais = '<table class="pp-tot">' +
+      '<tr class="a"><td>SUB TOTAL</td><td>' + R(c.pacote) + '</td></tr>' +
+      '<tr class="b"><td>COMPLEMENTARES</td><td>' + R(c.compl) + '</td></tr>' +
+      '<tr class="c"><td>NOTA FISCAL</td><td>' + R(c.nfVal) + '</td></tr>' +
+      '<tr class="d"><td>TOTAL GERAL</td><td>' + R(c.total) + '</td></tr></table>';
+
+    let rows = '';
+    const minRows = Math.max(c.parcelas.length, 5);
+    for (let i = 0; i < minRows; i++) {
+      const p = c.parcelas[i];
+      rows += p ? '<tr><td>' + p.mes + '</td><td>-</td><td>' + R(p.valor) + '</td></tr>' : '<tr><td>&nbsp;</td><td></td><td></td></tr>';
+    }
+    const cartao = c.cartao.map(function (x) {
+      return '<tr><td>' + x.meses + '</td><td>X</td><td>' + (x.parcela === null ? '—' : R(x.parcela)) + '</td><td>' + (x.total === null ? '—' : R(x.total)) + '</td></tr>';
+    }).join('');
+    const pag = '<div class="pp-bar black">FORMA DE PAGAMENTO</div><div class="pp-pg">' +
+      '<div class="pp-pc"><div class="pp-ph">OBSERVAÇÕES:</div>' +
+      '<div class="pp-ob"><b>1</b><span>Transf. bancária ou Pix</span></div><div class="pp-ob"><b>2</b><span>Pagamento no Cartão:<br>- Vide taxas operadora</span></div><div class="pp-ob"><b>3</b><span>Pagamento total até 7 dias anteriores ao evento</span></div></div>' +
+      '<div class="pp-pc"><div class="pp-ph">PARCELAMENTO:</div><table class="pp-t"><tr><th>Mês</th><th>Data</th><th>Valor</th></tr>' + rows + '<tr class="tt"><td colspan="2">TOTAL</td><td>' + R(c.total) + '</td></tr></table><p class="sm">*Transferência bancária, boleto ou Pix</p></div>' +
+      '<div class="pp-pc"><div class="pp-ph">À VISTA <small>(' + String(c.desc).replace('.', ',') + '% de desconto)</small></div><table class="pp-t"><tr><th>Mês</th><th>Data</th><th>Valor</th></tr><tr><td>' + c.mesOrc + '</td><td>-</td><td>' + R(c.avista) + '</td></tr></table><p class="sm">*Transferência bancária, boleto ou Pix</p>' +
+      '<div class="pp-ph" style="margin-top:12px">OPÇÃO CARTÃO <small>(taxas operadora):</small></div><table class="pp-t"><tr><th>meses</th><th></th><th>R$ parcela</th><th>R$ total</th></tr>' + cartao + '</table></div></div>';
+
+    const ct = QE.CONTATOS;
+    const contrato = '<div class="pp-cc"><div><div class="pp-bar black">DADOS PARA CONTRATO</div><ol class="pp-ct"><li>Nome / Razão Social:</li><li>CPF / CNPJ:</li><li>R.G.:</li><li>Endereço:</li><li>CEP:</li><li>E-mail:</li></ol></div>' +
+      '<div><div class="pp-bar black">NOSSOS CONTATOS</div><div class="pp-cn"><div class="two"><b>Rodrigo</b><b>Ana</b><span>' + ct.rodrigo + '</span><span>' + ct.ana + '</span></div>' +
+      '<p><b>E-mail:</b> ' + ct.email + '</p><p><b>Site:</b> ' + ct.site + '</p><p><b>Instagram:</b> ' + ct.insta + '</p><p>CNPJ: ' + ct.cnpj + '</p></div></div></div>';
+
+    const loc = '<div class="pp-bar black">LOCALIZAÇÃO</div><div class="pp-loc"><p class="red"><b>GOOGLE MAPS / WAZE:</b></p><p><b>"' + ct.mapsNome + '"</b></p><p>' + ct.endereco + '</p><p>Caminho 100% asfaltado</p><p>Fácil acesso para carros, vans e ônibus</p>' +
+      '<p class="red"><b>LINK LOCALIZAÇÃO:</b></p><p><a href="' + ct.mapsLink + '">' + ct.mapsLink + '</a></p><p class="red"><b>DISTÂNCIAS</b></p><p>Estação Butantã Metrô: 47 km</p><p>São Paulo Morumbi: 48 km</p><p>São Paulo Centro Histórico: 63 km</p></div>';
+
+    const p3 = '<section class="pg">' + totais + pag + contrato + loc + '</section>';
+
+    /* ---------- Página 4: cronograma ---------- */
+    const H0 = 9 * 60, SPAN = 11 * 60;
+    const pct = function (t) { return ((QE.toMin(t) - H0) / SPAN * 100).toFixed(3); };
+    let hdr = '';
+    for (let h = 9; h < 20; h++) hdr += '<span>' + String(h).padStart(2, '0') + 'h00m</span>';
+    let body = '', sec = '';
+    c.cron.forEach(function (it) {
+      if (it.sec !== sec) { sec = it.sec; body += '<div class="cr-sec">' + sec + '</div>'; }
+      const bars = it.segs.map(function (s) {
+        const l = pct(s[0]), w = ((QE.toMin(s[1]) - QE.toMin(s[0])) / SPAN * 100).toFixed(3);
+        const fimPct = (+pct(s[1])).toFixed(3);
+        const pos = (+l > 62) ? 'right:' + (100 - fimPct).toFixed(3) + '%' : 'left:' + l + '%';
+        return '<div class="cr-bar ' + (it.on ? 'on' : 'off') + '" style="left:' + l + '%;width:' + w + '%"></div><div class="cr-tm ' + (it.on ? '' : 'off') + '" style="' + pos + '">' + s[0] + ' às ' + s[1] + 'hs</div>';
+      }).join('');
+      body += '<div class="cr-row"><div class="cr-lab ' + (it.on ? '' : 'off') + '">' + esc(it.nome) + '</div><div class="cr-tl">' + bars + '</div></div>';
+    });
+    const j = o.janela || ['10:00', '18:00'];
+    const ov = '<div class="cr-ov"><i style="left:' + pct(j[0]) + '%"></i><i style="left:' + pct(j[1]) + '%"></i></div>';
+
+    const obs = '<div class="pp-obs"><p><b>1-</b> Todos os itens de 1 a ' + nItens + ' ticados em verde estão inclusos;</p><p><b>2-</b> Os itens de A a L são opcionais;</p><p><b>3-</b> Cronograma do Evento na última página da proposta;</p>' +
+      '<p><b>4-</b> Temos visitas todas as semanas, caso deseje podemos agendar um horário;</p><p><b>5-</b> Conferir disponibilidade da data no momento da contratação, vide disponibilidade;</p>' +
+      '<p><b>6-</b> Mais detalhes e fotos: <b>Instagram:</b> ' + ct.insta + ' · <b>Site:</b> ' + ct.site + '</p></div>';
+
+    const p4 = '<section class="pg"><div class="pp-bar black">CRONOGRAMA</div>' +
+      '<div class="cr"><div class="cr-hd"><div class="cr-corner"><img src="' + (IMG.logo || 'logo-marrom.png') + '" alt=""></div><div class="cr-hours">' + hdr + '</div></div>' +
+      '<div class="cr-body">' + body + ov + '</div></div>' +
+      '<div class="cr-leg"><b>LEGENDA</b><span><i class="g"></i>Serviços previstos</span><span><i class="y"></i>Serviços opcionais</span><span class="ig">' + ct.insta + '</span></div>' +
+      obs + '<div class="pp-ph3"><img src="' + (IMG.f1 || 'piscina.jpg') + '" alt=""><img src="' + (IMG.f2 || 'arvorismo.jpg') + '" alt=""><img src="' + (IMG.f3 || 'jogos.jpg') + '" alt=""></div></section>';
+
+    return p1 + p2 + p3 + p4;
+  };
+})(typeof window !== 'undefined' ? window.QE : require('./core.js'));
+
+/* Painel administrativo — Quinta dos Esquilos */
+(function () {
+  'use strict';
+  const $ = function (s) { return document.querySelector(s); };
+  const $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  const esc = function (s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  const clone = function (x) { return JSON.parse(JSON.stringify(x)); };
+  const getP = function (o, p) { return p.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, o); };
+  const setP = function (o, p, v) { const k = p.split('.'); const l = k.pop(); const t = k.reduce(function (a, x) { return a[x] || (a[x] = {}); }, o); t[l] = v; };
+  const STATUS = { novo: 'Novo', orcado: 'Orçamento pronto', enviado: 'Enviado ao cliente', fechado: 'Fechado', perdido: 'Perdido' };
+  const WD = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  const cardNome = function (id) { return (QE.CARDAPIOS.find(function (c) { return c.id === id; }) || {}).nome || '—'; };
+
+  let cfg, avail = [], lista = [], cur = null, curId = null, dirty = false, last = null, booted = false;
+
+  function toast(msg, err) {
+    const t = $('#toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); t.hidden = false;
+    clearTimeout(toast.h); toast.h = setTimeout(function () { t.hidden = true; }, err ? 5000 : 2200);
+  }
+
+  /* ---------- Login / inicialização ---------- */
+  QE.db.onAuth(async function (ok) {
+    if (!ok) { $('#login').hidden = false; $('#app').hidden = true; return; }
+    $('#login').hidden = true; $('#app').hidden = false; $('#demo').hidden = !QE.db.demo;
+    if (booted) return; booted = true;
+    try { await carregar(); } catch (e) {
+      console.error(e);
+      const bn = $('#demo'); bn.textContent = 'Entrou, mas não consegui ler o Firestore (' + e.message + '). Confira se o banco foi criado em Firestore Database e se as regras do firestore.rules foram publicadas.'; bn.hidden = false;
+    }
+    $('#fStatus').innerHTML = '<option value="">Todos os status</option>' + Object.keys(STATUS).map(function (k) { return '<option value="' + k + '">' + STATUS[k] + '</option>'; }).join('');
+    $('#edStatus').innerHTML = Object.keys(STATUS).map(function (k) { return '<option value="' + k + '">' + STATUS[k] + '</option>'; }).join('');
+    view('lista'); renderLista();
+  });
+  $('#loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); const er = $('#lgErro'); er.hidden = true;
+    const bt = $('#loginForm button'); bt.disabled = true; bt.textContent = 'Entrando…';
+    try { await QE.db.login($('#lgEmail').value.trim(), $('#lgSenha').value); }
+    catch (x) {
+      const c = x && x.code || '';
+      const m = {
+        'auth/invalid-credential': 'E-mail ou senha incorretos, ou esse usuário ainda não foi criado em Authentication > Usuários.',
+        'auth/invalid-login-credentials': 'E-mail ou senha incorretos, ou esse usuário ainda não foi criado em Authentication > Usuários.',
+        'auth/user-not-found': 'Esse usuário não existe. Crie em Authentication > Usuários.',
+        'auth/wrong-password': 'Senha incorreta.',
+        'auth/invalid-email': 'E-mail inválido.',
+        'auth/operation-not-allowed': 'O login por e-mail/senha está desativado. Ative em Authentication > Método de login.',
+        'auth/unauthorized-domain': 'Domínio não autorizado. Adicione o endereço do site em Authentication > Configurações > Domínios autorizados.',
+        'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
+        'auth/network-request-failed': 'Sem conexão com o Firebase. Confira a internet.',
+        'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'Chave do Firebase inválida no config.js.',
+        'auth/invalid-api-key': 'Chave do Firebase inválida no config.js.'
+      };
+      er.textContent = (m[c] || 'Não foi possível entrar.') + ' (' + (c || x.message) + ')'; er.hidden = false; console.error(x);
+    }
+    bt.disabled = false; bt.textContent = 'Entrar';
+  });
+  $('#sair').addEventListener('click', function () { QE.db.logout().then(function () { if (QE.db.demo) location.href = 'index.html'; }); });
+
+  async function carregar() {
+    cfg = QE.defaultConfig(); avail = QE.DISP_PADRAO.slice(); lista = [];
+    const lim = function (p) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, 9000); })]); };
+    const erros = [];
+    try { cfg = await lim(QE.db.config()); } catch (e) { erros.push('tabelas: ' + (e.code || e.message)); }
+    try { avail = await lim(QE.db.disponibilidade()); } catch (e) { erros.push('datas: ' + (e.code || e.message)); }
+    try { lista = await lim(QE.db.listar()); } catch (e) { erros.push('pedidos: ' + (e.code || e.message)); }
+    if (erros.length) throw new Error(erros.join('; '));
+  }
+
+  /* ---------- Navegação ---------- */
+  function view(v) {
+    ['lista', 'edit', 'disp', 'tab'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
+    $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === (v === 'edit' ? 'lista' : v)); });
+    if (v === 'disp') renderDisp();
+    if (v === 'tab') renderTab();
+    window.scrollTo(0, 0);
+  }
+  $('#tabs').addEventListener('click', function (e) {
+    const b = e.target.closest('button'); if (!b) return;
+    if (dirty && !confirm('Há alterações não salvas neste orçamento. Sair mesmo assim?')) return;
+    dirty = false; view(b.dataset.v); if (b.dataset.v === 'lista') renderLista();
+  });
+
+  /* ---------- Lista ---------- */
+  function renderLista() {
+    const f = $('#fStatus').value;
+    const itens = lista.filter(function (x) { return !f || x.status === f; });
+    $('#lista').innerHTML = itens.length ? itens.map(function (x) {
+      return '<button class="card" data-id="' + x.id + '"><b>' + esc(x.empresa) + ' <small>— ' + esc(x.contato) + '</small></b><span class="badge ' + esc(x.status) + '">' + (STATUS[x.status] || esc(x.status)) + '</span>' +
+        '<small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas · ' + (x.escopo === 'standard' ? 'Standard' : 'Premium') + ' · ' + cardNome(x.cardapio) + '</small>' +
+        '<small>' + (x.criadoEm ? 'Recebido em ' + new Date(x.criadoEm).toLocaleDateString('pt-BR') : '') + '</small></button>';
+    }).join('') : '<div class="vazio">Nenhuma solicitação por aqui ainda. Os pedidos enviados pelo site aparecem nesta lista.</div>';
+  }
+  $('#fStatus').addEventListener('change', renderLista);
+  $('#lista').addEventListener('click', function (e) { const c = e.target.closest('.card'); if (c) abrir(c.dataset.id); });
+  $('#novo').addEventListener('click', async function () {
+    const req = { empresa: 'Nova empresa', contato: '', email: '', telefone: '', dataEvento: '', qtd: 50, tipo: 'final_ano', tema: '', escopo: 'premium', cardapio: 'churrasco', cardapioOutro: '', cafe: false, nf: true, obs: '', origem: 'manual', status: 'novo' };
+    try { const id = await QE.db.criarManual(req); lista = await QE.db.listar(); abrir(id); } catch (e) { toast('Não foi possível criar.', true); }
+  });
+
+  /* ---------- Editor ---------- */
+  function abrir(id) {
+    const x = lista.find(function (y) { return y.id === id; }); if (!x) return;
+    cur = clone(x); curId = id; dirty = false;
+    if (!cur.orc) cur.orc = QE.orcInicial(cur, cfg);
+    ['sel', 'preco', 'cron'].forEach(function (k) { if (!cur.orc[k]) cur.orc[k] = {}; });
+    if (!cur.orc.janela) cur.orc.janela = ['10:00', '18:00'];
+    view('edit'); buildControls(); refresh();
+  }
+
+  const F = function (label, path, type, attrs) {
+    const v = getP(cur, path);
+    return '<div class="f"><label>' + label + '</label><input data-p="' + path + '" type="' + (type || 'text') + '" value="' + esc(v) + '" ' + (attrs || '') + '></div>';
+  };
+  const S = function (label, path, opts) {
+    const v = getP(cur, path);
+    return '<div class="f"><label>' + label + '</label><select data-p="' + path + '">' + opts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === v ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>';
+  };
+  const C = function (label, path) { return '<label class="chk"><input type="checkbox" data-p="' + path + '"' + (getP(cur, path) ? ' checked' : '') + '> ' + label + '</label>'; };
+  const N = function (label, path) { return '<div class="f"><label>' + label + '</label><input data-p="' + path + '" data-auto="' + path + '" type="number" step="0.01" min="0" value="' + esc(getP(cur, path)) + '"></div>'; };
+
+  function buildControls() {
+    const o = cur.orc;
+    let h = '<div class="sum" id="sum"></div>';
+    h += '<details class="box" open><summary>Dados do cliente</summary><div class="in">' +
+      F('Empresa', 'empresa') + '<div class="g2">' + F('Contato', 'contato') + F('Telefone', 'telefone', 'tel') + '</div>' + F('E-mail', 'email', 'email') +
+      '<div class="g2">' + F('Data do evento', 'dataEvento', 'date') + F('Quantidade de pessoas', 'qtd', 'number', 'min="1"') + '</div>' +
+      '<div class="g2">' + S('Tipo de evento', 'tipo', [['final_ano', 'Final de ano'], ['tematico', 'Temático']]) + S('Pacote', 'escopo', [['premium', 'Premium'], ['standard', 'Standard']]) + '</div>' +
+      F('Tema (se temático)', 'tema') +
+      '<div class="g2">' + S('Cardápio', 'cardapio', QE.CARDAPIOS.map(function (c) { return [c.id, c.nome]; })) + F('Cardápio personalizado', 'cardapioOutro') + '</div>' +
+      '<div class="g2">' + C('Café da manhã', 'cafe') + C('Com nota fiscal', 'nf') + '</div>' +
+      '<div class="f"><label>Observações do cliente</label><textarea data-p="obs" rows="2">' + esc(cur.obs) + '</textarea></div>' +
+      (cur.email || cur.telefone ? '<p class="hint">' + (cur.telefone ? '<a href="https://wa.me/55' + String(cur.telefone).replace(/\D/g, '') + '" target="_blank" rel="noopener">Abrir WhatsApp</a>' : '') + (cur.email ? ' · <a href="mailto:' + esc(cur.email) + '">Enviar e-mail</a>' : '') + '</p>' : '') +
+      '</div></details>';
+
+    h += '<details class="box" open><summary>Valores do pacote (da tabela, editáveis)</summary><div class="in"><p class="hint" id="faixaInfo"></p>' +
+      '<div class="g2">' + N('Valor do pacote (R$)', 'orc.pacote') + N('Parcelas (nº de meses)', 'orc.parcelas') + '</div>' +
+      '<div class="g2">' + N('Café da manhã (R$/pessoa)', 'orc.cafe') + N('Mesa de doces (R$/pessoa)', 'orc.doces') + '</div>' +
+      '<div class="g2">' + N('Barris de 50 L (qtd)', 'orc.b50') + N('Barris de 30 L (qtd)', 'orc.b30') + '</div>' +
+      '<p class="hint">Campo vazio = valor automático da tabela (aparece em cinza). Digite para sobrescrever.</p>' +
+      '<button class="btn sm" id="resetVals" type="button">Voltar tudo para a tabela</button></div></details>';
+
+    h += '<details class="box"><summary>Dados do orçamento</summary><div class="in"><div class="g2">' + F('Data do orçamento', 'orc.data', 'date') + F('Validade (dias)', 'orc.validade', 'number', 'min="1"') + '</div>' +
+      S('Cardápio do bar de drinks', 'orc.bar', [['prata', 'Prata'], ['ouro', 'Ouro']]) +
+      '<div class="g2">' + F('Início do evento', 'orc.janela.0', 'time') + F('Fim do evento', 'orc.janela.1', 'time') + '</div></div></details>';
+
+    h += '<details class="box"><summary>Serviços complementares (A a L)</summary><div class="in" id="linesBox">' + buildLines() + '</div></details>';
+    h += '<details class="box"><summary>Cronograma (horários)</summary><div class="in"><div id="cronBox">' + buildCron() + '</div><button class="btn sm" id="resetCron" type="button">Restaurar horários e itens automáticos</button></div></details>';
+    h += '<button class="btn" id="excluir" type="button">Excluir esta solicitação</button>';
+    $('#ctl').innerHTML = h;
+    $('#edTitulo').textContent = 'Orçamento — ' + (cur.empresa || 'sem nome');
+    $('#edStatus').value = cur.status || 'novo';
+    syncLines();
+  }
+
+  function buildLines() {
+    return QE.CATALOGO.map(function (g) {
+      return '<details class="grp"><summary><b>' + g.g + '</b><span>' + esc(g.titulo) + '</span><em data-gt="' + g.g + '"></em></summary>' +
+        g.linhas.map(function (l) {
+          return '<div class="ln"><label><input type="checkbox" data-ln="' + l.id + '"> ' + esc(l.nome) + '</label>' +
+            '<input type="number" min="1" data-lq="' + l.id + '" aria-label="Quantidade" title="Quantidade"><input type="number" step="0.01" min="0" data-lp="' + l.id + '" aria-label="Preço unitário" title="Preço unitário (vazio = padrão)"></div>';
+        }).join('') + '</details>';
+    }).join('') + '<p class="hint">Marque o que o cliente contratou. Quantidade e preço em cinza são os automáticos; digite para alterar.</p>';
+  }
+  const isAuto = function (id) { return id === 'c1' || id === 'd1'; };
+  function syncLines() {
+    const sel = cur.orc.sel;
+    $$('[data-ln]').forEach(function (el) {
+      const id = el.dataset.ln, on = sel[id] !== undefined && sel[id] !== 0 && sel[id] !== false;
+      el.checked = on;
+      const q = $('[data-lq="' + id + '"]'), p = $('[data-lp="' + id + '"]');
+      q.disabled = !on; p.disabled = !on;
+      q.value = on && sel[id] !== -1 ? sel[id] : '';
+      p.value = cur.orc.preco[id] !== undefined ? cur.orc.preco[id] : '';
+    });
+  }
+
+  function buildCron() {
+    const c = QE.calc(cur, cfg); let sec = '', h = '';
+    c.cron.forEach(function (it) {
+      if (it.sec !== sec) { sec = it.sec; h += '<div class="crsec">' + sec + '</div>'; }
+      h += '<div class="crl"><input type="checkbox" data-cr="' + it.id + '" data-k="on" title="Item ativo no cronograma"' + (it.on ? ' checked' : '') + '><span>' + esc(it.nome) + '</span>' +
+        '<input type="time" data-cr="' + it.id + '" data-k="ini" value="' + it.segs[0][0] + '"><input type="time" data-cr="' + it.id + '" data-k="fim" value="' + it.segs[0][1] + '"></div>';
+      if (it.segs[1]) h += '<div class="crl b2"><span></span><span class="hint">2º horário</span><input type="time" data-cr="' + it.id + '" data-k="ini2" value="' + it.segs[1][0] + '"><input type="time" data-cr="' + it.id + '" data-k="fim2" value="' + it.segs[1][1] + '"></div>';
+    });
+    return h;
+  }
+
+  /* Eventos dos controles */
+  function onCtl(e) {
+    const t = e.target;
+    if (t.dataset.p) {
+      let v;
+      if (t.type === 'checkbox') v = t.checked; else if (t.type === 'number') v = t.value === '' ? null : Number(t.value); else v = t.value;
+      setP(cur, t.dataset.p, v);
+      if (t.dataset.p === 'cafe') { if (v) cur.orc.sel.c1 = cur.orc.sel.c1 || -1; else delete cur.orc.sel.c1; syncLines(); }
+      if (t.dataset.p === 'empresa') $('#edTitulo').textContent = 'Orçamento — ' + (v || 'sem nome');
+    } else if (t.dataset.ln) {
+      const id = t.dataset.ln;
+      if (t.checked) cur.orc.sel[id] = isAuto(id) ? -1 : 1; else delete cur.orc.sel[id];
+      if (id === 'c1') cur.cafe = t.checked;
+      syncLines();
+    } else if (t.dataset.lq) {
+      const id = t.dataset.lq; if (cur.orc.sel[id] === undefined) return;
+      cur.orc.sel[id] = t.value === '' ? (isAuto(id) ? -1 : 1) : Math.max(1, Math.round(+t.value));
+    } else if (t.dataset.lp) {
+      const id = t.dataset.lp;
+      if (t.value === '') delete cur.orc.preco[id]; else cur.orc.preco[id] = +t.value;
+    } else if (t.dataset.cr) {
+      const c = cur.orc.cron[t.dataset.cr] || (cur.orc.cron[t.dataset.cr] = {});
+      if (t.dataset.k === 'on') c.on = t.checked; else c[t.dataset.k] = t.value;
+    } else return;
+    dirty = true; refresh();
+  }
+  $('#ctl').addEventListener('input', onCtl);
+  $('#ctl').addEventListener('change', onCtl);
+  $('#ctl').addEventListener('click', function (e) {
+    if (e.target.id === 'resetVals') { ['pacote', 'cafe', 'doces', 'b50', 'b30', 'parcelas'].forEach(function (k) { cur.orc[k] = null; $('[data-p="orc.' + k + '"]').value = ''; }); dirty = true; refresh(); }
+    if (e.target.id === 'resetCron') { cur.orc.cron = {}; $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); }
+    if (e.target.id === 'excluir') {
+      if (!confirm('Excluir a solicitação de "' + cur.empresa + '"? Isso não pode ser desfeito.')) return;
+      QE.db.excluir(curId).then(async function () { lista = await QE.db.listar(); dirty = false; view('lista'); renderLista(); toast('Solicitação excluída'); }).catch(function () { toast('Não foi possível excluir.', true); });
+    }
+  });
+  $('#edStatus').addEventListener('change', function () { cur.status = this.value; dirty = true; });
+
+  /* Atualiza prévia, resumo, avisos e placeholders */
+  function refresh() {
+    const c = QE.calc(cur, cfg); last = c;
+    $('#pvIn').innerHTML = QE.proposalHTML(cur, cfg, avail);
+    fit();
+
+    const Rr = QE.brl;
+    $('#sum').innerHTML = '<div><span>Pacote</span><span>' + Rr(c.pacote) + '</span></div><div><span>Complementares</span><span>' + Rr(c.compl) + '</span></div>' +
+      '<div><span>Nota fiscal (' + String(c.nfPct).replace('.', ',') + '%)</span><span>' + Rr(c.nfVal) + '</span></div>' +
+      '<div class="t"><span>Total geral</span><span>' + Rr(c.total) + '</span></div>' +
+      '<div><span>À vista (-' + String(c.desc).replace('.', ',') + '%)</span><span>' + Rr(c.avista) + '</span></div>' +
+      '<div><span>Parcelado</span><span>' + c.parcelas.length + ' × ' + Rr(c.parcelas[0].valor) + '</span></div>';
+
+    ['pacote', 'cafe', 'doces', 'b50', 'b30', 'parcelas'].forEach(function (k) {
+      const el = $('[data-p="orc.' + k + '"]'); if (!el) return;
+      const a = c.auto[k]; el.placeholder = k === 'pacote' || k === 'cafe' || k === 'doces' ? a.toFixed(2).replace('.', ',') : a;
+    });
+    c.grupos.forEach(function (g) {
+      const em = $('[data-gt="' + g.g + '"]'); if (em) em.textContent = g.total > 0 ? Rr(g.total) : '';
+      g.linhas.forEach(function (l) {
+        const q = $('[data-lq="' + l.id + '"]'), p = $('[data-lp="' + l.id + '"]');
+        if (q) q.placeholder = isAuto(l.id) ? c.q : 1;
+        if (p) p.placeholder = l.padrao.toFixed(2).replace('.', ',');
+      });
+    });
+    c.cron.forEach(function (it) {
+      const el = $('[data-cr="' + it.id + '"][data-k="on"]'); if (el && document.activeElement !== el) el.checked = it.on;
+    });
+
+    const fx = c.faixa;
+    $('#faixaInfo').textContent = fx.acima ? 'Quantidade acima da maior faixa da tabela (' + fx.q + '). Confira os valores.' :
+      fx.exato ? 'Faixa da tabela: ' + fx.q + ' pessoas.' : 'Quantidade entre faixas: usando a faixa de ' + fx.q + ' pessoas (arredondado para cima).';
+    $('#faixaInfo').className = 'hint' + (fx.exato ? '' : ' w');
+
+    const av = [];
+    if (fx.acima) av.push('A quantidade (' + c.q + ') passa da última faixa da tabela de valores. Revise o valor do pacote.');
+    else if (!fx.exato) av.push('A quantidade (' + c.q + ') não está na tabela: foi usada a faixa de ' + fx.q + ' pessoas. Confira se é isso que você quer cobrar.');
+    if (c.q > 250) av.push('A regra de chopp acima de 250 pessoas não estava na sua tabela. Foi usada uma estimativa; ajuste os barris se precisar.');
+    if (cur.escopo === 'standard') av.push('Pacote Standard: o valor vem da mesma tabela do Premium. Ajuste o valor do pacote se o Standard tiver preço próprio.');
+    if (!cur.dataEvento) av.push('Sem data do evento: o parcelamento foi calculado em 1 vez.');
+    $$('#pvIn .pg').forEach(function (pg, i) { if (pg.scrollHeight > pg.clientHeight + 2) av.push('A página ' + (i + 1) + ' do PDF está com conteúdo além do limite e será cortada.'); });
+    const box = $('#avisos'); box.hidden = !av.length; box.innerHTML = av.map(esc).join('<br>');
+  }
+
+  function fit() {
+    const pv = $('#pv'), inn = $('#pvIn');
+    const s = Math.min(1, (pv.clientWidth - 20) / 794);
+    inn.style.transform = 'scale(' + s + ')';
+    inn.style.marginRight = (-794 * (1 - s)) + 'px';
+    inn.style.marginBottom = (-inn.offsetHeight * (1 - s)) + 'px';
+  }
+  window.addEventListener('resize', function () { if (!$('#v-edit').hidden) fit(); });
+
+  /* Salvar */
+  async function salvar(silencioso) {
+    try {
+      await QE.db.salvar(curId, cur);
+      const i = lista.findIndex(function (x) { return x.id === curId; });
+      if (i >= 0) lista[i] = Object.assign({}, lista[i], clone(cur));
+      dirty = false; if (!silencioso) toast('Salvo');
+      return true;
+    } catch (e) { console.error(e); toast('Não foi possível salvar.', true); return false; }
+  }
+  $('#salvar').addEventListener('click', function () { salvar(); });
+  $('#voltar').addEventListener('click', function () {
+    if (dirty && !confirm('Há alterações não salvas. Voltar mesmo assim?')) return;
+    dirty = false; view('lista'); renderLista();
+  });
+
+  /* PDF */
+  function marcaOrcado() { if (cur.status === 'novo') { cur.status = 'orcado'; $('#edStatus').value = 'orcado'; } }
+  $('#pdf').addEventListener('click', async function () {
+    const btn = this; const nome = QE.nomeArquivo(cur);
+    if (typeof html2pdf === 'undefined') { toast('Gerador de PDF indisponível (sem internet?). Abrindo a impressão.', true); imprimir(); return; }
+    btn.disabled = true; const txt = btn.textContent; btn.textContent = 'Gerando…';
+    const host = document.createElement('div'); host.className = 'pdf-host'; host.innerHTML = QE.proposalHTML(cur, cfg, avail); document.body.appendChild(host);
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      await html2pdf().set({
+        margin: 0, filename: nome + '.pdf', image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, windowWidth: 794, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['css'] }
+      }).from(host).save();
+      marcaOrcado(); await salvar(true); toast('PDF gerado');
+    } catch (e) { console.error(e); toast('Falha ao gerar o PDF. Use o botão Imprimir e escolha “Salvar como PDF”.', true); }
+    finally { host.remove(); btn.disabled = false; btn.textContent = txt; }
+  });
+  function imprimir() {
+    const nome = QE.nomeArquivo(cur), prev = document.title, root = $('#printRoot');
+    root.innerHTML = QE.proposalHTML(cur, cfg, avail); document.title = nome; document.body.classList.add('printing');
+    const fim = function () { document.body.classList.remove('printing'); document.title = prev; root.innerHTML = ''; window.removeEventListener('afterprint', fim); };
+    window.addEventListener('afterprint', fim);
+    setTimeout(function () { window.print(); }, 80);
+    marcaOrcado(); salvar(true);
+  }
+  $('#imprimir').addEventListener('click', imprimir);
+
+  /* ---------- Disponibilidade ---------- */
+  let draft = [];
+  function renderDisp() {
+    draft = clone(avail).sort(function (a, b) { return a.d < b.d ? -1 : 1; });
+    drawDisp();
+  }
+  function drawDisp() {
+    $('#dispLista').innerHTML = draft.length ? draft.map(function (x) {
+      return '<div class="dr ' + (x.livre ? '' : 'off') + '"><span>' + QE.fmtData(x.d) + ' <small>(' + WD[QE.parseData(x.d).getDay()] + ')</small></span>' +
+        '<label class="chk"><input type="checkbox" data-d="' + x.d + '"' + (x.livre ? ' checked' : '') + '> Livre</label><button class="btn sm ghost" data-rm="' + x.d + '">Remover</button></div>';
+    }).join('') : '<div class="vazio">Nenhuma data cadastrada.</div>';
+  }
+  $('#dispLista').addEventListener('change', function (e) { const d = e.target.dataset.d; if (!d) return; draft.find(function (x) { return x.d === d; }).livre = e.target.checked; drawDisp(); });
+  $('#dispLista').addEventListener('click', function (e) { const d = e.target.dataset.rm; if (!d) return; draft = draft.filter(function (x) { return x.d !== d; }); drawDisp(); });
+  $('#dispAdd').addEventListener('click', function () {
+    const v = $('#dispNova').value; if (!v) return toast('Escolha uma data.', true);
+    if (draft.some(function (x) { return x.d === v; })) return toast('Essa data já está na lista.', true);
+    draft.push({ d: v, livre: true }); draft.sort(function (a, b) { return a.d < b.d ? -1 : 1; }); $('#dispNova').value = ''; drawDisp();
+  });
+  $('#dispLimpa').addEventListener('click', function () { const h = QE.hoje(); draft = draft.filter(function (x) { return x.d >= h; }); drawDisp(); });
+  $('#dispSalvar').addEventListener('click', async function () {
+    try { await QE.db.salvarDisponibilidade(draft); avail = clone(draft); toast('Disponibilidade salva'); } catch (e) { toast('Não foi possível salvar.', true); }
+  });
+
+  /* ---------- Tabelas e preços ---------- */
+  let td = null;
+  function renderTab() { td = clone(cfg); drawTab(); }
+  const numIn = function (attrs, v, ph) { return '<input type="number" step="any" ' + attrs + ' value="' + (v === null || v === undefined ? '' : v) + '"' + (ph !== undefined ? ' placeholder="' + ph + '"' : '') + '>'; };
+  function drawTab() {
+    let h = '<div class="tbox"><h3>Regras gerais</h3><div class="g3">' +
+      '<div class="f"><label>Nota fiscal (% sobre o total final)</label>' + numIn('data-g="nfPct"', td.nfPct) + '</div>' +
+      '<div class="f"><label>Desconto à vista (%)</label>' + numIn('data-g="descAvista"', td.descAvista) + '</div>' +
+      '<div class="f"><label>Validade padrão (dias)</label>' + numIn('data-g="validade"', td.validade) + '</div></div>' +
+      '<p class="hint" style="margin-top:10px">Taxa da operadora no cartão (%). Deixe vazio para não calcular no PDF.</p><div class="g3">' +
+      [3, 6, 12].map(function (m) { return '<div class="f"><label>' + m + 'x</label>' + numIn('data-c="m' + m + '"', td.cartao['m' + m]) + '</div>'; }).join('') + '</div></div>';
+
+    h += '<div class="tbox"><h3>Tabela de valores 2026</h3><table class="tbl"><tr><th>Pessoas</th><th>Pacote (R$)</th><th>Café (R$/pessoa)</th><th>Doces (R$/pessoa)</th><th></th></tr>' +
+      td.tabela.map(function (r, i) { return '<tr><td>' + numIn('data-t="tabela" data-i="' + i + '" data-k="q"', r.q) + '</td><td>' + numIn('data-t="tabela" data-i="' + i + '" data-k="pacote"', r.pacote) + '</td><td>' + numIn('data-t="tabela" data-i="' + i + '" data-k="cafe"', r.cafe) + '</td><td>' + numIn('data-t="tabela" data-i="' + i + '" data-k="doces"', r.doces) + '</td><td><button class="btn sm ghost" data-del="tabela" data-i="' + i + '">Remover</button></td></tr>'; }).join('') +
+      '</table><button class="btn sm" data-add="tabela">Adicionar faixa</button><p class="hint">Quantidades entre duas faixas usam a faixa seguinte (arredonda para cima).</p></div>';
+
+    h += '<div class="tbox"><h3>Regra de chopp</h3><table class="tbl"><tr><th>Pessoas</th><th>Barris de 50 L</th><th>Barris de 30 L</th><th></th></tr>' +
+      td.chopp.map(function (r, i) { return '<tr><td>' + numIn('data-t="chopp" data-i="' + i + '" data-k="q"', r.q) + '</td><td>' + numIn('data-t="chopp" data-i="' + i + '" data-k="b50"', r.b50) + '</td><td>' + numIn('data-t="chopp" data-i="' + i + '" data-k="b30"', r.b30) + '</td><td><button class="btn sm ghost" data-del="chopp" data-i="' + i + '">Remover</button></td></tr>'; }).join('') +
+      '</table><button class="btn sm" data-add="chopp">Adicionar faixa</button><p class="hint">A faixa de 300 pessoas (6 barris de 50 L) é uma estimativa, porque não estava na sua tabela.</p></div>';
+
+    h += '<div class="tbox"><h3>Preços dos serviços complementares</h3><p class="hint">Vazio = preço padrão (em cinza). Café e mesa de doces vêm da tabela acima.</p>' +
+      QE.CATALOGO.map(function (g) {
+        return '<p class="lbl" style="margin:12px 0 4px"><b>' + g.g + '</b> ' + esc(g.titulo) + '</p>' + g.linhas.filter(function (l) { return !l.auto; }).map(function (l) {
+          return '<div class="f" style="grid-template-columns:1fr 130px;align-items:center;gap:10px;margin-bottom:4px"><label style="font-size:.9rem;color:inherit">' + esc(l.nome) + '</label>' + numIn('data-p="' + l.id + '"', td.precos[l.id], l.preco) + '</div>';
+        }).join('');
+      }).join('') + '</div>';
+    $('#tabBody').innerHTML = h;
+  }
+  $('#tabBody').addEventListener('input', function (e) {
+    const t = e.target, v = t.value === '' ? null : Number(t.value);
+    if (t.dataset.g) td[t.dataset.g] = v;
+    else if (t.dataset.c) td.cartao[t.dataset.c] = v;
+    else if (t.dataset.t) td[t.dataset.t][+t.dataset.i][t.dataset.k] = v;
+    else if (t.dataset.p) { if (v === null) delete td.precos[t.dataset.p]; else td.precos[t.dataset.p] = v; }
+  });
+  $('#tabBody').addEventListener('click', function (e) {
+    const t = e.target;
+    if (t.dataset.del) { td[t.dataset.del].splice(+t.dataset.i, 1); drawTab(); }
+    if (t.dataset.add === 'tabela') { td.tabela.push({ q: 0, pacote: 0, cafe: 0, doces: 0 }); drawTab(); }
+    if (t.dataset.add === 'chopp') { td.chopp.push({ q: 0, b50: 0, b30: 0 }); drawTab(); }
+  });
+  $('#tabSalvar').addEventListener('click', async function () {
+    const ok = function (r) { return r.q > 0; };
+    td.tabela = td.tabela.filter(ok).sort(function (a, b) { return a.q - b.q; });
+    td.chopp = td.chopp.filter(ok).sort(function (a, b) { return a.q - b.q; });
+    if (!td.tabela.length || !td.chopp.length) return toast('As tabelas precisam ter pelo menos uma faixa.', true);
+    try { await QE.db.salvarConfig(td); cfg = QE.mergeConfig(td); toast('Tabelas salvas. Valem para os próximos cálculos.'); drawTab(); } catch (e) { toast('Não foi possível salvar.', true); }
+  });
+})();
+
+</script>
+</body>
+</html>
