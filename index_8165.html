@@ -1,0 +1,1571 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quinta dos Esquilos — Espaço de eventos em Cotia, SP</title>
+<meta name="description" content="Espaço de eventos com mais de 22.000 m² em Cotia (SP). Confraternizações corporativas, casamentos, aniversários, chás de bebê e muito mais. Solicite seu orçamento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+[hidden] { display: none !important; }
+/* Quinta dos Esquilos — paleta da apresentação corporativa */
+:root {
+  --espresso: #25130b; --bark: #563d27; --taupe: #7c6d5c; --linen: #ece6de; --paper: #f7f3ec;
+  --moss: #5d6a3a; --moss-d: #3f4a26; --gold: #c2a068; --gold-d: #9a7b45; --ink: #2a1c13; --r: 8px;
+  --serif: 'Marcellus', 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; font-family: var(--sans); font-size: 17px; line-height: 1.6; color: var(--ink); background: var(--paper); -webkit-font-smoothing: antialiased; }
+body.modal { overflow: hidden; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 400; line-height: 1.15; margin: 0; }
+h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); }
+h3 { font-size: 1.35rem; }
+h4 { font-size: 1.02rem; margin: 14px 0 4px; color: var(--gold-d); }
+p { margin: 0 0 1em; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hp { position: absolute; left: -9999px; opacity: 0; height: 0; }
+
+.btn { display: inline-block; font: 500 1rem/1 var(--sans); text-decoration: none; padding: 14px 24px; border-radius: 999px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.btn-gold { background: var(--gold); color: var(--espresso); }
+.btn-gold:hover { background: #d4b27c; }
+.btn-lg { padding: 18px 32px; font-size: 1.05rem; }
+.btn-xl { padding: 22px 44px; font-size: 1.2rem; }
+.btn-line-d { border-color: var(--bark); color: var(--bark); background: transparent; }
+.btn-line-d:hover { background: var(--linen); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+
+/* topo */
+.top { position: fixed; z-index: 10; inset: 0 0 auto 0; display: flex; align-items: center; gap: 28px; padding: 10px clamp(16px, 4vw, 48px); background: rgba(37, 19, 11, .95); backdrop-filter: blur(6px); }
+.brand img { height: 54px; width: auto; }
+.top nav { display: flex; gap: 24px; margin-left: auto; }
+.top nav a { color: var(--linen); text-decoration: none; font-size: .95rem; white-space: nowrap; }
+.top nav a:hover { color: var(--gold); }
+.top nav a.back { color: var(--gold); }
+.top nav a.back::before { content: '‹ '; }
+.top .btn { padding: 12px 22px; font-size: .92rem; white-space: nowrap; }
+.v-geral .n-corp, .v-corp .n-geral { display: none; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); min-height: 100svh; background: var(--espresso); color: var(--linen); }
+.hero-txt { padding: 130px clamp(20px, 5vw, 80px) 64px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+.hero-logo { width: min(240px, 60%); margin: 0 0 30px -6px; }
+.hero h1 { font-size: clamp(2.1rem, 4.6vw, 3.8rem); max-width: 16ch; color: #f4ece0; }
+.lead { font-size: 1.2rem; max-width: 36ch; margin: 24px 0 34px; color: #d9cfc1; }
+.hero-sub { margin: 26px 0 0; }
+.hero-sub a { color: #b5a796; text-underline-offset: 4px; }
+.hero-sub a:hover { color: var(--gold); }
+.hero-img { background: url(noite.jpg) center/cover no-repeat; min-height: 340px; }
+
+/* seções */
+.view > section { scroll-margin-top: 70px; }
+.sec { padding: clamp(60px, 8vw, 110px) 0; }
+.wrap { width: min(1120px, 100% - 40px); margin: 0 auto; }
+.wrap.two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.intro { font-size: 1.1rem; max-width: 62ch; margin: 18px 0 0; color: #4a3a2d; }
+.pull { font-family: var(--serif); font-size: 1.35rem; line-height: 1.4; color: var(--bark); margin-top: 22px; }
+.sec-dark { background: var(--bark); color: var(--linen); }
+.sec-dark .intro, .sec-dark p { color: #e6dccd; }
+.sec-linen { background: var(--linen); }
+.ph { width: 100%; border-radius: var(--r); object-fit: cover; }
+.ph.r { aspect-ratio: 4 / 3; }
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 24px 0 0; }
+.chips li { padding: 8px 16px; border: 1.5px solid var(--moss); color: var(--moss-d); border-radius: 999px; font-size: .95rem; }
+.chips-l li { border-color: var(--gold); color: var(--linen); }
+.tag { display: inline-block; margin: 0 0 12px; padding: 4px 12px; border-radius: 999px; background: var(--gold); color: var(--espresso) !important; font-size: .82rem; font-weight: 700; }
+.tag-l { background: #e3d9c7; }
+.sub { font-size: 1.5rem; margin: 48px 0 8px; }
+
+/* galeria */
+.gal { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 200px; gap: 12px; margin-top: 40px; }
+.gal figure { margin: 0; position: relative; overflow: hidden; border-radius: var(--r); }
+.gal img { width: 100%; height: 100%; object-fit: cover; }
+.gal figcaption { position: absolute; left: 0; bottom: 0; width: 100%; padding: 22px 14px 10px; color: #fff; font-size: .95rem; background: linear-gradient(to top, rgba(37, 19, 11, .78), transparent); }
+.g1 { grid-column: span 4; grid-row: span 2; } .g2 { grid-column: span 2; grid-row: span 3; }
+.g3, .g4 { grid-column: span 2; } .g5, .g6 { grid-column: span 3; }
+
+/* serviços e eventos */
+.svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 40px; margin-top: 36px; }
+.svc article { padding: 20px 0; border-top: 1px solid rgba(86, 61, 39, .25); }
+.svc h3 { font-size: 1.25rem; margin-bottom: 6px; color: var(--bark); }
+.svc p { margin: 0; color: #4a3a2d; font-size: .98rem; }
+.evt { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+.evt-card { background: #fff; border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; text-decoration: none; }
+.evt-card img { width: 100%; height: 170px; object-fit: cover; }
+.evt-card > div { padding: 18px 18px 22px; display: flex; flex-direction: column; flex: 1; }
+.evt-card h3 { margin-bottom: 6px; }
+.evt-card p { font-size: .95rem; color: #4a3a2d; flex: 1; }
+.evt-main { grid-column: span 4; flex-direction: row; background: var(--espresso); color: var(--linen); outline: 2px solid var(--gold); outline-offset: -2px; }
+.evt-main img { width: 46%; height: auto; min-height: 240px; }
+.evt-main > div { justify-content: center; padding: 28px clamp(20px, 4vw, 48px); }
+.evt-main h3 { font-size: 2rem; }
+.evt-main p { color: #d9cfc1; flex: 0; font-size: 1.05rem; max-width: 46ch; }
+.more { color: var(--gold-d); font-weight: 700; text-underline-offset: 4px; }
+.evt-main .more { color: var(--gold); text-decoration: none; }
+.evt-main .more::after { content: ' ›'; }
+blockquote { margin: 22px 0 0; padding: 0 0 0 20px; border-left: 3px solid var(--gold); }
+blockquote p { font-family: var(--serif); font-size: 1.12rem; line-height: 1.5; margin-bottom: .6em; }
+blockquote footer { font-size: .92rem; color: var(--taupe); }
+h2 + blockquote { margin-top: 28px; }
+
+/* corporativo */
+.c-hero { background: var(--espresso); color: var(--linen); padding: 150px 0 72px; }
+.c-hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); }
+.c-hero .lead { margin-top: 20px; }
+.pk { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; margin-top: 40px; align-items: start; }
+.pk article { padding: 34px clamp(20px, 3vw, 38px); border-radius: var(--r); }
+.pk ul { list-style: none; padding: 0; margin: 18px 0 0; }
+.pk li { padding: 11px 0; border-top: 1px solid rgba(37, 19, 11, .15); font-size: .98rem; }
+.pk-std { background: var(--linen); }
+.pk-prem { background: var(--espresso); color: var(--linen); outline: 2px solid var(--gold); outline-offset: -2px; }
+.pk-prem li { border-top-color: rgba(236, 230, 222, .18); }
+.pk-prem h3 { font-size: 2rem; }
+.pk-prem li b { color: var(--gold); font-weight: 500; }
+.menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; align-items: start; }
+.mn { background: #fff; border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; }
+.mn img { width: 100%; height: 230px; object-fit: cover; }
+.mn > div { padding: 20px 22px 22px; }
+.mn-hl { grid-column: span 3; flex-direction: row; outline: 2px solid var(--gold); outline-offset: -2px; }
+.mn-hl img { width: 42%; height: auto; aspect-ratio: 4 / 3; align-self: stretch; object-fit: cover; }
+.mn-hl > div { flex: 1; padding: 28px clamp(20px, 3vw, 40px); align-self: center; }
+.mn-hl h3 { font-size: 1.9rem; }
+.mn p { font-size: .98rem; color: #4a3a2d; margin: 0 0 8px; }
+.mn details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--gold-d); font-weight: 700; padding: 6px 0; }
+.mini { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 16px; }
+.mini figure { margin: 0; }
+.mini img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--r); }
+.mini figcaption { font-size: .9rem; padding-top: 6px; text-align: center; }
+.bar-ph { display: grid; grid-template-columns: 1.5fr 1.5fr 1fr 1fr; gap: 10px; margin-top: 32px; }
+.bar-ph img { width: 100%; height: 240px; object-fit: cover; border-radius: var(--r); }
+.pb { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+.pb article { background: rgba(255, 255, 255, .07); border-radius: var(--r); padding: 28px; border: 1px solid rgba(236, 230, 222, .2); }
+.pb .gold { border-color: var(--gold); background: rgba(194, 160, 104, .12); }
+.pb dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 14px 0 0; }
+.pb dt { color: var(--gold); }
+.pb dd { margin: 0; }
+.deco, .arv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 32px; }
+.deco img, .arv img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--r); }
+.arv img { aspect-ratio: 4 / 3; }
+.feat { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 32px; }
+.feat > div { border-top: 2px solid var(--gold); padding-top: 14px; }
+.feat h3 { font-size: 1.15rem; margin-bottom: 6px; }
+.feat p { font-size: .95rem; color: #4a3a2d; margin: 0; }
+.trio { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 10px; margin-top: 32px; }
+.trio img { width: 100%; height: 300px; object-fit: cover; border-radius: var(--r); }
+.cmp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 32px; }
+.cmp article { background: #fff; border-radius: var(--r); overflow: hidden; }
+.cmp img { width: 100%; height: 190px; object-fit: cover; }
+.cmp h3 { padding: 16px 18px 4px; font-size: 1.2rem; }
+.cmp p { padding: 0 18px 20px; margin: 0; font-size: .95rem; color: #4a3a2d; }
+.cta-end { margin-top: 64px; padding: 44px 24px; background: var(--espresso); color: var(--linen); border-radius: var(--r); text-align: center; }
+.cta-end h3 { font-size: 1.9rem; margin-bottom: 22px; }
+
+/* rodapé */
+.foot { background: var(--espresso); color: var(--linen); padding: 72px 0 56px; }
+.foot-grid { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 40px; }
+.foot-logo { width: 240px; margin-bottom: 14px; }
+.foot h3 { font-size: 1.15rem; color: var(--gold); margin-bottom: 14px; }
+.foot p { margin: 0 0 8px; }
+.foot-sm { font-size: .9rem; color: #b5a796; }
+.foot a { text-decoration-color: rgba(194, 160, 104, .6); text-underline-offset: 3px; }
+.foot a:hover { color: var(--gold); }
+
+/* janela do formulário */
+dialog { border: 0; padding: 0; border-radius: 12px; width: min(760px, calc(100% - 24px)); max-height: calc(100svh - 24px); background: var(--paper); color: var(--ink); box-shadow: 0 20px 70px rgba(0, 0, 0, .45); }
+dialog::backdrop { background: rgba(37, 19, 11, .72); }
+dialog[open] { display: flex; flex-direction: column; }
+.dlg-bar { display: flex; align-items: center; justify-content: space-between; padding: 18px 26px; background: var(--espresso); color: var(--linen); flex: none; }
+.dlg-bar h2 { font-size: 1.5rem; }
+.x { background: none; border: 0; color: var(--linen); font-size: 2rem; line-height: 1; cursor: pointer; padding: 0 6px; }
+.x:hover { color: var(--gold); }
+.dlg-body { padding: 24px 26px 30px; overflow-y: auto; }
+fieldset { border: 0; padding: 0; margin: 0 0 28px; min-width: 0; }
+legend { font-family: var(--serif); font-size: 1.25rem; padding: 0; margin-bottom: 12px; }
+.opc { font-family: var(--sans); font-size: .88rem; color: var(--taupe); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.f { margin-bottom: 14px; display: flex; flex-direction: column; }
+.f label { font-size: .92rem; font-weight: 500; margin-bottom: 6px; }
+.f small { margin-top: 5px; color: var(--taupe); font-size: .85rem; }
+input:not([type=radio]):not([type=checkbox]), textarea { font: inherit; width: 100%; padding: 13px 14px; border: 1.5px solid #c9bcad; border-radius: var(--r); background: #fff; color: var(--ink); }
+input:not([type=radio]):not([type=checkbox]):focus, textarea:focus { border-color: var(--bark); outline: 3px solid rgba(194, 160, 104, .5); outline-offset: 0; }
+.invalid { border-color: #b3261e !important; }
+.opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opt-grid.three { grid-template-columns: repeat(3, 1fr); }
+.opt { position: relative; display: block; cursor: pointer; }
+.opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.opt span { display: block; height: 100%; padding: 13px 14px 13px 44px; border: 1.5px solid #c9bcad; border-radius: var(--r); background: #fff; position: relative; line-height: 1.35; }
+.opt span::before { content: ''; position: absolute; left: 14px; top: 16px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--taupe); background: #fff; }
+.opt input[type=checkbox] + span::before { border-radius: 4px; }
+.opt input:checked + span { border-color: var(--moss); background: #f1f4e8; }
+.opt input[type=radio]:checked + span::before { border-color: var(--moss); background: radial-gradient(var(--moss) 0 45%, #fff 50%); }
+.opt input[type=checkbox]:checked + span::before { border-color: var(--moss); background: var(--moss) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") center/14px no-repeat; }
+.opt input:focus-visible + span { outline: 3px solid var(--gold); outline-offset: 2px; }
+.opt small { color: #5b4a3b; font-size: .85rem; }
+.datas { margin: 4px 0 0; padding: 14px; background: #fff; border: 1.5px dashed #c9bcad; border-radius: var(--r); }
+.datas p { margin: 0 0 10px; font-size: .92rem; color: #4a3a2d; }
+.datas-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.datas-list button { font: inherit; font-size: .92rem; padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--moss); background: #fff; color: var(--moss-d); cursor: pointer; }
+.datas-list button:hover, .datas-list button[aria-pressed=true] { background: var(--moss); color: #fff; }
+.erro { background: #fbe9e7; color: #8a1c14; border-left: 4px solid #b3261e; padding: 12px 16px; margin: 0 0 18px; border-radius: 0 var(--r) var(--r) 0; }
+.resumo { margin: 20px 0; display: grid; grid-template-columns: 170px 1fr; gap: 0; background: #fff; border-radius: var(--r); border: 1px solid #ddd2c2; }
+.resumo dt, .resumo dd { margin: 0; padding: 11px 16px; border-bottom: 1px solid #eee5d6; }
+.resumo dt { color: var(--taupe); font-size: .92rem; }
+.resumo dt:last-of-type, .resumo dd:last-of-type { border-bottom: 0; }
+.acts { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+.ok h3 { font-size: 1.8rem; margin-bottom: 12px; color: var(--moss-d); }
+
+/* responsivo */
+@media (max-width: 1000px) {
+  .top nav { display: none; }
+  .top .btn { margin-left: auto; }
+  .hero { grid-template-columns: 1fr; min-height: 0; }
+  .hero-img { order: -1; margin-top: 74px; min-height: 300px; }
+  .hero-txt { padding: 36px 22px 52px; }
+  .hero-logo { display: none; }
+  .wrap.two, .pk, .pb, .menu { grid-template-columns: 1fr; }
+  .mn-hl { grid-column: auto; }
+  .mn-hl { grid-column: auto; flex-direction: column; } .mn-hl img { width: 100%; aspect-ratio: 16 / 10; }
+  .gal { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 170px; }
+  .gal figure { grid-column: auto !important; grid-row: auto !important; } .g1 { grid-column: 1 / -1 !important; }
+  .svc, .cmp { grid-template-columns: 1fr 1fr; }
+  .evt { grid-template-columns: 1fr 1fr; } .evt-main { grid-column: 1 / -1; flex-direction: column; } .evt-main img { width: 100%; min-height: 200px; }
+  .feat, .deco, .arv { grid-template-columns: 1fr 1fr; }
+  .trio, .bar-ph { grid-template-columns: 1fr 1fr; } .trio img, .bar-ph img { height: 200px; }
+  .mini { grid-template-columns: repeat(3, 1fr); }
+  .foot-grid { grid-template-columns: 1fr; }
+  .c-hero { padding-top: 120px; }
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .brand img { height: 42px; }
+  .svc, .cmp, .evt, .feat { grid-template-columns: 1fr; }
+  .row2, .opt-grid, .opt-grid.three { grid-template-columns: 1fr; }
+  .resumo { grid-template-columns: 1fr; } .resumo dt { border-bottom: 0; padding-bottom: 0; }
+  .mini { grid-template-columns: 1fr 1fr; }
+  .dlg-body { padding: 20px 18px 26px; }
+  .acts .btn { width: 100%; text-align: center; }
+  .btn-xl { padding: 20px 30px; font-size: 1.1rem; }
+}
+
+.dt { font-family: var(--serif); font-size: 1.1rem; margin: 0 0 2px !important; color: var(--ink) !important; }
+.dt-s { font-size: .88rem !important; }
+
+.cal { background: #fff; border: 1.5px solid #c9bcad; border-radius: var(--r); padding: 14px; margin: 0 0 14px; }
+.cal-t { font-family: var(--serif); font-size: 1.1rem; margin: 0 0 8px !important; }
+.cal-ms { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.cal-m b { display: block; margin-bottom: 6px; font-size: .95rem; }
+.cal-g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+.cal-g i { font-style: normal; font-size: .75rem; color: var(--taupe); }
+.cal-g span, .cal-g button { aspect-ratio: 1; display: grid; place-items: center; border-radius: 6px; font: inherit; font-size: .88rem; border: 0; background: transparent; }
+.cal-g .na { color: #b9b1a5; }
+.cal-g .sold { color: #b3261e; background: #f7e4e1; text-decoration: line-through; }
+.cal-g button.free { background: #eaf1dd; color: var(--moss-d); font-weight: 700; border: 1.5px solid var(--moss); cursor: pointer; }
+.cal-g button.free:hover, .cal-g button.free.on { background: var(--moss); color: #fff; }
+.cal-l { font-size: .82rem; color: var(--taupe); margin: 10px 0 0 !important; }
+.cal-l i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px; }
+.cal-l i.free { background: #eaf1dd; border: 1.5px solid var(--moss); } .cal-l i.sold { background: #f7e4e1; } .cal-l i.na { background: #e8e3da; }
+
+</style>
+</head>
+<body class="v-geral">
+
+<header class="top">
+  <a class="brand" href="#inicio" data-nav="geral" aria-label="Quinta dos Esquilos — início"><img src="logo-dourado.png" alt="Quinta dos Esquilos — Espaço de eventos"></a>
+  <nav class="n-geral" aria-label="Principal">
+    <a href="#sobre">Sobre nós</a>
+    <a href="#espaco">O espaço</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#eventos">Eventos</a>
+    <a href="#depoimentos">Depoimentos</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <nav class="n-corp" aria-label="Corporativo">
+    <a href="#inicio" class="back">Início</a>
+    <a href="#c-pacotes">Pacotes</a>
+    <a href="#c-gastronomia">Gastronomia</a>
+    <a href="#c-bar">Bar</a>
+    <a href="#c-decoracao">Decoração</a>
+    <a href="#c-musica">Música</a>
+    <a href="#c-complementares">Complementares</a>
+  </nav>
+  <button class="btn btn-gold" type="button" data-open-form>Solicitar orçamento</button>
+</header>
+
+<main>
+<!-- ======================= GERAL ======================= -->
+<div id="view-geral" class="view">
+
+  <section id="inicio" class="hero">
+    <div class="hero-txt">
+      <img class="hero-logo" src="logo-dourado.png" alt="Quinta dos Esquilos — Espaço de eventos">
+      <h1>Tudo que você procura para o seu evento ser inesquecível</h1>
+      <p class="lead">Mais de 22.000&nbsp;m² de natureza em Cotia, com equipe própria do buffet à decoração.</p>
+      <button class="btn btn-gold btn-xl" type="button" data-open-form>Solicitar orçamento</button>
+      <p class="hero-sub"><a href="#sobre">Conheça a Quinta dos Esquilos</a></p>
+    </div>
+    <div class="hero-img" role="img" aria-label="Gazebo iluminado entre árvores à noite na Quinta dos Esquilos"></div>
+  </section>
+
+  <section id="sobre" class="sec">
+    <div class="wrap two">
+      <div>
+        <h2>Sobre nós</h2>
+        <p class="intro">O espaço Quinta dos Esquilos é o lugar ideal para você que deseja celebrar os momentos especiais da vida.</p>
+        <p>Com um conceito exótico e intimista, o local conta com mais de 22.000&nbsp;m² de entretenimento para todas as idades, além de diversas opções de serviços.</p>
+        <p class="pull">Estrutura completa com equipe própria, preparada para atender cada detalhe do seu evento com excelência.</p>
+      </div>
+      <img class="ph r" src="piscina.jpg" alt="Piscina com deck e pergolado" loading="lazy">
+    </div>
+  </section>
+
+  <section id="espaco" class="sec sec-dark">
+    <div class="wrap">
+      <h2>O espaço</h2>
+      <p class="intro">O cenário perfeito para grandes momentos. Piscina, campo de futebol, salão de jogos, mini arvorismo, tirolesa, redário e fogueira.</p>
+      <div class="gal">
+        <figure class="g1"><img src="piscina.jpg" alt="Piscina" loading="lazy"><figcaption>Piscina</figcaption></figure>
+        <figure class="g2"><img src="redario.jpg" alt="Redário e fogueira à noite" loading="lazy"><figcaption>Redário e fogueira</figcaption></figure>
+        <figure class="g3"><img src="arvorismo.jpg" alt="Mini arvorismo" loading="lazy"><figcaption>Mini arvorismo e tirolesa</figcaption></figure>
+        <figure class="g4"><img src="campo.jpg" alt="Campo de futebol" loading="lazy"><figcaption>Campo de futebol</figcaption></figure>
+        <figure class="g5"><img src="jogos.jpg" alt="Salão de jogos" loading="lazy"><figcaption>Salão de jogos</figcaption></figure>
+        <figure class="g6"><img src="arvore.jpg" alt="Áreas verdes ao lado da piscina" loading="lazy"><figcaption>Áreas verdes</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicos" class="sec">
+    <div class="wrap">
+      <h2>Nossos serviços</h2>
+      <p class="intro">Mão de obra própria e as melhores marcas, para o seu evento ter uma experiência única.</p>
+      <div class="svc">
+        <article><h3>Buffet</h3><p>Equipe própria, variedades gastronômicas, qualidade e apresentação.</p></article>
+        <article><h3>Bar de drinks</h3><p>Bartenders experientes, amplo cardápio, drinks tradicionais e autorais.</p></article>
+        <article><h3>Confeitaria</h3><p>Confeiteira especializada, cardápio personalizado, doces e bolos.</p></article>
+        <article><h3>Chopp</h3><p>Germânia, Brahma ou Heineken.</p></article>
+        <article><h3>Banda e DJ</h3><p>Sertanejo e diversos estilos, samba e pagode, pop rock. DJ conforme o perfil do cliente, com som e iluminação.</p></article>
+        <article><h3>Decoração</h3><p>Decoradora e florista próprias. Projetos únicos.</p></article>
+        <article><h3>Mini arvorismo</h3><p>Para adultos e crianças, com monitores.</p></article>
+        <article><h3>Cabine de fotos</h3><p>Túnel de LED infinito.</p></article>
+        <article><h3>Diversos</h3><p>Carrinho de sorvete, recreadores, cama elástica, brinquedos infláveis, touro mecânico e backdrop.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="eventos" class="sec sec-linen">
+    <div class="wrap">
+      <h2>Eventos que fazemos</h2>
+      <p class="intro">Cada celebração ganha um projeto próprio. Escolha o tipo de evento para conhecer as opções.</p>
+      <div class="evt">
+        <a class="evt-card evt-main" href="#corporativo" data-nav="corp">
+          <img src="depoimentos.jpg" alt="Equipe reunida na piscina durante confraternização" loading="lazy">
+          <div><h3>Corporativo</h3><p>Confraternizações de fim de ano e eventos temáticos para empresas. Pacotes, cardápios, bar, decoração e atrações.</p><span class="more">Ver pacotes e cardápios</span></div>
+        </a>
+        <div class="evt-card">
+          <img src="mesa.jpg" alt="Mesa posta com flores" loading="lazy">
+          <div><h3>Casamento</h3><p>Cerimônia e festa em meio à natureza.</p><a class="more" href="#contato" data-wa="Olá! Gostaria de saber mais sobre casamentos na Quinta dos Esquilos.">Falar com a gente</a></div>
+        </div>
+        <div class="evt-card">
+          <img src="mesadoces1.jpg" alt="Mesa de doces decorada com flores" loading="lazy">
+          <div><h3>Aniversário</h3><p>Para todas as idades, com buffet, doces e atrações.</p><a class="more" href="#contato" data-wa="Olá! Gostaria de saber mais sobre aniversários na Quinta dos Esquilos.">Falar com a gente</a></div>
+        </div>
+        <div class="evt-card">
+          <img src="deco4.jpg" alt="Arranjo de flores coloridas" loading="lazy">
+          <div><h3>Chá de bebê e revelação</h3><p>Momentos em família com decoração delicada.</p><a class="more" href="#contato" data-wa="Olá! Gostaria de saber mais sobre chá de bebê / revelação na Quinta dos Esquilos.">Falar com a gente</a></div>
+        </div>
+        <div class="evt-card">
+          <img src="arv1.jpg" alt="Estrutura de mini arvorismo entre as árvores" loading="lazy">
+          <div><h3>Outros eventos</h3><p>Formaturas, encontros de família e outras ocasiões.</p><a class="more" href="#contato" data-wa="Olá! Gostaria de saber mais sobre eventos na Quinta dos Esquilos.">Falar com a gente</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="depoimentos" class="sec">
+    <div class="wrap two">
+      <img class="ph r" src="depoimentos.jpg" alt="Equipe comemorando ao lado da piscina" loading="lazy">
+      <div>
+        <h2>Depoimentos</h2>
+        <blockquote>
+          <p>A Quinta dos Esquilos foi uma grata surpresa! (…) Planejei a festa de final de ano do meu time com eles e só tenho elogios a fazer – todos simplesmente amaram!</p>
+          <p>(…) O grande diferencial foi, sem dúvida, a equipe. Desde os proprietários até os garçons e cozinheiros, todos foram extremamente simpáticos, educados, prestativos e atenciosos.</p>
+          <footer>Camila Barros · avaliação 5 estrelas no Google</footer>
+        </blockquote>
+        <blockquote>
+          <p>Lugar incrível. Proprietários super atenciosos, simpáticos. Tanto que meu casamento foi nesse local recentemente. (…) Festa em geral, podem contratar e conhecer não vão se arrepender.</p>
+          <footer>Gabriel Pires · avaliação 5 estrelas no Google</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ======================= CORPORATIVO ======================= -->
+<div id="view-corp" class="view" hidden>
+
+  <section id="corporativo" class="c-hero">
+    <div class="wrap">
+      <h1>Eventos corporativos</h1>
+      <p class="lead">Confraternizações de fim de ano e eventos temáticos para a sua empresa, com tudo pronto: espaço, buffet, bebidas, música e decoração.</p>
+      <button class="btn btn-gold btn-lg" type="button" data-open-form>Solicitar orçamento</button>
+    </div>
+  </section>
+
+  <section id="c-pacotes" class="sec">
+    <div class="wrap">
+      <h2>Nossos pacotes</h2>
+      <p class="intro">Contamos com mão de obra própria e trabalhamos com as melhores marcas de produtos para que o seu cliente tenha uma experiência única.</p>
+      <div class="pk">
+        <article class="pk-std">
+          <h3>Standard</h3>
+          <ul>
+            <li><b>Espaço</b> com piscina, campo de futebol, salão de jogos, lareira externa com redário e fácil acesso a partir de São Paulo</li>
+            <li><b>Buffet</b> churrasco Standard ou outras opções de cardápio</li>
+            <li><b>Bebidas não alcoólicas</b>: água, suco e refrigerante</li>
+            <li><b>Decoração básica</b> com decoradora própria, não tematizada</li>
+            <li><b>Chopp</b> Germânia, com outras opções disponíveis</li>
+            <li><b>DJ</b> com equipamento de som profissional</li>
+          </ul>
+        </article>
+        <article class="pk-prem">
+          <p class="tag">Mais vendido</p>
+          <h3>Premium</h3>
+          <ul>
+            <li><b>Espaço</b> com piscina, campo de futebol, salão de jogos, lareira externa com redário e fácil acesso a partir de São Paulo</li>
+            <li><b>Buffet</b> churrasco Premium ou outras opções de cardápio</li>
+            <li><b>Bebidas não alcoólicas</b>: água, suco e refrigerante</li>
+            <li><b>Decoração</b> com projeto personalizado e decoradora própria</li>
+            <li><b>Chopp</b> Germânia, com outras opções disponíveis</li>
+            <li><b>Bar de drinks</b> pacote Prata, com possibilidade de upgrade e diversas opções de drinks</li>
+            <li><b>DJ</b> com equipamento de som profissional</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="c-gastronomia" class="sec sec-linen">
+    <div class="wrap">
+      <h2>Opções gastronômicas</h2>
+      <p class="intro">Ingredientes frescos, sabores autênticos e uma experiência memorável. Mais que uma refeição.</p>
+
+      <div class="menu">
+        <article class="mn mn-hl">
+          <img src="churrasco-premium.jpg" alt="Churrasco premium com cortes nobres" loading="lazy">
+          <div>
+            <p class="tag">Incluso no pacote Premium</p>
+            <h3>Churrasco Premium</h3>
+            <p>Buffet incrível com cortes nobres.</p>
+            <details><summary>Ver cardápio</summary>
+              <h4>Entradas</h4><p>Bolinha de queijo, coxinha de frango, bolinho de carne seca, empada de palmito, esfiha de carne, palitinho de marguerita, guacamole com nachos e tábua de linguiça toscana com molho verde.</p>
+              <h4>Carnes</h4><p>Linguiça toscana, linguiça apimentada, bife ancho, fraldinha, alcatra, picanha, tulipa, coração de frango e cupim.</p>
+              <h4>Acompanhamentos</h4><p>Arroz branco, banana milanesa, batata frita, farofa temperada, vinagrete, batata bolinha tipo petisco, feijão tropeiro, queijo coalho e pão de alho.</p>
+              <h4>Saladas e molhos</h4><p>Salada de maionese, caponata de abobrinha e salada mista. Molhos Caesar, mostarda e mel, e limão pepper.</p>
+            </details>
+          </div>
+        </article>
+        <article class="mn">
+          <img src="churrasco-standard.jpg" alt="Espetos de churrasco no buffet" loading="lazy">
+          <div>
+            <p class="tag tag-l">Incluso no pacote Standard</p>
+            <h3>Churrasco Standard</h3>
+            <details><summary>Ver cardápio</summary>
+              <h4>Entradas</h4><p>Bolinha de queijo, coxinha de frango, bolinho de carne seca, empada de palmito, esfiha de carne, palitinho de marguerita, guacamole com nachos e tábua de linguiça toscana com molho verde.</p>
+              <h4>Carnes</h4><p>Linguiça toscana, linguiça apimentada, espeto de carne bovina e espeto de frango.</p>
+              <h4>Acompanhamentos</h4><p>Arroz branco, banana milanesa, batata frita, farofa temperada, vinagrete, feijão tropeiro, queijo coalho e pão de alho.</p>
+              <h4>Saladas e molhos</h4><p>Salada de maionese, caponata de abobrinha e salada mista. Molhos Caesar, mostarda e mel, e limão pepper.</p>
+            </details>
+          </div>
+        </article>
+        <article class="mn">
+          <img src="cafe.jpg" alt="Mesa de café da manhã com flores" loading="lazy">
+          <div>
+            <p class="tag tag-l">Opcional, não incluso nos pacotes</p>
+            <h3>Café da manhã</h3>
+            <details><summary>Ver cardápio</summary>
+              <h4>Salgados</h4><p>Salsicha ao molho, ovos mexidos, queijo prato, presunto, salame, pão francês, pão de forma, pão de queijo, mini esfirra, enroladinho de presunto e queijo, manteiga e requeijão.</p>
+              <h4>Doces</h4><p>Bolo de cenoura, bolo de chocolate, geleia de morango e frutas da época.</p>
+              <h4>Bebidas</h4><p>Café, leite, chocolate, chás, água e suco.</p>
+            </details>
+          </div>
+        </article>
+        <article class="mn">
+          <img src="mesadoces2.jpg" alt="Mesa de doces com tortas e pudim" loading="lazy">
+          <div>
+            <p class="tag tag-l">Opcional, não incluso nos pacotes</p>
+            <h3>Mesa de doces</h3>
+            <details><summary>Ver cardápio</summary>
+              <h4>Doces</h4><p>Tortinha de limão com cobertura de frutas vermelhas, torta de coco, pudim de leite, merengue de morango, bolo de cenoura ou ninho, carolina, brigadeiro ou beijinho e petit four.</p>
+              <h4>Bebidas</h4><p>Café, chás, água, suco (2 sabores) e refrigerante.</p>
+            </details>
+          </div>
+        </article>
+      </div>
+
+      <h3 class="sub">Menus diversos</h3>
+      <p>Não inclusos nos pacotes. Pedimos o orçamento junto com o seu evento.</p>
+      <div class="mini">
+        <figure><img src="carnes.jpg" alt="Buffet de carnes e massas" loading="lazy"><figcaption>Carnes e massas</figcaption></figure>
+        <figure><img src="feijoada.jpg" alt="Feijoada servida em panelas de barro" loading="lazy"><figcaption>Feijoada</figcaption></figure>
+        <figure><img src="finger.jpg" alt="Finger food em porções individuais" loading="lazy"><figcaption>Finger food</figcaption></figure>
+        <figure><img src="crepe.jpg" alt="Estação de crepe" loading="lazy"><figcaption>Crepe</figcaption></figure>
+        <figure><img src="doces.jpg" alt="Mesa de antepastos e doces" loading="lazy"><figcaption>Mesa de antepastos</figcaption></figure>
+      </div>
+      <ul class="chips"><li>Pizza</li><li>Boteco</li><li>Junino</li><li>Brasilidades</li><li>Cardápio personalizado</li></ul>
+    </div>
+  </section>
+
+  <section id="c-bar" class="sec sec-dark">
+    <div class="wrap">
+      <h2>Bar da Quinta</h2>
+      <p class="intro">Drinks deliciosos para o seu evento, com equipe experiente, drinks incríveis e material completo.</p>
+      <div class="bar-ph">
+        <img src="bar-time.jpg" alt="Equipe de bartenders no bar da Quinta" loading="lazy">
+        <img src="drinks.jpg" alt="Taças de drinks coloridos" loading="lazy">
+        <img src="drink1.jpg" alt="Drink de frutas vermelhas" loading="lazy">
+        <img src="drink3.jpg" alt="Drinks em canecas de cobre" loading="lazy">
+      </div>
+      <div class="pb">
+        <article>
+          <h3>Pacote Prata</h3>
+          <p class="tag">Incluso no pacote Premium</p>
+          <dl>
+            <dt>Vodka</dt><dd>Smirnoff</dd>
+            <dt>Gin</dt><dd>Gordon's</dd>
+            <dt>Cachaça</dt><dd>Velho Barreiro</dd>
+            <dt>Rum</dt><dd>Bacardi</dd>
+            <dt>Saquê</dt><dd>Azuma Kirin</dd>
+            <dt>Energético</dt><dd>Baly</dd>
+          </dl>
+        </article>
+        <article class="gold">
+          <h3>Pacote Ouro</h3>
+          <p class="tag">Upgrade</p>
+          <dl>
+            <dt>Vodka</dt><dd>Absolut</dd>
+            <dt>Gin</dt><dd>Tanqueray</dd>
+            <dt>Cachaça</dt><dd>Sagatiba</dd>
+            <dt>Rum</dt><dd>Bacardi</dd>
+            <dt>Saquê</dt><dd>Azuma Kirin</dd>
+            <dt>Energético</dt><dd>Red Bull</dd>
+            <dt>Mais drinks</dt><dd>Aperol Spritz, Negroni e Fitzgerald</dd>
+          </dl>
+        </article>
+      </div>
+      <h3 class="sub">Nos dois pacotes</h3>
+      <ul class="chips chips-l">
+        <li>Caipirinha gourmet</li><li>Festival Moscow Mule</li><li>Gin gourmet</li><li>Festival soda italiana</li><li>Pina colada</li><li>Mojitos</li>
+      </ul>
+      <p>Adicionais: bolha comestível, drinks personalizados e drinks com picolé.</p>
+    </div>
+  </section>
+
+  <section id="c-decoracao" class="sec">
+    <div class="wrap">
+      <h2>Decoração</h2>
+      <p class="intro">Ambientes que contam histórias. Decoração personalizada para tornar cada momento ainda mais especial, unindo a beleza da natureza com elegância, conforto e atenção aos detalhes, com o tema da sua empresa.</p>
+      <ul class="chips"><li>Decoração personalizada</li><li>Projeto exclusivo</li><li>Flores naturais</li><li>Equipe completa</li></ul>
+      <div class="deco">
+        <img src="deco1.jpg" alt="Mesa longa decorada com flores" loading="lazy">
+        <img src="deco3.jpg" alt="Mesa preta com arranjo laranja" loading="lazy">
+        <img src="deco4.jpg" alt="Arranjo de flores coloridas" loading="lazy">
+        <img src="deco5.jpg" alt="Mesa redonda decorada" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section id="c-backdrop" class="sec sec-linen">
+    <div class="wrap two">
+      <img class="ph r" src="backdrop.jpg" alt="Backdrop com a arte da empresa ao lado da piscina" loading="lazy">
+      <div>
+        <h2>Backdrop</h2>
+        <p class="intro">Painel com a arte da sua empresa, em alta definição.</p>
+        <p>Execução da lona, estrutura metálica e instalação. A empresa envia a arte, e a gente cuida do resto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="c-musica" class="sec">
+    <div class="wrap">
+      <h2>Banda e DJ</h2>
+      <p class="intro">Música para animar o seu evento, com estrutura completa de som e iluminação.</p>
+      <div class="feat">
+        <div><h3>DJ profissional</h3><p>De acordo com a sua preferência musical.</p></div>
+        <div><h3>Microfones</h3><p>À disposição na área do palco.</p></div>
+        <div><h3>Estrutura completa</h3><p>Som e iluminação para o seu evento.</p></div>
+        <div><h3>Banda</h3><p>Sertanejo e diversos estilos: samba e pagode, pop rock, MPB e muito mais.</p></div>
+      </div>
+      <div class="trio">
+        <img src="banda.jpg" alt="Banda tocando no palco" loading="lazy">
+        <img src="dj.jpg" alt="DJ na cabine decorada" loading="lazy">
+        <img src="banda2.jpg" alt="Show ao vivo com dupla sertaneja" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section id="c-arvorismo" class="sec sec-dark">
+    <div class="wrap">
+      <h2>Mini arvorismo</h2>
+      <p class="intro">Para crianças e adultos. Ótima opção para integração da equipe e fotos incríveis para recordação.</p>
+      <div class="arv">
+        <img src="arv1.jpg" alt="Mini arvorismo com passarelas" loading="lazy">
+        <img src="arv2.jpg" alt="Ponte de madeira do mini arvorismo" loading="lazy">
+        <img src="arv3.jpg" alt="Torre com escorregador" loading="lazy">
+        <img src="arv4.jpg" alt="Passarela suspensa entre as torres" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section id="c-complementares" class="sec">
+    <div class="wrap">
+      <h2>Serviços complementares</h2>
+      <p class="intro">Ainda mais opções para animar o seu evento. Você escolhe depois de receber o orçamento.</p>
+      <div class="cmp">
+        <article><img src="sorvete.jpg" alt="Carrinho de sorvete" loading="lazy"><h3>Carrinho de sorvete</h3><p>Sorvetes tipo picolé, com opções de personalização. Período de 2 horas.</p></article>
+        <article><img src="cama.jpg" alt="Cama elástica gigante" loading="lazy"><h3>Cama elástica</h3><p>Cama elástica gigante com 4 metros de diâmetro. Período de 5 horas, com monitor.</p></article>
+        <article><img src="cabine.jpg" alt="Cabine de fotos com túnel de LED" loading="lazy"><h3>Cabine de fotos</h3><p>Túnel de LED infinito, personalização com o tema da empresa, adornos e fotos e vídeos para redes sociais.</p></article>
+        <article><img src="apresentacao.jpg" alt="Tela de apresentação em salão com cadeiras" loading="lazy"><h3>Apresentação corporativa</h3><p>Tela de 3 m x 2 m, entrada HDMI, mesa de apoio para notebook, áudio e microfones.</p></article>
+        <article><img src="inflaveis.jpg" alt="Brinquedo inflável" loading="lazy"><h3>Brinquedos infláveis</h3><p>Escorregador inflável, guerra de cotonete e touro mecânico. Período de 5 horas, com monitor.</p></article>
+        <article><img src="bar-frente.jpg" alt="Bar de chopp" loading="lazy"><h3>Chopp</h3><p>Germânia, Brahma ou Heineken, em barris de 30 ou 50 litros, com chopeira elétrica.</p></article>
+      </div>
+      <ul class="chips"><li>Fotografia e vídeo</li><li>Recreadores</li><li>Banda ao vivo</li><li>Gerador stand by</li><li>Pessoas complementares</li></ul>
+      <div class="cta-end">
+        <h3>Vamos planejar o seu próximo evento?</h3>
+        <button class="btn btn-gold btn-lg" type="button" data-open-form>Solicitar orçamento</button>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer id="contato" class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <img class="foot-logo" src="logo-dourado.png" alt="Quinta dos Esquilos — Espaço de eventos">
+      <p class="foot-sm">Quinta dos Esquilos Festas e Eventos Ltda.<br>CNPJ 47.131.561/0001-93</p>
+    </div>
+    <div>
+      <h3>Contatos</h3>
+      <p><b>Rodrigo e Ana</b> <a href="https://wa.me/5511956992345">(11) 95699-2345</a></p>
+      <p><a href="mailto:quintadosesquilos@gmail.com">quintadosesquilos@gmail.com</a></p>
+      <p><a href="https://www.instagram.com/quintadosesquilos" target="_blank" rel="noopener">@quintadosesquilos</a></p>
+      <p class="foot-sm">Temos visitas todas as semanas. Se quiser, agendamos um horário.</p>
+    </div>
+    <div>
+      <h3>Como chegar</h3>
+      <p>Travessa Yoshinaga, 07<br>Bairro Aguassaí, Cotia (SP)<br>CEP 06720-000</p>
+      <p class="foot-sm">Metrô Butantã: 47 km · Morumbi: 48 km<br>Centro Histórico de São Paulo: 63 km</p>
+      <p><a href="https://maps.app.goo.gl/QAAUgdxak5EZWuup7?g_st=iw" target="_blank" rel="noopener">Abrir no Google Maps</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ======================= FORMULÁRIO (janela) ======================= -->
+<dialog id="dlg" aria-labelledby="dlgTitulo">
+  <div class="dlg-bar">
+    <h2 id="dlgTitulo">Solicitar orçamento</h2>
+    <button class="x" type="button" data-close aria-label="Fechar">×</button>
+  </div>
+
+  <div id="stForm" class="dlg-body">
+    <p class="intro">Responda tudo para a gente conseguir enviar o orçamento. Leva cerca de dois minutos.</p>
+    <form id="form" novalidate>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <fieldset>
+        <legend>Sobre você</legend>
+        <div class="row2">
+          <div class="f"><label for="empresa">Solicitante / empresa</label><input id="empresa" name="empresa" required autocomplete="organization"></div>
+          <div class="f"><label for="nomeContato">Seu nome</label><input id="nomeContato" name="contato" required autocomplete="name"></div>
+        </div>
+        <div class="row2">
+          <div class="f"><label for="email">E-mail</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+          <div class="f"><label for="telefone">WhatsApp</label><input id="telefone" name="telefone" type="tel" required autocomplete="tel" placeholder="(11) 99999-9999" maxlength="15" inputmode="tel"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Data e quantidade</legend>
+        <div class="row2">
+          <div class="f"><label for="data">Data pretendida</label><input id="data" name="dataEvento" type="date" required></div>
+          <div class="f"><label for="qtd">Quantidade de pessoas</label><input id="qtd" name="qtd" type="number" inputmode="numeric" min="10" max="1000" required><small>Adultos e crianças.</small></div>
+        </div>
+        <div id="dtAviso" class="erro" role="alert" hidden>
+          <b>Esta data não está disponível.</b> Você pode escolher outra data no calendário abaixo.
+        </div>
+        <div id="cal" class="cal" hidden></div>
+        <div id="datas" class="datas" hidden>
+          <p class="dt">Datas disponíveis para o final do ano (2026)</p><p class="dt-s">Toque na data para escolher:</p>
+          <div id="datasLista" class="datas-list"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Tipo de evento</legend>
+        <div class="opt-grid">
+          <label class="opt"><input type="radio" name="tipo" value="final_ano"><span>Confraternização - final de ano</span></label>
+          <label class="opt"><input type="radio" name="tipo" value="tematico"><span>Confraternização - temática</span></label>
+        </div>
+        <div class="f" id="temaBox" hidden><label for="tema">Qual é o tema?</label><input id="tema" name="tema"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pacote de interesse</legend>
+        <div class="opt-grid">
+          <label class="opt"><input type="radio" name="escopo" value="premium"><span><b>Premium</b><br><small>Espaço, buffet premium, bebidas não alcoólicas, bar de drinks, chopp, DJ e decoração personalizada</small></span></label>
+          <label class="opt"><input type="radio" name="escopo" value="standard"><span><b>Standard</b><br><small>Espaço, buffet standard, chopp, DJ, bebidas não alcoólicas e decoração básica</small></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Preferência de cardápio <span class="opc">(escolha um)</span></legend>
+        <div class="opt-grid three" id="cardapios"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Café da manhã</legend>
+        <div class="opt-grid">
+          <label class="opt"><input type="radio" name="cafe" value="sim"><span>Sim, quero incluir</span></label>
+          <label class="opt"><input type="radio" name="cafe" value="nao"><span>Não preciso</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Mesa de doces</legend>
+        <div class="opt-grid">
+          <label class="opt"><input type="radio" name="doces" value="sim"><span>Sim, quero incluir</span></label>
+          <label class="opt"><input type="radio" name="doces" value="nao"><span>Não preciso</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Nota fiscal</legend>
+        <div class="opt-grid">
+          <label class="opt"><input type="radio" name="nf" value="sim"><span>Preciso de nota fiscal</span></label>
+          <label class="opt"><input type="radio" name="nf" value="nao"><span>Não preciso</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Algo mais que devemos saber? <span class="opc">(opcional)</span></legend>
+        <div class="f"><label for="obs" class="sr">Observações</label><textarea id="obs" name="obs" rows="3" placeholder="Atrações, restrições alimentares, horário preferido…"></textarea></div>
+      </fieldset>
+
+      <p id="erro" class="erro" role="alert" hidden></p>
+      <button class="btn btn-gold btn-lg" type="submit">Revisar pedido</button>
+    </form>
+  </div>
+
+  <div id="stRev" class="dlg-body" hidden>
+    <p class="intro">Confira os dados antes de enviar. Se estiver tudo certo, confirme.</p>
+    <dl id="resumo" class="resumo"></dl>
+    <p id="erroEnvio" class="erro" role="alert" hidden></p>
+    <div class="acts">
+      <button class="btn btn-line-d" type="button" id="voltar">Voltar e editar</button>
+      <button class="btn btn-gold btn-lg" type="button" id="confirmar">Confirmar e enviar</button>
+    </div>
+  </div>
+
+  <div id="stOk" class="dlg-body ok" hidden tabindex="-1">
+    <h3>Pedido enviado</h3>
+    <p id="okTxt"></p>
+    <p>Nossa equipe vai preparar o orçamento e responder em breve. Se preferir, fale com a gente agora:</p>
+    <div class="acts">
+      <a id="okWa" class="btn btn-gold" target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <button class="btn btn-line-d" type="button" data-close>Fechar</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
+<script>
+/* ==========================================================================
+   Quinta dos Esquilos — núcleo (regras de preço + dados + banco)
+   Funciona no navegador e no Node (para testes).
+   ========================================================================== */
+(function (root) {
+  'use strict';
+  const QE = {};
+
+  /* ---------- Contatos fixos ---------- */
+  QE.CONTATOS = {
+    telefone: '(11) 95699-2345',
+    wa: '5511956992345',
+    rodrigo: '(11) 95699-2345',
+    ana: '(11) 95699-2345',
+    rodrigoWa: '5511956992345',
+    anaWa: '5511956992345',
+    email: 'quintadosesquilos@gmail.com',
+    site: 'www.quintadosesquilos.com.br',
+    insta: '@quintadosesquilos',
+    cnpj: '47.131.561/0001-93',
+    endereco: 'Travessa Yoshinaga, 07 - Bairro Aguassaí - CEP 06720-000 - Cotia - SP',
+    mapsNome: 'Chácara Quinta dos Esquilos',
+    mapsLink: 'https://maps.app.goo.gl/QAAUgdxak5EZWuup7?g_st=iw'
+  };
+
+  /* ---------- Tabela de valores 2026 (foto 1) ---------- */
+  QE.TABELA = [
+    { q: 20, pacote: 22800, cafe: 95, doces: 66.5 },
+    { q: 30, pacote: 24300, cafe: 95, doces: 66.5 },
+    { q: 40, pacote: 25200, cafe: 90, doces: 63 },
+    { q: 50, pacote: 28100, cafe: 85, doces: 59.5 },
+    { q: 60, pacote: 29900, cafe: 78, doces: 54.6 },
+    { q: 70, pacote: 32500, cafe: 78, doces: 54.6 },
+    { q: 80, pacote: 34500, cafe: 75, doces: 52.5 },
+    { q: 90, pacote: 37850, cafe: 70, doces: 49 },
+    { q: 100, pacote: 39900, cafe: 68, doces: 47.6 },
+    { q: 120, pacote: 42400, cafe: 65, doces: 45.5 },
+    { q: 150, pacote: 47900, cafe: 60, doces: 42 },
+    { q: 200, pacote: 63500, cafe: 58, doces: 40.6 },
+    { q: 250, pacote: 78350, cafe: 57, doces: 39.9 },
+    { q: 300, pacote: 89500, cafe: 55, doces: 38.5 }
+  ];
+
+  /* ---------- Regra de chopp por quantidade de pessoas (foto 2) ----------
+     b50 = barris de 50 L, b30 = barris de 30 L.
+     A faixa de 300 pessoas NÃO estava na foto: valor assumido (6 x 50 L). */
+  QE.CHOPP = [
+    { q: 10, b50: 0, b30: 1 }, { q: 20, b50: 0, b30: 1 }, { q: 30, b50: 0, b30: 1 }, { q: 40, b50: 0, b30: 1 },
+    { q: 50, b50: 1, b30: 0 }, { q: 60, b50: 1, b30: 0 }, { q: 70, b50: 1, b30: 0 },
+    { q: 80, b50: 1, b30: 1 }, { q: 90, b50: 2, b30: 0 }, { q: 100, b50: 2, b30: 0 }, { q: 120, b50: 2, b30: 0 },
+    { q: 150, b50: 3, b30: 0 }, { q: 200, b50: 4, b30: 0 }, { q: 250, b50: 5, b30: 0 }, { q: 300, b50: 6, b30: 0 }
+  ];
+
+  /* ---------- Cardápios ---------- */
+  QE.CARDAPIOS = [
+    { id: 'churrasco', nome: 'Churrasco' },
+    { id: 'carnes', nome: 'Carnes e massas' },
+    { id: 'feijoada', nome: 'Feijoada' },
+    { id: 'crepe', nome: 'Crepe' },
+    { id: 'finger', nome: 'Finger food' },
+    { id: 'pizza', nome: 'Pizza' }
+  ];
+  /* Mesma lista, no formato usado pelo orçamento */
+  QE.CARDAPIOS_ORC = QE.CARDAPIOS.map(function (c) { return [c.id, c.nome]; });
+  /* Nomes antigos (pedidos já recebidos) continuam aparecendo corretamente */
+  QE.CARDAPIOS_ALL = QE.CARDAPIOS_ORC.concat([['boteco', 'Boteco'], ['junino', 'Junino'], ['brasilidades', 'Brasilidades'], ['personalizado', 'Personalizado']]);
+  QE.STATUS = { novo: 'Pendente', enviado: 'Enviado', andamento: 'Em andamento', contrato: 'Em contrato', ganho: 'Ganho' };
+  QE.normStatus = function (st) { return QE.STATUS[st] ? st : (st === 'orcado' ? 'enviado' : st === 'fechado' ? 'ganho' : 'novo'); };
+
+  QE.cardSel = function (req) {
+    const a = (req.cardapios && req.cardapios.length) ? req.cardapios : (req.cardapio ? [req.cardapio] : []);
+    return a.filter(function (x, i) { return a.indexOf(x) === i; });
+  };
+  QE.cardNome = function (id) { return (QE.CARDAPIOS_ALL.find(function (c) { return c[0] === id; }) || [0, ''])[1]; };
+
+  /* ---------- Serviços complementares A–L (preços do orçamento atual) ---------- */
+  const OBS5 = 'até 5% da quantidade total avisado com antecedência';
+  QE.CATALOGO = [
+    { g: 'A', titulo: 'Buffet e serviços (pessoas complementares)', linhas: [
+      { id: 'a1', nome: 'Pessoas complementares', obs: OBS5, preco: 310, un: 'pessoa' },
+      { id: 'a2', nome: 'Crianças 7 a 12 anos', obs: OBS5, preco: 175, un: 'pessoa' },
+      { id: 'a3', nome: 'Staff do cliente (motorista / músico / fotógrafo / etc…)', preco: 130, un: 'pessoa' } ] },
+    { g: 'B', titulo: 'Chopp barril extra', cols: true, nota: '* Barris extra em consignação, somente em caso de opção marca Germânia', linhas: [
+      { id: 'b1', nome: 'Germânia · barril 30 litros', preco: 940, un: 'barril' },
+      { id: 'b2', nome: 'Germânia · barril 50 litros', preco: 1450, un: 'barril' },
+      { id: 'b3', nome: 'Brahma · barril 30 litros', preco: 1150, un: 'barril' },
+      { id: 'b4', nome: 'Brahma · barril 50 litros', preco: 1890, un: 'barril' },
+      { id: 'b5', nome: 'Heineken · barril 30 litros', preco: 1260, un: 'barril' },
+      { id: 'b6', nome: 'Heineken · barril 50 litros', preco: 1970, un: 'barril' } ] },
+    { g: 'C', titulo: 'Café da Manhã', info: ['Período: vide cronograma · Cardápio: anexo'], linhas: [
+      { id: 'c1', nome: 'Café da manhã', un: 'pessoa', auto: 'cafe' } ] },
+    { g: 'D', titulo: 'Mesa de café e doces (opção para o final do evento)', info: ['Período: vide cronograma · Cardápio: anexo'], linhas: [
+      { id: 'd1', nome: 'Mesa de café e doces', un: 'pessoa', auto: 'doces' } ] },
+    { g: 'E', titulo: 'Banda', info: ['Opções: Banda de Samba e Pagode ou Sertanejo + diversos ou Pop Rock', 'Alimentação dos músicos: incluso · Equipamentos de som: incluso'], linhas: [
+      { id: 'e1', nome: 'Banda — 3 horas (intervalo de 30 minutos)', preco: 4180, un: 'fixo' } ] },
+    { g: 'F', titulo: 'Mini Arvorismo', info: ['Para adultos e crianças a partir de 7 anos', 'Em caso de não contratação, o equipamento permanece fechado durante o evento'], linhas: [
+      { id: 'f1', nome: 'Mini arvorismo — 4 horas, 2 monitores', preco: 1980, un: 'fixo' } ] },
+    { g: 'G', titulo: 'Recreador', info: ['Alimentação: incluso'], linhas: [
+      { id: 'g1', nome: 'Recreadores — 2 recreadores, 5 horas', preco: 1780, un: 'fixo' } ] },
+    { g: 'H', titulo: 'Atrações complementares', cols: true, linhas: [
+      { id: 'h1', nome: 'Cabine de foto / Túnel de LED infinito', preco: 2450, un: 'fixo' },
+      { id: 'h2', nome: 'Cama elástica', preco: 1290, un: 'fixo' },
+      { id: 'h3', nome: 'Touro mecânico', preco: 2990, un: 'fixo' },
+      { id: 'h4', nome: 'Guerra de cotonete', preco: 2200, un: 'fixo' },
+      { id: 'h5', nome: 'Giro radical', preco: 2400, un: 'fixo' },
+      { id: 'h6', nome: 'Escorregador gigante', preco: 2780, un: 'fixo' },
+      { id: 'h7', nome: 'Carrinho de sorvete', preco: 0, un: 'fixo' } ] },
+    { g: 'I', titulo: 'Estrutura para apresentação', cols: true, info: ['Escopo: tela com entrada HDMI para apresentação, som externo para áudio e 2 microfones'], linhas: [
+      { id: 'i1', nome: 'Tela 1,45 x 0,80 m', preco: 1300, un: 'fixo' },
+      { id: 'i2', nome: 'Tela 1,55 x 0,90 m', preco: 1490, un: 'fixo' },
+      { id: 'i3', nome: 'Tela 2,00 x 1,10 m', preco: 2100, un: 'fixo' },
+      { id: 'i4', nome: 'Tela 3,00 x 2,00 m', preco: 4500, un: 'fixo' } ] },
+    { g: 'J', titulo: 'Fotografia / Vídeo', info: ['Fotógrafo · videomaker / filmmaker', 'Fotos tratadas do evento · Vídeo final de 20 minutos', 'Teaser final do evento · Vídeos curtos durante o evento para redes sociais'], linhas: [
+      { id: 'j1', nome: 'Fotografia e vídeo', preco: 3500, un: 'fixo' } ] },
+    { g: 'K', titulo: 'Gerador', linhas: [
+      { id: 'k1', nome: 'Gerador externo stand by', preco: 3000, un: 'fixo' } ] },
+    { g: 'L', titulo: 'Backdrop', cols: true, info: ['Escopo: execução da lona, estrutura metálica para backdrop e instalação', '* A empresa deverá fornecer a arte em alta definição'], linhas: [
+      { id: 'l1', nome: 'Backdrop 2,00 x 2,20 m', preco: 780, un: 'fixo' },
+      { id: 'l2', nome: 'Backdrop 3,00 x 2,20 m', preco: 1250, un: 'fixo' },
+      { id: 'l3', nome: 'Backdrop 4,00 x 2,20 m', preco: 1920, un: 'fixo' },
+      { id: 'l4', nome: 'Backdrop 5,00 x 2,20 m', preco: 2380, un: 'fixo' },
+      { id: 'l5', nome: 'Backdrop (vertical entrada) 1,50 x 2,50 m', preco: 920, un: 'fixo' } ] },
+    { g: 'M', titulo: 'Personalizações', cols: true, linhas: [
+      { id: 'm1', nome: 'Porta guardanapos', preco: 0, un: 'fixo' },
+      { id: 'm2', nome: 'Logo em drinks', preco: 0, un: 'fixo' },
+      { id: 'm3', nome: 'Bolha de fumaça', preco: 0, un: 'fixo' },
+      { id: 'm4', nome: 'TV totem', preco: 0, un: 'fixo' },
+      { id: 'm5', nome: 'Boias decorativas de piscina', preco: 0, un: 'fixo' } ] }
+  ];
+
+  /* ---------- Cronograma padrão (do orçamento atual) ----------
+     link: 'incl' = sempre incluso · 'prem' = só no pacote Premium
+           'man' = ligado manualmente · id de linha (c1, d1…) = segue o opcional */
+  /* Dois modelos de cronograma (padrão da casa):
+     A = com café da manhã: evento de 8 h, das 10h às 18h  ·  B = sem café: evento de 6 h, das 12h às 18h.
+     Cada item traz os horários do modelo B; o campo A só lista o que muda no modelo A.
+     link: 'incl' = sempre · 'prem' = só Premium · 'man' = ligado à mão · 'semcafe' = só no modelo sem café ·
+           id de linha (c1, d1…) = aparece se o opcional estiver incluso · 'banda2' / 'dj2' = segunda banda / segundo DJ */
+  QE.CRON_BASE = { A: ['10:00', '18:00'], B: ['12:00', '18:00'] };
+  QE.CRON = [
+    { id: 'chegada', sec: 'RECEPÇÃO', nome: 'Chegada dos convidados', ini: '12:00', fim: '12:30', link: 'semcafe' },
+    { id: 'cafe', sec: 'BUFFET / DOCES', nome: 'Café da manhã', ini: '10:00', fim: '11:30', link: 'c1' },
+    { id: 'entradas', sec: 'BUFFET / DOCES', nome: 'Entradas', ini: '12:00', fim: '13:30', link: 'incl' },
+    { id: 'buffet', sec: 'BUFFET / DOCES', nome: 'Buffet', ini: '13:30', fim: '17:00', link: 'incl' },
+    { id: 'sobremesa', sec: 'BUFFET / DOCES', nome: 'Sobremesa', ini: '16:30', fim: '17:30', link: 'incl' },
+    { id: 'doces', sec: 'BUFFET / DOCES', nome: 'Mesa Café e Doces', ini: '16:30', fim: '18:00', link: 'd1' },
+    { id: 'bebidas', sec: 'BEBIDAS', nome: 'Bebidas (água/suco/refrig.)', ini: '12:00', fim: '18:00', link: 'incl', A: { ini: '11:30' } },
+    { id: 'chopp', sec: 'BEBIDAS', nome: 'Chopp', ini: '12:00', fim: '18:00', link: 'incl', A: { ini: '11:30' } },
+    { id: 'bar', sec: 'BEBIDAS', nome: 'Bar de drinks', ini: '13:00', fim: '17:00', link: 'prem' },
+    { id: 'som', sec: 'MÚSICA', nome: 'Som ambiente', ini: '12:00', fim: '14:00', link: 'incl', A: { ini: '10:00' } },
+    { id: 'dj', sec: 'MÚSICA', nome: 'DJ', ini: '14:00', fim: '16:00', ini2: '16:00', fim2: '18:00', link: 'incl' },
+    { id: 'dj2', sec: 'MÚSICA', nome: 'DJ 2', ini: '14:00', fim: '16:00', ini2: '16:00', fim2: '18:00', link: 'dj2' },
+    { id: 'banda', sec: 'MÚSICA', nome: 'Banda', ini: '13:00', fim: '14:00', ini2: '14:30', fim2: '16:00', link: 'e1' },
+    { id: 'banda2', sec: 'MÚSICA', nome: 'Banda 2', ini: '13:00', fim: '14:00', ini2: '14:30', fim2: '16:00', link: 'banda2' },
+    { id: 'recreadores', sec: 'ATRAÇÕES', nome: 'Recreadores', ini: '12:00', fim: '17:00', link: 'g1' },
+    { id: 'foto', sec: 'ATRAÇÕES', nome: 'Fotografia', ini: '12:00', fim: '16:00', link: 'j1', A: { ini: '11:00' } },
+    { id: 'arvorismo', sec: 'ATRAÇÕES', nome: 'Mini Arvorismo', ini: '13:00', fim: '17:00', link: 'f1', A: { ini: '11:00', fim: '15:00' } },
+    { id: 'cabine', sec: 'ATRAÇÕES', nome: 'Cabine de foto', ini: '13:00', fim: '17:00', link: 'h1', A: { ini: '12:00', fim: '16:00' } },
+    { id: 'cama', sec: 'ATRAÇÕES', nome: 'Cama elástica', ini: '13:00', fim: '17:00', link: 'h2', A: { ini: '12:00' } },
+    { id: 'touro', sec: 'ATRAÇÕES', nome: 'Touro Mecânico', ini: '13:00', fim: '17:00', link: 'h3', A: { ini: '12:00' } },
+    { id: 'inflaveis', sec: 'ATRAÇÕES', nome: 'Brinquedos Infláveis', ini: '13:00', fim: '17:00', link: 'man', A: { ini: '12:00' } },
+    { id: 'escorregador', sec: 'ATRAÇÕES', nome: 'Escorregador Gigante', ini: '13:00', fim: '17:00', link: 'h6', A: { ini: '12:00' } }
+  ];
+
+  /* ---------- Fotos editáveis pelo painel (chave = nome do arquivo sem extensão) ---------- */
+  QE.FOTOS_LISTA = [
+    ['noite', 'Foto principal do início do site', 'Início e espaço'], ['redario', 'Redário e fogueira (galeria O espaço)', 'Início e espaço'], ['piscina', 'Piscina (Sobre nós, O espaço e orçamento)', 'Início e espaço'],
+    ['arvorismo', 'Mini arvorismo (galeria)', 'Início e espaço'], ['campo', 'Campo de futebol', 'Início e espaço'], ['jogos', 'Salão de jogos', 'Início e espaço'], ['arvore', 'Áreas verdes', 'Início e espaço'],
+    ['depoimentos', 'Equipe na piscina (Corporativo e Depoimentos)', 'Eventos'], ['mesa', 'Casamento', 'Eventos'], ['mesadoces1', 'Aniversário', 'Eventos'], ['deco4', 'Chá de bebê e revelação / Decoração', 'Eventos'], ['arv1', 'Outros eventos / Mini arvorismo', 'Eventos'],
+    ['churrasco-premium', 'Churrasco Premium', 'Gastronomia'], ['churrasco-standard', 'Churrasco Standard', 'Gastronomia'], ['cafe', 'Café da manhã', 'Gastronomia'], ['mesadoces2', 'Mesa de doces', 'Gastronomia'],
+    ['carnes', 'Carnes e massas', 'Gastronomia'], ['feijoada', 'Feijoada', 'Gastronomia'], ['finger', 'Finger food', 'Gastronomia'], ['crepe', 'Crepe', 'Gastronomia'], ['doces', 'Mesa de antepastos', 'Gastronomia'],
+    ['bar-time', 'Bar da Quinta (equipe)', 'Bar'], ['drinks', 'Taças de drinks', 'Bar'], ['drink1', 'Drink de frutas vermelhas', 'Bar'], ['drink3', 'Drinks em canecas', 'Bar'],
+    ['deco1', 'Decoração: mesa longa', 'Decoração e backdrop'], ['deco3', 'Decoração: mesa preta', 'Decoração e backdrop'], ['deco5', 'Decoração: mesa redonda', 'Decoração e backdrop'], ['backdrop', 'Backdrop', 'Decoração e backdrop'],
+    ['banda', 'Banda', 'Música e atrações'], ['dj', 'DJ', 'Música e atrações'], ['banda2', 'Show ao vivo', 'Música e atrações'], ['arv2', 'Arvorismo 2', 'Música e atrações'], ['arv3', 'Arvorismo 3', 'Música e atrações'], ['arv4', 'Arvorismo 4', 'Música e atrações'],
+    ['sorvete', 'Carrinho de sorvete', 'Serviços complementares'], ['cama', 'Cama elástica', 'Serviços complementares'], ['cabine', 'Cabine de fotos', 'Serviços complementares'],
+    ['apresentacao', 'Apresentação corporativa', 'Serviços complementares'], ['inflaveis', 'Brinquedos infláveis', 'Serviços complementares'], ['bar-frente', 'Chopp / bar', 'Serviços complementares'],
+    ['capa', 'Capa do orçamento (a imagem já inclui o logo)', 'Orçamento em PDF'],
+    ['menu-churrasco-premium', 'Cardápio: Churrasco Premium', 'Cardápios em anexo no PDF'], ['menu-churrasco-standard', 'Cardápio: Churrasco Standard', 'Cardápios em anexo no PDF'],
+    ['menu-carnes', 'Cardápio: Carnes e massas', 'Cardápios em anexo no PDF'], ['menu-feijoada', 'Cardápio: Feijoada', 'Cardápios em anexo no PDF'],
+    ['menu-crepe', 'Cardápio: Crepe', 'Cardápios em anexo no PDF'], ['menu-finger', 'Cardápio: Finger food', 'Cardápios em anexo no PDF'],
+    ['menu-pizza', 'Cardápio: Pizza (ainda sem imagem, envie aqui)', 'Cardápios em anexo no PDF'],
+    ['menu-cafe', 'Cardápio: Café da manhã', 'Cardápios em anexo no PDF'], ['menu-doces', 'Cardápio: Mesa de doces', 'Cardápios em anexo no PDF'],
+    ['menu-bar-prata', 'Cardápio: Bar pacote Prata', 'Cardápios em anexo no PDF'], ['menu-bar-ouro', 'Cardápio: Bar pacote Ouro', 'Cardápios em anexo no PDF'], ['aereo', 'Foto aérea do orçamento', 'Orçamento em PDF']
+  ];
+  QE.FOTOS = {};
+  QE._blob = {};
+  QE.foto = function (n) {
+    const v = QE.FOTOS[n];
+    if (!v) return n + '.jpg';
+    if (v.indexOf('data:') !== 0 || typeof URL === 'undefined' || typeof Blob === 'undefined') return v;
+    const k = n + ':' + v.length;
+    if (!QE._blob[k]) {
+      const bin = atob(v.split(',')[1]), u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      QE._blob[k] = URL.createObjectURL(new Blob([u8], { type: 'image/jpeg' }));
+    }
+    return QE._blob[k];
+  };
+  QE.aplicarFotos = function (map) {
+    if (typeof document === 'undefined') return;
+    QE.FOTOS = map || {};
+    Array.prototype.forEach.call(document.querySelectorAll('img'), function (i) {
+      const k = (i.getAttribute('src') || '').replace(/\.(jpg|png)$/, '');
+      if (QE.FOTOS[k] && /\.jpg$/.test(i.getAttribute('src') || '')) i.src = QE.FOTOS[k];
+    });
+    const h = document.querySelector('.hero-img');
+    if (h && QE.FOTOS.noite) h.style.backgroundImage = 'url(' + QE.FOTOS.noite + ')';
+  };
+
+  /* ---------- Datas disponíveis (semente, baseada no orçamento atual) ---------- */
+  QE.DISP_PADRAO = [
+    ['2026-11-20', 1], ['2026-11-21', 1], ['2026-11-22', 1], ['2026-11-27', 1], ['2026-11-28', 0], ['2026-11-29', 1],
+    ['2026-12-03', 1], ['2026-12-04', 1], ['2026-12-05', 0], ['2026-12-06', 0], ['2026-12-10', 1], ['2026-12-11', 0],
+    ['2026-12-12', 0], ['2026-12-13', 0], ['2026-12-14', 1], ['2026-12-15', 1], ['2026-12-16', 1], ['2026-12-17', 0],
+    ['2026-12-18', 0], ['2026-12-19', 0], ['2026-12-20', 1], ['2026-12-21', 1]
+  ].map(function (x) { return { d: x[0], livre: !!x[1] }; });
+
+  /* ---------- Configuração padrão ---------- */
+  QE.defaultConfig = function () {
+    return {
+      upgradeOuro: 35,      // bar Ouro: acréscimo por pessoa no valor do pacote (não aparece discriminado)
+      nfPct: 9,             // nota fiscal = 9% sobre o valor total final
+      descAvista: 2.5,      // desconto à vista (%)
+      validade: 15,         // dias
+      cartao: { m3: null, m6: null, m12: null }, // taxa da operadora (%) — vazio = não calculado
+      tabela: JSON.parse(JSON.stringify(QE.TABELA)),
+      chopp: JSON.parse(JSON.stringify(QE.CHOPP)),
+      precos: {}            // sobrescritas de preço por id de linha
+    };
+  };
+  QE.mergeConfig = function (saved) {
+    const d = QE.defaultConfig();
+    if (!saved) return d;
+    const out = Object.assign({}, d, saved);
+    out.cartao = Object.assign({}, d.cartao, saved.cartao || {});
+    out.tabela = (saved.tabela && saved.tabela.length) ? saved.tabela : d.tabela;
+    out.chopp = (saved.chopp && saved.chopp.length) ? saved.chopp : d.chopp;
+    out.precos = saved.precos || {};
+    return out;
+  };
+
+  /* ---------- Utilitários ---------- */
+  const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const MES3 = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  QE.MESES = MESES;
+  QE.parseData = function (s) {
+    if (!s) return null;
+    const p = String(s).split('-').map(Number);
+    return new Date(p[0], p[1] - 1, p[2]);
+  };
+  QE.hoje = function () {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  };
+  QE.fmtData = function (s) { const d = QE.parseData(s); return d ? String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear() : ''; };
+  QE.fmtDM = function (s) { const d = QE.parseData(s); return d ? String(d.getDate()).padStart(2, '0') + '/' + MES3[d.getMonth()] : ''; };
+  QE.brl = function (n) {
+    n = Number(n) || 0;
+    return 'R$\u00a0' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+  const toMin = function (t) { const p = String(t || '0:0').split(':'); return (+p[0]) * 60 + (+p[1] || 0); };
+  QE.toMin = toMin;
+
+  /* ---------- Faixas ---------- */
+  /* A tabela é por faixa: usa sempre a faixa de baixo (180 pessoas -> faixa de 150; 220 -> faixa de 200) */
+  QE.faixa = function (tabela, q) {
+    const t = tabela.slice().sort(function (a, b) { return a.q - b.q; });
+    let r = null;
+    t.forEach(function (x) { if (x.q <= q) r = x; });
+    const abaixo = !r; if (!r) r = t[0];
+    return Object.assign({}, r, { exato: !abaixo && r.q === q, abaixo: abaixo, acima: q > t[t.length - 1].q });
+  };
+  QE.faixaChopp = function (regra, q) {
+    const t = regra.slice().sort(function (a, b) { return a.q - b.q; });
+    let r = null;
+    t.forEach(function (x) { if (x.q <= q) r = x; });
+    return r || t[0];
+  };
+
+  /* ---------- Orçamento inicial a partir de uma solicitação ---------- */
+  QE.orcInicial = function (req, cfg) {
+    const sel = {};
+    if (req.cafe) sel.c1 = -1; // -1 = todas as pessoas
+    if (req.doces) sel.d1 = -1;
+    return {
+      data: QE.hoje(), validade: cfg.validade, bar: 'prata',
+      pacote: null, cafe: null, doces: null, b50: null, b30: null, parcelas: null,
+      sel: sel, preco: {}, cron: {}
+    };
+  };
+
+  /* ---------- Cálculo completo ---------- */
+  QE.calc = function (req, cfg) {
+    cfg = cfg || QE.defaultConfig();
+    const o = req.orc || QE.orcInicial(req, cfg);
+    const q = Math.max(1, Math.round(+req.qtd || 0));
+    const fx = QE.faixa(cfg.tabela, q);
+    const ch = QE.faixaChopp(cfg.chopp, q);
+    const pick = function (v, d) { return (v === null || v === undefined || v === '' || isNaN(v)) ? d : +v; };
+
+    const premio = req.escopo !== 'standard';
+    const upg = (premio && o.bar === 'ouro') ? pick(cfg.upgradeOuro, 35) * q : 0;
+    const pacoteAuto = fx.pacote + upg;
+    const exc = o.excl || {};
+    const pacote = pick(o.pacote, pacoteAuto);
+    const cafePP = pick(o.cafe, fx.cafe);
+    const docesPP = pick(o.doces, fx.doces);
+    const b50 = pick(o.b50, ch.b50);
+    const b30 = pick(o.b30, ch.b30);
+
+    const sel = o.sel || {};
+    const grupos = QE.CATALOGO.map(function (g) {
+      let total = 0;
+      const linhas = g.linhas.map(function (l) {
+        const raw = sel[l.id];
+        const on = raw !== undefined && raw !== null && raw !== 0 && raw !== false;
+        const qtd = !on ? 0 : (raw === -1 ? q : (+raw || 1));
+        const base = l.auto === 'cafe' ? cafePP : l.auto === 'doces' ? docesPP : pick(cfg.precos && cfg.precos[l.id], l.preco);
+        const unit = pick(o.preco && o.preco[l.id], base);
+        const t = on ? qtd * unit : 0;
+        total += t;
+        return Object.assign({}, l, { on: on, qtd: qtd, unit: unit, total: t, padrao: base });
+      });
+      return Object.assign({}, g, { linhas: linhas, total: total });
+    });
+    const extras = (o.extras || []).filter(function (x) { return x && (x.t || x.d || +x.v || (x.subs && x.subs.length)); }).map(function (x) {
+      const q = (x.q === undefined || x.q === null || x.q === '' || isNaN(x.q)) ? 1 : +x.q, v = +x.v || 0;
+      return { t: x.t || '', d: x.d || '', q: q, v: v, total: q * v, subs: (x.subs || []).filter(function (z) { return String(z || '').trim(); }) };
+    });
+    /* Troca da marca do chopp: o cliente paga só a diferença do barril em relação à Germânia */
+    const marca = o.chopp && QE.MARCAS_CHOPP[o.chopp] ? o.chopp : 'germania';
+    let troca = null;
+    if (marca !== 'germania' && !exc.chopp) {
+      const preco = function (id) { let v = null; QE.CATALOGO.forEach(function (g) { g.linhas.forEach(function (l) { if (l.id === id) v = pick(cfg.precos && cfg.precos[id], l.preco); }); }); return v; };
+      const ids = { brahma: ['b3', 'b4'], heineken: ['b5', 'b6'] }[marca];
+      const d30 = preco(ids[0]) - preco('b1'), d50 = preco(ids[1]) - preco('b2');
+      troca = { marca: marca, nome: QE.MARCAS_CHOPP[marca], b30: b30, b50: b50, d30: d30, d50: d50, valor: b30 * d30 + b50 * d50 };
+    }
+    const extrasTot = extras.reduce(function (t, x) { return t + x.total; }, 0) + (troca ? troca.valor : 0);
+    const compl = grupos.reduce(function (s, g) { return s + g.total; }, 0) + extrasTot;
+    const soma = pacote + compl;
+
+    /* Desconto sobre o total (valor em R$ ou percentual) */
+    const dsc = o.desconto || {};
+    let descVal = 0;
+    if (dsc.valor > 0) descVal = Math.min(soma, Math.round((dsc.tipo === 'pct' ? soma * dsc.valor / 100 : +dsc.valor) * 100) / 100);
+    const somaLiq = soma - descVal;
+
+    /* Nota fiscal = 9% sobre o valor total FINAL (somaLiq / (1 - 9%)). Sem nota: o valor aparece riscado e não soma. */
+    const nfPct = pick(cfg.nfPct, 9);
+    const nfAuto = Math.round(somaLiq / (1 - nfPct / 100)) - somaLiq;
+    const nfRef = (o.nfVal === null || o.nfVal === undefined || o.nfVal === '' || isNaN(o.nfVal)) ? nfAuto : Math.max(0, +o.nfVal);
+    let total = somaLiq, nfVal = 0;
+    if (req.nf) { total = somaLiq + nfRef; nfVal = nfRef; }
+
+    /* À vista: desconto de 2,5% sobre o total final */
+    const desc = pick(cfg.descAvista, 2.5);
+    const avista = Math.round(total * 100 * (1 - desc / 100) + 1e-6) / 100;
+
+    /* Parcelamento: meses do orçamento até o mês do evento (inclusive) */
+    const dq = QE.parseData(o.data) || new Date();
+    const de = QE.parseData(req.dataEvento);
+    let nAuto = 1;
+    if (de) nAuto = Math.max(1, (de.getFullYear() * 12 + de.getMonth()) - (dq.getFullYear() * 12 + dq.getMonth()) + 1);
+    const n = Math.max(1, Math.round(pick(o.parcelas, nAuto)));
+    const cents = Math.round(total * 100), man = o.parcFix || {};
+    const parcelas = []; let resto = cents;
+    const off = Math.round(+o.parcOff || 0);
+    for (let i = 0; i < n; i++) {
+      const dm = new Date(dq.getFullYear(), dq.getMonth() + off + i, 1), m = dm.getMonth();
+      const fixo = man[i] !== undefined && man[i] !== null && man[i] !== '' && !isNaN(man[i]);
+      let v;
+      if (fixo) v = Math.round(+man[i] * 100);
+      else if (i === n - 1) v = resto;
+      else v = Math.floor(resto / (n - i));
+      if (v < 0) v = 0;
+      resto -= v;
+      parcelas.push({ mes: MESES[m], ano: dm.getFullYear(), valor: v / 100, fixo: fixo });
+    }
+    const difParc = Math.round(resto) / 100; /* diferença entre a soma das parcelas e o total (deve ser 0) */
+    const cartao = [3, 6, 12].map(function (m) {
+      const taxa = cfg.cartao && cfg.cartao['m' + m];
+      const ok = !(taxa === null || taxa === undefined || taxa === '' || isNaN(taxa));
+      const tot = ok ? total * (1 + taxa / 100) : null;
+      return { meses: m, parcela: ok ? tot / m : null, total: tot };
+    });
+
+    /* Cronograma */
+    const prem = req.escopo !== 'standard';
+    const cs = QE.cardSel(req); const cdp = cs.length ? QE.cardNome(cs[0]) : '';
+    const todasLinhas = grupos.reduce(function (a, g) { return a.concat(g.linhas); }, []);
+    const linha = function (id) { return todasLinhas.find(function (l) { return l.id === id; }) || {}; };
+    const cafeOn = !!linha('c1').on;
+    const tpl = cafeOn ? 'A' : 'B';
+    const baseJ = QE.CRON_BASE[tpl];
+    const jIn = o.janela && o.janela.length ? o.janela : null;
+    const janelaAuto = !jIn || jIn.join('-') === '12:00-18:00' || jIn.join('-') === '10:00-18:00';
+    const jn = janelaAuto ? baseJ : jIn;
+    const nBandas = linha('e1').on ? Math.max(1, +linha('e1').qtd || 1) : 0;
+    const nDjs = Math.max(1, Math.min(3, +o.djs || 1));
+    const customs = (o.cronExtra || []).map(function (x) { return { id: x.id, sec: x.sec || 'OUTROS', nome: x.nome || 'Novo item', ini: x.ini || '12:00', fim: x.fim || '13:00', link: 'incl', custom: true }; });
+    let baseCron = QE.CRON.concat(customs);
+    if (o.cronOrder && o.cronOrder.length) {
+      const rank = function (id) { const i = o.cronOrder.indexOf(id); return i < 0 ? 100000 + baseCron.findIndex(function (b) { return b.id === id; }) : i; };
+      baseCron = baseCron.slice().sort(function (a, b) { return rank(a.id) - rank(b.id); });
+    }
+    /* Os horários dos itens seguem o modelo (A ou B). Se o evento mudar de horário, o início desloca os itens e
+       o fim desloca os que terminam junto com o evento (ex.: DJ, chopp, bebidas). */
+    const fmtT = function (m) { m = ((m % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+    const dS = QE.toMin(jn[0]) - QE.toMin(baseJ[0]), dE = QE.toMin(jn[1]) - QE.toMin(baseJ[1]);
+    const mv = function (t, fimDoEvento) { return fmtT(QE.toMin(t) + (fimDoEvento ? dE : dS)); };
+    const cron = baseCron.map(function (it) {
+      const ov = (o.cron && o.cron[it.id]) || {};
+      let on, hidden = false;
+      if (it.link === 'incl') on = true;
+      else if (it.link === 'prem') on = prem;
+      else if (it.link === 'man') on = false;
+      else if (it.link === 'semcafe') on = !cafeOn;
+      else if (it.link === 'dj2') { on = nDjs >= 2; hidden = !on; }
+      else if (it.link === 'banda2') { on = nBandas >= 2; hidden = !on; }
+      else on = !!linha(it.link).on;
+      const exId = { bebidas: 'bebidas', chopp: 'chopp', bar: 'bar', dj: 'dj', dj2: 'dj', entradas: 'buffet', buffet: 'buffet', sobremesa: 'buffet' }[it.id];
+      if (!hidden && ov.on !== undefined) on = !!ov.on;
+      if (exId && exc[exId]) on = false;
+      const tp = it.custom ? it : Object.assign({}, it, tpl === 'A' ? (it.A || {}) : {});
+      const padrao = it.custom ? it : { ini: mv(tp.ini), fim: mv(tp.fim, tp.fim === baseJ[1]), ini2: tp.ini2 ? mv(tp.ini2) : '', fim2: tp.fim2 ? mv(tp.fim2, tp.fim2 === baseJ[1]) : '' };
+      const dIni = it.id === 'chegada' ? jn[0] : padrao.ini;
+      const dFim = it.id === 'chegada' ? fmtT(QE.toMin(jn[0]) + 30) : padrao.fim;
+      const segs = [[ov.ini || dIni, ov.fim || dFim]];
+      if (it.ini2) segs.push([ov.ini2 || padrao.ini2, ov.fim2 || padrao.fim2]);
+      let nome = it.nome;
+      if (it.id === 'buffet') nome = 'Buffet ' + (cdp || 'Churrasco');
+      if (it.id === 'banda' && nBandas >= 2) nome = 'Banda 1';
+      if (it.id === 'dj' && nDjs >= 2) nome = 'DJ 1';
+      return Object.assign({}, it, { nome: nome, on: on, hidden: hidden, segs: segs });
+    });
+
+    return {
+      q: q, faixa: fx, excl: exc, upg: upg, auto: { nfVal: nfAuto, pacote: pacoteAuto, cafe: fx.cafe, doces: fx.doces, b50: ch.b50, b30: ch.b30, parcelas: nAuto },
+      pacote: pacote, cafePP: cafePP, docesPP: docesPP, b50: b50, b30: b30,
+      desconto: { tipo: dsc.tipo === 'pct' ? 'pct' : 'valor', valor: +dsc.valor || 0, val: descVal }, nfRef: nfRef,
+      janela: jn, janelaAuto: janelaAuto, tpl: tpl, nDjs: nDjs,
+      grupos: grupos, extras: extras, troca: troca, marca: marca, extrasTot: extrasTot, compl: compl, soma: soma, nfPct: nfPct, nfVal: nfVal, total: total,
+      desc: desc, avista: avista, mesOrc: MESES[dq.getMonth()], parcelas: parcelas, difParc: difParc, cartao: cartao, cron: cron, prem: prem
+    };
+  };
+
+  QE.ESTILOS_BANDA = [['samba', 'Samba + Pagode'], ['sertanejo', 'Sertanejo + Diversos'], ['pop', 'Pop Rock'], ['outros', 'Outros']];
+  QE.estiloBanda = function (b) {
+    if (!b) return '';
+    const e = QE.ESTILOS_BANDA.find(function (x) { return x[0] === b.e; });
+    return b.e === 'outros' ? ('Outros' + (b.t ? ': ' + b.t : '')) : (e ? e[1] : '');
+  };
+  QE.MARCAS_CHOPP = { germania: 'Germânia', brahma: 'Brahma', heineken: 'Heineken' };
+  QE.maskTel = function (v) {
+    const d = String(v || '').replace(/\D/g, '').slice(0, 11);
+    if (d.length <= 2) return d.length ? '(' + d : '';
+    if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  };
+
+  /* ---------- Cardápios que vão em anexo no orçamento ---------- */
+  QE.menusAnexo = function (req, c) {
+    const out = [], prem = req.escopo !== 'standard', cs = QE.cardSel(req)[0];
+    const mp = { churrasco: prem ? 'menu-churrasco-premium' : 'menu-churrasco-standard', carnes: 'menu-carnes', feijoada: 'menu-feijoada', crepe: 'menu-crepe', finger: 'menu-finger' };
+    const ex = (req.orc && req.orc.excl) || {};
+    if (ex.buffet) { /* buffet não incluso: sem cardápio de buffet */ }
+    else if (mp[cs]) out.push(mp[cs]);
+    else if (cs === 'pizza' && !ex.buffet && QE.FOTOS && QE.FOTOS['menu-pizza']) out.push('menu-pizza');
+    const on = function (id) { return c.grupos.some(function (g) { return g.linhas.some(function (l) { return l.id === id && l.on; }); }); };
+    if (on('c1')) out.push('menu-cafe');
+    if (on('d1')) out.push('menu-doces');
+    if (prem && !ex.bar) out.push(req.orc && req.orc.bar === 'ouro' ? 'menu-bar-ouro' : 'menu-bar-prata');
+    return out;
+  };
+  /* Cópia dos dados que geram o PDF (histórico de versões baixadas) */
+  QE.snapshot = function (req) {
+    const k = ['empresa', 'contato', 'email', 'telefone', 'dataEvento', 'qtd', 'tipo', 'tema', 'escopo', 'cardapio', 'cardapios', 'cafe', 'doces', 'nf', 'obs', 'orc'];
+    const o = {}; k.forEach(function (x) { if (req[x] !== undefined) o[x] = req[x]; });
+    return JSON.parse(JSON.stringify(o));
+  };
+
+  /* ---------- Nome do arquivo PDF ---------- */
+  QE.nomeArquivo = function (req) {
+    const limpa = function (s) { return String(s || '').replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, ' ').trim(); };
+    return 'Quinta dos Esquilos - Confraternização Corporativa ' + limpa(req.empresa) + ' - ' + limpa(req.contato) + ' ' + (+req.qtd || 0) + ' pessoas';
+  };
+
+  /* ====================================================================
+     Camada de dados: Firebase (se config.js estiver preenchido) ou
+     modo demonstração (localStorage, só neste navegador).
+     ==================================================================== */
+  if (typeof window !== 'undefined') {
+    const fbCfg = window.QE_FIREBASE;
+    const demo = !(fbCfg && window.firebase);
+    let fs = null, auth = null;
+    if (!demo) { window.firebase.initializeApp(fbCfg); fs = window.firebase.firestore(); auth = typeof window.firebase.auth === 'function' ? window.firebase.auth() : null; } /* o site público não carrega o módulo de login */
+    const LS = 'qe_demo_v1';
+    const ld = function () { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) { return {}; } };
+    const sv = function (o) { localStorage.setItem(LS, JSON.stringify(o)); };
+    const clean = function (x) { return JSON.parse(JSON.stringify(x)); };
+    const uid = function () { return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); };
+
+    QE.db = {
+      demo: demo,
+      async enviar(req) {
+        const data = clean(req); data.status = 'novo';
+        if (demo) { const o = ld(); o.sol = o.sol || {}; const id = uid(); o.sol[id] = Object.assign({ id: id, criadoEm: Date.now() }, data); sv(o); return id; }
+        const add = fs.collection('solicitacoes').add(Object.assign({}, data, { criadoEm: window.firebase.firestore.FieldValue.serverTimestamp() }));
+        const lim = new Promise(function (_, rej) { setTimeout(function () { rej(Object.assign(new Error('tempo esgotado'), { code: 'timeout' })); }, 15000); });
+        const ref = await Promise.race([add, lim]);
+        return ref.id;
+      },
+      async listar() {
+        if (demo) { return Object.values(ld().sol || {}).sort(function (a, b) { return b.criadoEm - a.criadoEm; }); }
+        const s = await fs.collection('solicitacoes').get();
+        return s.docs.map(function (d) {
+          const x = d.data(); x.id = d.id;
+          x.criadoEm = x.criadoEm && x.criadoEm.toMillis ? x.criadoEm.toMillis() : (x.criadoEm || 0);
+          return x;
+        }).sort(function (a, b) { return b.criadoEm - a.criadoEm; });
+      },
+      async criarManual(req) {
+        const data = clean(req);
+        if (demo) { const o = ld(); o.sol = o.sol || {}; const id = uid(); o.sol[id] = Object.assign({ id: id, criadoEm: Date.now() }, data); sv(o); return id; }
+        const ref = await fs.collection('solicitacoes').add(Object.assign({}, data, { criadoEm: window.firebase.firestore.FieldValue.serverTimestamp() }));
+        return ref.id;
+      },
+      async salvar(id, req) {
+        const data = clean(req); delete data.id; delete data.criadoEm;
+        if (demo) { const o = ld(); o.sol[id] = Object.assign({}, o.sol[id], data); sv(o); return; }
+        await fs.collection('solicitacoes').doc(id).set(data, { merge: true });
+      },
+      async excluir(id) {
+        if (demo) { const o = ld(); delete (o.sol || {})[id]; sv(o); return; }
+        await fs.collection('solicitacoes').doc(id).delete();
+      },
+      async dispInfo() {
+        if (demo) { const o = ld(); return { datas: o.disp || QE.DISP_PADRAO, ocultarForm: !!o.dispOcultar }; }
+        const d = await fs.collection('publico').doc('disponibilidade').get();
+        const x = d.exists ? d.data() : {};
+        return { datas: x.datas ? x.datas : QE.DISP_PADRAO, ocultarForm: !!x.ocultarForm };
+      },
+      async disponibilidade() { return (await this.dispInfo()).datas; },
+      async salvarDisponibilidade(datas, ocultarForm) {
+        if (demo) { const o = ld(); o.disp = clean(datas); o.dispOcultar = !!ocultarForm; sv(o); return; }
+        await fs.collection('publico').doc('disponibilidade').set({ datas: clean(datas), ocultarForm: !!ocultarForm });
+      },
+      async config() {
+        if (demo) return QE.mergeConfig(ld().cfg);
+        const d = await fs.collection('config').doc('geral').get();
+        return QE.mergeConfig(d.exists ? d.data() : null);
+      },
+      async salvarConfig(cfg) {
+        if (demo) { const o = ld(); o.cfg = clean(cfg); sv(o); return; }
+        await fs.collection('config').doc('geral').set(clean(cfg));
+      },
+      async fotos() {
+        if (demo) return ld().fotos || {};
+        const sn = await fs.collection('fotos').get(); const m = {};
+        sn.forEach(function (d) { const x = d.data(); if (x && x.data) m[d.id] = x.data; });
+        return m;
+      },
+      async salvarFoto(k, data) {
+        if (demo) { const o = ld(); o.fotos = o.fotos || {}; o.fotos[k] = data; sv(o); return; }
+        await fs.collection('fotos').doc(k).set({ data: data, em: Date.now() });
+      },
+      async removerFoto(k) {
+        if (demo) { const o = ld(); if (o.fotos) delete o.fotos[k]; sv(o); return; }
+        await fs.collection('fotos').doc(k).delete();
+      },
+      onAuth(cb) { if (demo) { cb(true); return; } if (!auth) { cb(false); return; } auth.onAuthStateChanged(function (u) { cb(!!u); }); },
+      login(email, senha) { return auth.signInWithEmailAndPassword(email, senha); },
+      logout() { return demo || !auth ? Promise.resolve() : auth.signOut(); }
+    };
+  }
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = QE;
+  else root.QE = QE;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* Quinta dos Esquilos — site público */
+(function () {
+  'use strict';
+  const $ = function (s) { return document.querySelector(s); };
+  const $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  const esc = function (s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  const dlg = $('#dlg'), form = $('#form');
+  const WD = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+
+  /* ---------- Navegação entre "Geral" e "Corporativo" ---------- */
+  let viewAtual = 'geral';
+  function route() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (id === 'orcamento') { history.replaceState(null, '', location.pathname + location.search); abrir(); return; }
+    const el = id ? document.getElementById(id) : null;
+    let v = viewAtual;
+    if (el) { if (el.closest('#view-corp')) v = 'corp'; else if (el.closest('#view-geral')) v = 'geral'; }
+    const mudou = v !== viewAtual;
+    viewAtual = v;
+    $('#view-geral').hidden = v !== 'geral';
+    $('#view-corp').hidden = v !== 'corp';
+    document.body.classList.toggle('v-geral', v === 'geral');
+    document.body.classList.toggle('v-corp', v === 'corp');
+    if (mudou || !el) window.scrollTo(0, 0);
+    if (el) setTimeout(function () { el.scrollIntoView({ behavior: mudou ? 'auto' : 'smooth' }); }, 20);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  /* WhatsApp dos eventos que ainda não têm página própria */
+  $$('[data-wa]').forEach(function (a) {
+    a.href = 'https://wa.me/' + QE.CONTATOS.rodrigoWa + '?text=' + encodeURIComponent(a.dataset.wa);
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+
+  /* Fotos trocadas pelo painel */
+  QE.db.fotos().then(QE.aplicarFotos).catch(function () { /* usa as fotos originais */ });
+
+  /* ---------- Janela do formulário ---------- */
+  function etapa(n) { $('#stForm').hidden = n !== 'form'; $('#stRev').hidden = n !== 'rev'; $('#stOk').hidden = n !== 'ok'; dlg.scrollTop = 0; $$('#dlg .dlg-body').forEach(function (b) { b.scrollTop = 0; }); }
+  function abrir() { if (dlg.open) return; etapa('form'); dlg.showModal(); document.body.classList.add('modal'); }
+  $$('[data-open-form]').forEach(function (b) { b.addEventListener('click', abrir); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.closest('[data-close]')) dlg.close(); });
+  dlg.addEventListener('close', function () { document.body.classList.remove('modal'); });
+
+  /* Cardápios (escolha uma ou mais) */
+  $('#cardapios').innerHTML = QE.CARDAPIOS.map(function (c) {
+    return '<label class="opt"><input type="radio" name="cardapio" value="' + c.id + '"><span>' + c.nome + '</span></label>';
+  }).join('');
+  $('#data').min = QE.hoje();
+
+  form.addEventListener('change', function (e) {
+    if (e.target.name === 'tipo') {
+      $('#temaBox').hidden = e.target.value !== 'tematico';
+      if (e.target.value !== 'tematico') $('#tema').value = '';
+    }
+    if (e.target.id === 'data') { marcaDatas(); avisoData(); }
+  });
+
+  /* Datas livres */
+  let dispTodas = [];
+  const MESES_L = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const vendida = function (v) { return !!v && dispTodas.some(function (x) { return x.d === v && !x.livre; }); };
+  function desenhaCalendario() {
+    if (!dispTodas.length) { $('#cal').hidden = true; return; }
+    const ds = dispTodas.map(function (x) { return x.d; }).sort();
+    const ini = QE.parseData(ds[0]), fim = QE.parseData(ds[ds.length - 1]);
+    const mapa = {}; dispTodas.forEach(function (x) { mapa[x.d] = x.livre; });
+    const sel = $('#data').value;
+    let h = '<p class="cal-t">Disponibilidade de datas</p><div class="cal-ms">';
+    for (let a = ini.getFullYear(), m = ini.getMonth(); a < fim.getFullYear() || (a === fim.getFullYear() && m <= fim.getMonth()); m++) {
+      if (m > 11) { m = 0; a++; }
+      const prim = new Date(a, m, 1).getDay(), dias = new Date(a, m + 1, 0).getDate();
+      h += '<div class="cal-m"><b>' + MESES_L[m] + ' ' + a + '</b><div class="cal-g">' + ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(function (x) { return '<i>' + x + '</i>'; }).join('');
+      for (let i = 0; i < prim; i++) h += '<span></span>';
+      for (let d = 1; d <= dias; d++) {
+        const iso = a + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        const st = mapa[iso];
+        if (st === true) h += '<button type="button" class="free' + (iso === sel ? ' on' : '') + '" data-d="' + iso + '" aria-label="' + d + ' de ' + MESES_L[m] + ', disponível">' + d + '</button>';
+        else if (st === false) h += '<span class="sold" title="Indisponível">' + d + '</span>';
+        else h += '<span class="na">' + d + '</span>';
+      }
+      h += '</div></div>';
+      if (a === fim.getFullYear() && m === fim.getMonth()) break;
+    }
+    h += '</div><p class="cal-l"><i class="free"></i> disponível &nbsp; <i class="sold"></i> indisponível &nbsp; <i class="na"></i> consulte-nos</p>';
+    $('#cal').innerHTML = h; $('#cal').hidden = false;
+  }
+  function avisoData() {
+    const v = $('#data').value, ocupada = vendida(v);
+    $('#dtAviso').hidden = !ocupada;
+    if (ocupada) {
+      $('#dtAviso').innerHTML = ocultarForm ? '<b>Esta data não está disponível.</b> Escolha outra data ou fale com a gente pelo WhatsApp.' : '<b>Esta data não está disponível.</b> Você pode escolher outra data no calendário abaixo.';
+      if (ocultarForm) $('#cal').hidden = true; else desenhaCalendario();
+      $('#data').classList.add('invalid');
+    } else { $('#cal').hidden = true; $('#data').classList.remove('invalid'); }
+    return ocupada;
+  }
+  $('#cal').addEventListener('click', function (e) {
+    const b = e.target.closest('button[data-d]'); if (!b) return;
+    $('#data').value = b.dataset.d; marcaDatas(); avisoData(); $('#erro').hidden = true;
+  });
+  let ocultarForm = false;
+  QE.db.dispInfo().then(function (info) {
+    const lista = info.datas; ocultarForm = !!info.ocultarForm;
+    dispTodas = lista;
+    const hoje = QE.hoje();
+    const livres = lista.filter(function (x) { return x.livre && x.d >= hoje; }).sort(function (a, b) { return a.d < b.d ? -1 : 1; });
+    if (!livres.length || ocultarForm) return;
+    $('#datas').hidden = false;
+    $('#datasLista').innerHTML = livres.map(function (x) {
+      return '<button type="button" data-d="' + x.d + '" aria-pressed="false">' + QE.fmtDM(x.d) + ' (' + WD[QE.parseData(x.d).getDay()].slice(0, 3) + ')</button>';
+    }).join('');
+  }).catch(function () { /* sem disponibilidade: o campo de data segue livre */ });
+  $('#datasLista').addEventListener('click', function (e) {
+    const b = e.target.closest('button'); if (!b) return;
+    $('#data').value = b.dataset.d; marcaDatas(); avisoData();
+  });
+  function marcaDatas() {
+    const v = $('#data').value; if ($('#dtAviso') && !$('#dtAviso').hidden && !vendida(v)) avisoData();
+    $$('#datasLista button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.d === v ? 'true' : 'false'); });
+  }
+
+  /* ---------- Validação e revisão ---------- */
+  function erro(msg, el) {
+    const box = $('#erro'); box.textContent = msg; box.hidden = false;
+    if (el) { el.classList.add('invalid'); if (el.focus) el.focus(); }
+    box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+  form.addEventListener('input', function (e) {
+    if (e.target.name === 'telefone') e.target.value = QE.maskTel(e.target.value);
+    e.target.classList.remove('invalid'); $('#erro').hidden = true;
+  });
+
+  let pedido = null;
+  const g = function (n) { return (form.elements[n] && form.elements[n].value || '').trim(); };
+  const radio = function (n) { const r = form.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : ''; };
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (form.website.value) return; // antispam
+    $$('.invalid').forEach(function (x) { x.classList.remove('invalid'); });
+    const obrig = [['empresa', 'a empresa solicitante'], ['contato', 'o seu nome'], ['email', 'o e-mail'], ['telefone', 'o WhatsApp'], ['dataEvento', 'a data pretendida'], ['qtd', 'a quantidade de pessoas']];
+    for (const o of obrig) { if (!g(o[0])) return erro('Preencha ' + o[1] + '.', form.elements[o[0]]); }
+    if (!/^\S+@\S+\.\S+$/.test(g('email'))) return erro('Confira o e-mail: parece incompleto.', form.elements.email);
+    if (g('telefone').replace(/\D/g, '').length < 10) return erro('Confira o WhatsApp: inclua o DDD.', form.elements.telefone);
+    const qtd = parseInt(g('qtd'), 10);
+    if (!(qtd >= 10)) return erro('Informe a quantidade de pessoas (mínimo 10).', form.elements.qtd);
+    if (g('dataEvento') < QE.hoje()) return erro('Escolha uma data a partir de hoje.', form.elements.dataEvento);
+    if (vendida(g('dataEvento'))) { avisoData(); return erro('Esta data não está disponível. Escolha outra no calendário.', form.elements.dataEvento); }
+    const perguntas = [['tipo', 'o tipo de evento'], ['escopo', 'o pacote de interesse'], ['cardapio', 'a preferência de cardápio'], ['cafe', 'se quer café da manhã'], ['doces', 'se quer mesa de doces'], ['nf', 'se precisa de nota fiscal']];
+    for (const p of perguntas) { if (!radio(p[0])) return erro('Escolha ' + p[1] + '.', form.querySelector('input[name="' + p[0] + '"]')); }
+    if (radio('tipo') === 'tematico' && !g('tema')) return erro('Conte qual é o tema do evento.', form.elements.tema);
+
+    pedido = {
+      empresa: g('empresa'), contato: g('contato'), email: g('email'), telefone: g('telefone'),
+      dataEvento: g('dataEvento'), qtd: qtd, tipo: radio('tipo'), tema: g('tema'),
+      escopo: radio('escopo'), cardapio: radio('cardapio'), cardapios: [radio('cardapio')],
+      cafe: radio('cafe') === 'sim', doces: radio('doces') === 'sim', nf: radio('nf') === 'sim', obs: g('obs'), origem: 'site'
+    };
+    const linhas = [
+      ['Empresa', esc(pedido.empresa)], ['Contato', esc(pedido.contato)], ['E-mail', esc(pedido.email)], ['WhatsApp', esc(pedido.telefone)],
+      ['Data', QE.fmtData(pedido.dataEvento) + ' (' + WD[QE.parseData(pedido.dataEvento).getDay()] + ')'], ['Pessoas', pedido.qtd],
+      ['Tipo de evento', pedido.tipo === 'tematico' ? 'Confraternização - temática: ' + esc(pedido.tema) : 'Confraternização - final de ano'],
+      ['Pacote', pedido.escopo === 'premium' ? 'Premium' : 'Standard'], ['Cardápio', esc(QE.cardNome(pedido.cardapio))],
+      ['Café da manhã', pedido.cafe ? 'Sim' : 'Não'], ['Mesa de doces', pedido.doces ? 'Sim' : 'Não'], ['Nota fiscal', pedido.nf ? 'Sim' : 'Não']
+    ];
+    if (pedido.obs) linhas.push(['Observações', esc(pedido.obs)]);
+    $('#resumo').innerHTML = linhas.map(function (l) { return '<dt>' + l[0] + '</dt><dd>' + l[1] + '</dd>'; }).join('');
+    $('#erroEnvio').hidden = true;
+    etapa('rev');
+  });
+  $('#voltar').addEventListener('click', function () { etapa('form'); });
+
+  /* ---------- Envio ---------- */
+  $('#confirmar').addEventListener('click', async function () {
+    if (!pedido) return;
+    const btn = this, txt = btn.textContent, er = $('#erroEnvio');
+    btn.disabled = true; btn.textContent = 'Enviando…'; er.hidden = true;
+    try {
+      await QE.db.enviar(pedido);
+      $('#okTxt').textContent = 'Recebemos o pedido da ' + pedido.empresa + ' para ' + QE.fmtData(pedido.dataEvento) + ' (' + pedido.qtd + ' pessoas).';
+      const msg = 'Olá! Acabei de enviar um pedido de orçamento pelo site. Empresa: ' + pedido.empresa + ', data: ' + QE.fmtData(pedido.dataEvento) + ', ' + pedido.qtd + ' pessoas.';
+      $('#okWa').href = 'https://wa.me/' + QE.CONTATOS.rodrigoWa + '?text=' + encodeURIComponent(msg);
+      form.reset(); $('#temaBox').hidden = true; marcaDatas();
+      pedido = null; etapa('ok'); $('#stOk').focus();
+    } catch (err) {
+      console.error(err);
+      const c = err && err.code || '';
+      er.textContent = (c === 'permission-denied' ? 'O sistema ainda não está aceitando pedidos. ' : c === 'timeout' ? 'A conexão demorou demais. ' : 'Não foi possível enviar agora. ') +
+        'Tente de novo em instantes ou chame a gente no WhatsApp: ' + QE.CONTATOS.rodrigo + (c ? ' (' + c + ')' : '') + '.';
+      er.hidden = false;
+    } finally { btn.disabled = false; btn.textContent = txt; }
+  });
+})();
+
+</script>
+</body>
+</html>
