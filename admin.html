@@ -705,7 +705,7 @@ body.pv-lock { overflow: hidden; }
 .pg.ctp { background: #fff; color: #000; font-family: 'Times New Roman', Times, serif; font-size: 12.5px; font-weight: 400; line-height: 1.38; padding: 62px 72px 70px; }
 .pg.ctp .ctb { display: flow-root; width: 650px; }
 .pg.ctp .ctb p { margin: 0 0 11px; text-align: justify; }
-.pg.ctp .ctb p.ctt { font-size: 15px; font-weight: 700; text-decoration: underline; margin-bottom: 18px; text-align: left; }
+.pg.ctp .ctb p.ctt { font-size: 15px; font-weight: 700; text-decoration: underline; margin-bottom: 18px; text-align: center; }
 .pg.ctp .ctb p.ctch { margin-bottom: 3px; }
 .pg.ctp .ctb p.ctin { padding-left: 22px; }
 .pg.ctp .ctb p.ctpc { margin-bottom: 8px; }
@@ -733,6 +733,9 @@ body.pv-lock { overflow: hidden; }
 .pg.obp .obh { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #d8c08c; margin-bottom: 16px; padding-bottom: 8px; }
 .pg.obp .obh h2 { margin: 0; font-size: 34px; } .pg.obp .obh em { font-size: 11px; letter-spacing: .12em; color: #b99557; font-style: normal; }
 .pg.obp .pn { position: absolute; bottom: 24px; right: 40px; font-size: 9px; color: #8a8374; }
+
+#vOrcBusca, #vOrc { width: 100%; box-sizing: border-box; display: block; font: inherit; }
+#vOrcBusca { margin-bottom: 6px; }
 </style>
 </head>
 <body>
@@ -908,7 +911,7 @@ body.pv-lock { overflow: hidden; }
     <div id="visModal" class="vmodal" hidden>
       <form id="visForm" class="vbox" autocomplete="off">
         <h3 id="visTitulo">Nova visita</h3>
-        <div class="f"><label for="vOrc">Orçamento relacionado (opcional — puxa os dados)</label><input id="vOrcBusca" type="search" placeholder="Digite para buscar (nome, tipo ou data)…" autocomplete="off" style="margin-bottom:6px"><select id="vOrc"></select><small id="vOrcInfo" class="hint"></small></div>
+        <div class="f"><label for="vOrc">Orçamento relacionado (opcional — puxa os dados)</label><input id="vOrcBusca" type="text" placeholder="Digite para buscar (nome, tipo ou data)…" autocomplete="off" style="margin-bottom:6px"><select id="vOrc"></select><small id="vOrcInfo" class="hint"></small></div>
         <div class="g2">
           <div class="f"><label for="vTipo">Tipo de evento</label><select id="vTipo"></select></div>
           <div class="f" id="vOutroBox" hidden><label for="vOutro">Qual evento?</label><input id="vOutro"></div>
@@ -2134,8 +2137,8 @@ body.pv-lock { overflow: hidden; }
       '<div class="tt"><span class="lbl">Total geral</span><div class="tv dsp">' + R(c.total) + '</div></div></div>' +
       '<div class="rt"><div class="card pay av"><div class="top"><span class="lbl">À vista</span>' + (eco > 0 ? '<span class="eco">economia de ' + R(eco) + '</span>' : '') + '</div><div class="big dsp">' + R(c.avista) + '</div><div class="s">Transferência bancária, boleto ou Pix</div></div>' +
       '<div class="card pay"><div class="top"><span class="lbl">Parcelado</span><span class="s">' + c.parcelas.length + '× sem acréscimo</span></div><div class="big dsp">' + c.parcelas.length + (c.parcelas.length === 1 ? ' parcela' : ' parcelas') + '</div>' + meses + '</div></div></div>' +
-      '<div class="nts"><div><i class="it">01</i>Transferência bancária ou Pix.</div><div><i class="it">02</i>Cartão de crédito — ' + (c.cartaoCC ? 'parcelas com os juros do cartão.' : 'consulte as taxas da operadora.') + (!c.cartaoCC && cartaoTxt ? '<br><span style="font-size:8px">' + cartaoTxt + '</span>' : '') + '</div><div><i class="it">03</i>Pagamento total até 7 dias antes do evento.</div></div>' +
-      (c.cartaoCC ? '<div class="card pay ccpdf"><div class="top"><span class="lbl">Cartão de crédito</span><span class="s">parcelas com juros do cartão</span></div><div class="ccg">' + c.cartaoCC.map(function (x) { return '<div><b class="dsp">' + x.meses + '× ' + R(x.parcela) + '</b><span>total ' + R(x.total) + ' · juros ' + String(x.taxa).replace('.', ',') + '%</span></div>'; }).join('') + '</div></div>' : '') +
+      '<div class="nts"><div><i class="it">01</i>Transferência bancária ou Pix.</div><div><i class="it">02</i>Cartão de crédito — ' + (c.cartaoCC ? 'opções de parcelamento abaixo.' : 'consulte as taxas da operadora.') + (!c.cartaoCC && cartaoTxt ? '<br><span style="font-size:8px">' + cartaoTxt + '</span>' : '') + '</div><div><i class="it">03</i>Pagamento total até 7 dias antes do evento.</div></div>' +
+      (c.cartaoCC ? '<div class="card pay ccpdf"><div class="top"><span class="lbl">Cartão de crédito</span><span class="s">parcelamento no cartão</span></div><div class="ccg">' + c.cartaoCC.map(function (x) { return '<div><b class="dsp">' + x.meses + '× ' + R(x.parcela) + '</b><span>total ' + R(x.total) + '</span></div>'; }).join('') + '</div></div>' : '') +
       '<div class="two" style="margin-top:22px"><div><div class="sec" style="margin:0 0 4px"><h3 class="dsp" style="font-size:23px">Dados para contrato</h3></div>' +
       ['Nome / Razão social', 'CPF / CNPJ', 'RG', 'Endereço', 'CEP', 'E-mail'].map(function (x) { return '<div class="ctr">' + x + '</div>'; }).join('') + '</div>' +
       '<div><div class="sec" style="margin:0 0 8px"><h3 class="dsp" style="font-size:23px">Contatos</h3></div>' +
@@ -2298,7 +2301,7 @@ body.pv-lock { overflow: hidden; }
   QE.contratoPadrao = function (req, ct) {
     const ev = QE.evento(req);
     const d = Object.assign({
-      nome: req.empresa || '', doc: '', rg: '', end: '', cep: '', email: req.email || '',
+      nome: req.empresa || '', doc: '', rg: '', end: '', rua: '', num: '', bairro: '', cidade: '', uf: '', cep: '', email: req.email || '',
       dataAss: QE.hoje(),
       t1: { nome: 'Júlia Alves Ferreira', cpf: '470.079.728-29', email: 'juliaalvesferreira241203@gmail.com' },
       t2on: false, t2: { nome: '', cpf: '', email: '' },
@@ -2307,6 +2310,8 @@ body.pv-lock { overflow: hidden; }
     d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {});
     d.t2 = Object.assign({ nome: '', cpf: '', email: '' }, d.t2 || {});
     d.social = ev.social;
+    const partes = [[d.rua, d.num ? ', ' + d.num : ''], [d.bairro, ''], [d.cidade, d.uf ? ' – ' + d.uf : '']].map(function (x) { return x[0] ? x[0] + x[1] : ''; }).filter(Boolean);
+    d.endTxt = partes.length ? partes.join(', ') : (d.end || '');
     return d;
   };
   /* valores que vêm da proposta (vermelho) */
@@ -2326,10 +2331,9 @@ body.pv-lock { overflow: hidden; }
   /* Blocos do contrato (cada um é um parágrafo/cláusula). marcar = pinta amarelo/vermelho/verde para conferência na tela */
   QE.contratoBlocos = function (req, cfg, ctIn, marcar) {
     const ct = QE.contratoPadrao(req, ctIn), P = QE.contratoProposta(req, cfg), c = P.c, ev = P.ev, social = ev.social;
-    const Y = function (t) { return marcar ? '<span class="hl-y">' + ESC(t) + '</span>' : ESC(t); };
-    const R = function (t) { return marcar ? '<span class="hl-r">' + ESC(t) + '</span>' : ESC(t); };
-    const G = function (t) { return marcar ? '<span class="hl-g">' + ESC(t) + '</span>' : ESC(t); };
-    const Yb = function (t) { return marcar ? '<span class="hl-y"><b>' + ESC(t) + '</b></span>' : '<b>' + ESC(t) + '</b>'; };
+    const Y = function (t) { return marcar ? '<b>' + ESC(t) + '</b>' : ESC(t); };
+    const R = Y, G = Y;
+    const Yb = function (t) { return '<b>' + ESC(t) + '</b>'; };
     const dataEv = QE.fmtData(req.dataEvento) || '__/__/____';
     const tipoUp = social ? ev.tag.toUpperCase() : 'CONFRATERNIZAÇÃO DE EMPRESA';
     const tipoNm = social ? ev.tag : 'Confraternização de empresa';
@@ -2338,8 +2342,8 @@ body.pv-lock { overflow: hidden; }
     const hd = function (t) { return '<p class="ctch">' + t + '</p>'; };
 
     const contratante = social
-      ? Yb(ct.nome || '________') + ', ' + Y('CPF: ' + (ct.doc || '________') + ', R.G. ' + (ct.rg || '________') + ', residente e domiciliado(a) em ' + (ct.end || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'))
-      : Yb(ct.nome || '________') + ', ' + Y('CNPJ: ' + (ct.doc || '________') + ', ' + (ct.end || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'));
+      ? Yb(ct.nome || '________') + ', ' + Y('CPF: ' + (ct.doc || '________') + ', R.G. ' + (ct.rg || '________') + ', residente e domiciliado(a) em ' + (ct.endTxt || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'))
+      : Yb(ct.nome || '________') + ', ' + Y('CNPJ: ' + (ct.doc || '________') + ', ' + (ct.endTxt || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'));
 
     add('<p class="ctt">CONTRATO DE LOCAÇÃO DE ESPAÇO e FORNECIMENTOS DE SERVIÇOS</p>');
     add(p('Pelo presente instrumento particular, de um lado Quinta dos Esquilos Festas e Eventos Ltda., CNPJ: 47.131.561/0001-93, neste ato, representada por Ana Lúcia Alves Ferreira, CPF: 274.893.198-03, R.G. 32.684.312-7, residente e domiciliada na Rua Alexandre de Gusmão, 935 – Cotia – São Paulo cep: 06706-080, doravante denominado CONTRATADO; e de outro lado ' + contratante + ', doravante simplesmente denominado CONTRATANTE, têm justo e acertado o presente CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, mediante as cláusulas e condições seguintes, que mutuamente aceitam, a saber:'));
@@ -3975,17 +3979,17 @@ body.pv-lock { overflow: hidden; }
     const I = function (k, lab, ph, tipo, extra) { const v = getP(ct, k); return '<div class="f"><label>' + lab + '</label><input type="' + (tipo || 'text') + '" data-ct="' + k + '" value="' + esc(v === null || v === undefined ? '' : v) + '" placeholder="' + esc(ph || '') + '"' + (extra || '') + '></div>'; };
     const rows = P.c.parcelas.map(function (pc, i) { return '<li>' + (P.c.parcelas.length === 1 ? 'Pagamento único' : i === 0 ? 'Sinal' : 'Parcela ' + i) + ': <b>' + QE.rs(pc.valor) + '</b> até ' + QE.fmtData(pc.data) + '</li>'; }).join('');
     return '<div class="box open"><div class="in">' +
-      '<p class="hint" style="margin-top:0"><span class="hl-y">Amarelo</span> = você preenche aqui · <span class="hl-r">Vermelho</span> = vem da proposta · <span class="hl-g">Verde</span> = vem destes dados. As cores aparecem só na tela; o PDF sai sem elas.</p>' +
+      '<p class="hint" style="margin-top:0">Na prévia, em <b>negrito</b> ficam os dados preenchidos aqui ou vindos da proposta. O PDF sai sem negrito nesses trechos.</p>' +
       '<h4 class="sh first">' + (social ? 'Dados do contratante (pessoa física)' : 'Dados da empresa contratante') + '</h4>' +
       I('nome', social ? 'Nome completo' : 'Razão social') + '<div class="g2">' + I('doc', social ? 'CPF' : 'CNPJ') + (social ? I('rg', 'RG') : I('cep', 'CEP')) + '</div>' +
-      I('end', social ? 'Endereço de moradia (rua, nº, bairro, cidade – UF)' : 'Endereço (rua, nº, bairro, cidade – UF)') + '<div class="g2">' + (social ? I('cep', 'CEP') : '') + I('email', 'E-mail', '', 'email') + '</div>' +
+      '<p class="hint" style="margin:6px 0 2px">' + (social ? 'Endereço de moradia' : 'Endereço') + '</p>' + I('rua', 'Rua') + '<div class="g2">' + I('num', 'Número') + I('bairro', 'Bairro') + '</div><div class="g2">' + I('cidade', 'Cidade') + I('uf', 'UF', 'SP', 'text', ' maxlength="2" style="text-transform:uppercase"') + '</div>' + '<div class="g2">' + (social ? I('cep', 'CEP') : '') + I('email', 'E-mail', '', 'email') + '</div>' +
       '<h4 class="sh">Assinatura</h4>' + I('dataAss', 'Data da assinatura', '', 'date') +
       '<h4 class="sh">Testemunhas</h4><p class="hint" style="margin:0 0 4px">Testemunha 1</p>' + I('t1.nome', 'Nome') + '<div class="g2">' + I('t1.cpf', 'CPF') + I('t1.email', 'E-mail') + '</div>' +
       '<label class="chk"><input type="checkbox" data-ct="t2on"' + (ct.t2on ? ' checked' : '') + '> Adicionar 2ª testemunha (só aparece no contrato se marcado)</label>' +
       '<div id="ctT2"' + (ct.t2on ? '' : ' hidden') + '>' + I('t2.nome', 'Nome da 2ª testemunha') + '<div class="g2">' + I('t2.cpf', 'CPF') + I('t2.email', 'E-mail') + '</div></div>' +
       '<h4 class="sh">Regras de acréscimo e staff</h4><div class="g2">' + I('pctAcr', 'Acréscimo de pessoas (%)', '10', 'number', ' min="1" max="100"') + I('staffAdic', 'Staff adicional fora do prazo (R$)', String((P.staff + 50) || ''), 'number', ' min="0" step="0.01"') + '</div>' +
       '<p class="hint">Staff adicional: se ficar vazio, usa o valor do staff da proposta + R$ 50,00.</p>' +
-      '<h4 class="sh">Vem da proposta (vermelho)</h4><ul class="ctinfo"><li>Evento: <b>' + esc(P.ev.tag) + '</b> em <b>' + esc(QE.fmtData(cur.dataEvento) || 'sem data') + '</b> para <b>' + P.qtd + '</b> pessoas</li>' +
+      '<h4 class="sh">Vem da proposta</h4><ul class="ctinfo"><li>Evento: <b>' + esc(P.ev.tag) + '</b> em <b>' + esc(QE.fmtData(cur.dataEvento) || 'sem data') + '</b> para <b>' + P.qtd + '</b> pessoas</li>' +
       '<li>Valor total: <b>' + QE.rs(P.c.total) + '</b></li>' + rows + '<li>Pessoa excedente: <b>' + QE.rs(P.excedente) + '</b> · Staff do cliente: <b>' + QE.rs(P.staff) + '</b></li>' +
       '<li>Anexos: ' + esc(P.anexos.join(' · ')) + '</li></ul><p class="hint">Para mudar algo vermelho, volte à proposta, ajuste e abra o contrato de novo.</p>' +
       '</div></div>';
@@ -4012,6 +4016,7 @@ body.pv-lock { overflow: hidden; }
     if (k === 'pctAcr' || k === 'staffAdic') v = v === '' ? null : Number(v);
     setP(cur.contrato, k, v); dirty = true;
     if (k === 't2on') $('#ctT2').hidden = !v;
+    if (k === 'uf') { v = String(v).toUpperCase(); t.value = v; setP(cur.contrato, k, v); }
     if (k === 'nome') $('#ctTitulo').textContent = 'Contrato — ' + (v || cur.empresa || 'sem nome');
     clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250);
   }
