@@ -206,8 +206,8 @@ details.box > .in { padding: 4px 14px 14px; display: grid; gap: 10px; }
 .crn { padding: 4px 6px; }
 .cradd { margin-top: 12px; padding: 10px; border: 1px dashed var(--line); border-radius: 8px; display: grid; gap: 8px; background: #fbf9f4; }
 
-.kb { grid-template-columns: repeat(5, minmax(200px, 1fr)); }
-@media (max-width: 800px) { .kb { grid-template-columns: repeat(5, 240px); } }
+.kb { grid-template-columns: repeat(4, minmax(200px, 1fr)); }
+@media (max-width: 800px) { .kb { grid-template-columns: repeat(4, 240px); } }
 .badge.contrato { background: #e5d9f0; color: #5b3a7a; font-weight: 700; }
 .parbt { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
 
@@ -619,6 +619,10 @@ body.pv-lock { overflow: hidden; }
 .c-mus { background: linear-gradient(to right, #9a6a40, #6f4727); }
 .c-atr { background: linear-gradient(to right, #dfae9b, #c58873); }
 .c-out { background: linear-gradient(to right, #b8ad96, #968970); }
+.c-x1 { background: linear-gradient(to right, #6f8350, #4d5f35); }
+.c-x2 { background: linear-gradient(to right, #c98a6b, #a5654a); }
+.c-x3 { background: linear-gradient(to right, #ecdcb4, #d9c38e); }
+.c-x4 { background: linear-gradient(to right, #8a9a9e, #647478); }
 .cn-b.c-rec { color: #22340f; } .cn-b.c-buf { color: #2f2210; } .cn-b.c-beb { color: #fff; } .cn-b.c-mus { color: #fff; } .cn-b.c-atr { color: #3d1f14; } .cn-b.c-out { color: #2b2418; }
 .cn-b { font-weight: 600; }
 .cn-s .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: 2px; }
@@ -680,6 +684,55 @@ body.pv-lock { overflow: hidden; }
 .cn-bl { top: calc(var(--rh, 30px) * 0.14 + 12px); font-size: 7px; }
 .cn-leg { margin-top: 10px; }
 
+
+.cpk { display: flex; flex-wrap: wrap; gap: 6px; }
+.cpk .cw { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
+.cpk .cw.auto { background: repeating-linear-gradient(45deg, #fff, #fff 4px, #e6dfd0 4px, #e6dfd0 8px); }
+.cpk .cw.on { box-shadow: 0 0 0 2px var(--gold, #b48f55); }
+.crcor { display: flex; align-items: center; gap: 8px; }
+
+.cctab { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 6px 0; }
+.cctab th, .cctab td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.ccpdf { margin: 10px 34px 0; padding: 8px 14px; }
+.ccpdf .ccg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 4px; }
+.ccpdf .ccg b { display: block; font-size: 17px; }
+.ccpdf .ccg span { font-size: 8px; color: var(--muted); }
+
+/* ===== Contrato ===== */
+.hl-y { background: #ffff00; } .hl-r { background: #ff0000; color: #000; } .hl-g { background: #00ff00; }
+.ctinfo { margin: 0 0 6px; padding-left: 18px; font-size: .88rem; } .ctinfo li { margin: 2px 0; }
+.ct-pvin .pg { margin-bottom: 14px; box-shadow: 0 1px 8px rgba(0, 0, 0, .25); }
+.pg.ctp { background: #fff; color: #000; font-family: 'Times New Roman', Times, serif; font-size: 12.5px; font-weight: 400; line-height: 1.38; padding: 62px 72px 70px; }
+.pg.ctp .ctb { display: flow-root; width: 650px; }
+.pg.ctp .ctb p { margin: 0 0 11px; text-align: justify; }
+.pg.ctp .ctb p.ctt { font-size: 15px; font-weight: 700; text-decoration: underline; margin-bottom: 18px; text-align: left; }
+.pg.ctp .ctb p.ctch { margin-bottom: 3px; }
+.pg.ctp .ctb p.ctin { padding-left: 22px; }
+.pg.ctp .ctb p.ctpc { margin-bottom: 8px; }
+.pg.ctp .ctb .ctsg { margin-top: 44px; line-height: 1.35; }
+.pg.ctp .pn { position: absolute; bottom: 34px; left: 0; right: 72px; text-align: right; font-size: 11px; }
+.ctm .pg.ctp { height: auto; }
+/* ===== Obras ===== */
+.obl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px; padding: 8px 0; border-top: 1px dashed var(--line); align-items: end; }
+.obl .obn { grid-column: 1 / 3; font-weight: 700; }
+.obl label { font-size: .75rem; display: grid; gap: 2px; }
+.obl .obd { font-size: .8rem; align-self: center; color: var(--muted, #8a8374); }
+.obl .crb { grid-column: 1 / 3; display: flex; gap: 4px; }
+.obl .crcor { grid-column: 1 / 3; }
+.ob-doc { background: #faf8f3; padding: 22px 20px; border-radius: 6px; min-width: 640px; }
+.ob-doc h3 { margin: 0; font-size: 26px; } .ob-doc > p { margin: 0 0 12px; font-size: 12px; color: #8a8374; }
+.ob-g { background: #fff; border: 1px solid #e7dfce; border-radius: 10px; padding: 8px 12px 10px; font-family: 'Poppins', Arial, sans-serif; }
+.ob-h, .ob-r { display: grid; grid-template-columns: 170px 1fr; align-items: center; }
+.ob-hs { position: relative; height: 18px; } .ob-hs span { position: absolute; top: 0; font-size: 8px; color: #8a8374; text-align: left; white-space: nowrap; overflow: hidden; }
+.ob-rows { position: relative; } .ob-gl { position: absolute; left: 170px; right: 0; top: 0; bottom: 0; } .ob-gl i { position: absolute; top: 0; bottom: 0; width: 1px; background: #efe9dc; }
+.ob-s { position: relative; font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: #b99557; padding: 8px 0 2px; font-weight: 600; }
+.ob-r { position: relative; height: 26px; } .ob-l { font-size: 10px; padding-right: 8px; line-height: 1.15; }
+.ob-t { position: relative; height: 26px; } .ob-b { position: absolute; top: 5px; height: 16px; border-radius: 99px; }
+.ob-bl { position: absolute; top: 7px; transform: translateX(-50%); font-size: 8px; white-space: nowrap; color: #1c1a16; font-weight: 600; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+.pg.obp { background: #faf8f3; padding: 46px 40px; }
+.pg.obp .obh { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #d8c08c; margin-bottom: 16px; padding-bottom: 8px; }
+.pg.obp .obh h2 { margin: 0; font-size: 34px; } .pg.obp .obh em { font-size: 11px; letter-spacing: .12em; color: #b99557; font-style: normal; }
+.pg.obp .pn { position: absolute; bottom: 24px; right: 40px; font-size: 9px; color: #8a8374; }
 </style>
 </head>
 <body>
@@ -703,6 +756,7 @@ body.pv-lock { overflow: hidden; }
       <button data-v="lista" class="on">Solicitações</button>
       <button data-v="kanban">Kanban</button>
       <button data-v="vis">Visitas</button>
+      <button data-v="obras">Obras</button>
       <button data-v="disp">Disponibilidade</button>
       <button data-v="tab">Tabelas e preços</button>
       <button data-v="fin">Financeiro</button>
@@ -746,6 +800,7 @@ body.pv-lock { overflow: hidden; }
           <button id="enviarWa" class="btn pri">Enviar orçamento</button>
           <button id="pdf" class="btn">Baixar PDF</button>
           <button id="imprimir" class="btn ghost">Imprimir</button>
+          <button id="gerarContrato" class="btn" hidden>Gerar contrato</button>
         </div>
       </div>
       <p id="avisos" class="avisos" hidden></p>
@@ -804,6 +859,35 @@ body.pv-lock { overflow: hidden; }
     </div>
 
     <!-- Visitas -->
+    <section id="v-contrato" class="view" hidden>
+      <div class="head sticky">
+        <button id="ctVoltar" class="btn ghost">Voltar à proposta</button>
+        <h2 id="ctTitulo">Contrato</h2>
+        <div class="head-r"><button id="ctSalvar" class="btn">Salvar dados</button><button id="ctPdf" class="btn pri">Baixar contrato em PDF</button></div>
+      </div>
+      <div class="ed">
+        <div class="ed-ctl" id="ctForm"></div>
+        <div class="ed-pv"><div id="ctPv" class="pv"><div id="ctPvIn" class="ct-pvin"></div></div></div>
+      </div>
+    </section>
+
+    <section id="v-obras" class="view" hidden>
+      <div class="head"><h2>Obras</h2>
+        <div class="head-r"><select id="obSel" aria-label="Obra"></select><button id="obNova" class="btn ghost">Nova obra</button><button id="obExcluir" class="btn ghost">Excluir obra</button><button id="obPdf" class="btn pri">Baixar PDF</button></div></div>
+      <p class="sub">Planeje as etapas da obra em dias. Tudo é editável: nome, seção, dia de início e fim, cor. Salva automaticamente.</p>
+      <div class="ed">
+        <div class="ed-ctl">
+          <div class="box open"><div class="in">
+            <div class="g2"><div class="f"><label>Nome da obra</label><input id="obNome"></div><div class="f"><label>Data de início (opcional)</label><input type="date" id="obIni"></div></div>
+            <datalist id="obSecs"></datalist>
+            <div id="obItens"></div>
+            <button id="obAdd" class="btn sm" type="button">+ Adicionar etapa</button>
+          </div></div>
+        </div>
+        <div class="ed-pv"><div class="pv"><div id="obPv"></div></div></div>
+      </div>
+    </section>
+
     <section id="v-vis" class="view" hidden>
       <div class="head"><h2>Visitas</h2><div class="head-r"><button id="visNova" class="btn pri" type="button">+ Nova visita</button></div></div>
       <p class="lead">Programação das visitas ao espaço. Você pode puxar os dados de um orçamento e só preencher a data e o horário da visita.</p>
@@ -824,7 +908,7 @@ body.pv-lock { overflow: hidden; }
     <div id="visModal" class="vmodal" hidden>
       <form id="visForm" class="vbox" autocomplete="off">
         <h3 id="visTitulo">Nova visita</h3>
-        <div class="f"><label for="vOrc">Orçamento relacionado (opcional — puxa os dados)</label><select id="vOrc"></select></div>
+        <div class="f"><label for="vOrc">Orçamento relacionado (opcional — puxa os dados)</label><input id="vOrcBusca" type="search" placeholder="Digite para buscar (nome, tipo ou data)…" autocomplete="off" style="margin-bottom:6px"><select id="vOrc"></select><small id="vOrcInfo" class="hint"></small></div>
         <div class="g2">
           <div class="f"><label for="vTipo">Tipo de evento</label><select id="vTipo"></select></div>
           <div class="f" id="vOutroBox" hidden><label for="vOutro">Qual evento?</label><input id="vOutro"></div>
@@ -1045,8 +1129,8 @@ body.pv-lock { overflow: hidden; }
   QE.CARDAPIOS_ORC = QE.CARDAPIOS.map(function (c) { return [c.id, c.nome]; });
   /* Nomes antigos (pedidos já recebidos) continuam aparecendo corretamente */
   QE.CARDAPIOS_ALL = QE.CARDAPIOS_ORC.concat([['boteco', 'Boteco'], ['junino', 'Junino'], ['brasilidades', 'Brasilidades'], ['personalizado', 'Personalizado']]);
-  QE.STATUS = { novo: 'Pendente', enviado: 'Enviado', andamento: 'Em andamento', contrato: 'Em contrato', ganho: 'Ganho' };
-  QE.normStatus = function (st) { return QE.STATUS[st] ? st : (st === 'orcado' ? 'enviado' : st === 'fechado' ? 'ganho' : 'novo'); };
+  QE.STATUS = { novo: 'Pendente', enviado: 'Enviado', contrato: 'Em contrato', ganho: 'Ganho' };
+  QE.normStatus = function (st) { return QE.STATUS[st] ? st : (st === 'andamento' ? 'enviado' : st === 'orcado' ? 'enviado' : st === 'fechado' ? 'ganho' : 'novo'); };
 
   QE.cardSel = function (req) {
     const a = (req.cardapios && req.cardapios.length) ? req.cardapios : (req.cardapio ? [req.cardapio] : []);
@@ -1133,6 +1217,7 @@ body.pv-lock { overflow: hidden; }
      Cada item traz os horários do modelo B; o campo A só lista o que muda no modelo A.
      link: 'incl' = sempre · 'prem' = só Premium · 'man' = ligado à mão · 'semcafe' = só no modelo sem café ·
            id de linha (c1, d1…) = aparece se o opcional estiver incluso · 'banda2' / 'dj2' = segunda banda / segundo DJ */
+  QE.CORES_CRON = [['c-rec', 'Verde claro'], ['c-buf', 'Dourado'], ['c-beb', 'Verde escuro'], ['c-mus', 'Marrom'], ['c-atr', 'Rosa antigo'], ['c-out', 'Areia'], ['c-x1', 'Oliva'], ['c-x2', 'Terracota'], ['c-x3', 'Creme'], ['c-x4', 'Cinza azulado']];
   QE.CRON_BASE = { A: ['10:00', '18:00'], B: ['12:00', '18:00'], W: ['15:30', '22:00'] };   // W = casamento: evento das 15h30 às 22h
   QE.CRON = [
     { id: 'chegada', sec: 'RECEPÇÃO', nome: 'Chegada dos convidados', ini: '12:00', fim: '12:30', link: 'semcafe' },
@@ -1482,6 +1567,15 @@ body.pv-lock { overflow: hidden; }
       return { meses: m, parcela: ok ? tot / m : null, total: tot };
     });
 
+    /* Cartão de crédito (opcional por orçamento): juros do cartão sobre o total geral */
+    const cc0 = (o && o.cartaoCredito) || {};
+    const CC_PAD = { 3: 6.12, 6: 8.28, 9: 10.38, 12: 12.4 };
+    const cartaoCC = cc0.on ? [3, 6, 9, 12].map(function (m) {
+      const tx = parseFloat(String(cc0['t' + m]).replace(',', '.')), taxa = isNaN(tx) ? CC_PAD[m] : tx;
+      const tot = Math.round(total * (1 + taxa / 100) * 100) / 100;
+      return { meses: m, taxa: taxa, total: tot, parcela: Math.round(tot / m * 100) / 100 };
+    }) : null;
+
     /* Cronograma */
     const prem = req.escopo !== 'standard';
     const cs = QE.cardSel(req); const cdp = cs.map(function (id) { return QE.cardNome(id); }).filter(Boolean).join(' + ');
@@ -1495,7 +1589,7 @@ body.pv-lock { overflow: hidden; }
     const jn = janelaAuto ? baseJ : jIn;
     const nBandas = linha('e1').on ? Math.max(1, +linha('e1').qtd || 1) : 0;
     const nDjs = Math.max(1, Math.min(3, +o.djs || 1));
-    const customs = (o.cronExtra || []).map(function (x) { return { id: x.id, sec: x.sec || 'OUTROS', nome: x.nome || 'Novo item', ini: x.ini || '12:00', fim: x.fim || '13:00', link: 'incl', custom: true }; });
+    const customs = (o.cronExtra || []).map(function (x) { return { id: x.id, cor: x.cor || '', sec: x.sec || 'OUTROS', nome: x.nome || 'Novo item', ini: x.ini || '12:00', fim: x.fim || '13:00', link: 'incl', custom: true }; });
     let baseCron = QE.CRON.concat(customs);
     if (o.cronOrder && o.cronOrder.length) {
       const ordem = o.cronOrder.filter(function (id) { return baseCron.some(function (b) { return b.id === id; }); });
@@ -1550,7 +1644,7 @@ body.pv-lock { overflow: hidden; }
       janela: jn, janelaAuto: janelaAuto, tpl: tpl, nDjs: nDjs,
       evento: ev, letraExtras: letraExtras,
       grupos: grupos, extras: extras, troca: troca, marca: marca, extrasTot: extrasTot, compl: compl, soma: soma, nfPct: nfPct, nfVal: nfVal, total: total,
-      desc: desc, avista: avista, mesOrc: MESES[dq.getMonth()], parcelas: parcelas, difParc: difParc, parcDia: parcDia, cartao: cartao, cron: cron, prem: prem
+      desc: desc, avista: avista, mesOrc: MESES[dq.getMonth()], parcelas: parcelas, difParc: difParc, parcDia: parcDia, cartao: cartao, cartaoCC: cartaoCC, cron: cron, prem: prem
     };
   };
 
@@ -1816,6 +1910,15 @@ body.pv-lock { overflow: hidden; }
         const d = await fs.collection('config').doc('geral').get();
         return QE.mergeConfig(d.exists ? d.data() : null);
       },
+      async obras() {
+        if (demo) return ld().obras || null;
+        const d = await fs.collection('config').doc('obras').get();
+        return d.exists ? d.data() : null;
+      },
+      async salvarObras(o) {
+        if (demo) { const x = ld(); x.obras = clean(o); sv(x); return; }
+        await fs.collection('config').doc('obras').set(clean(o));
+      },
       async salvarConfig(cfg) {
         if (demo) { const o = ld(); o.cfg = clean(cfg); sv(o); return; }
         await fs.collection('config').doc('geral').set(clean(cfg));
@@ -2031,7 +2134,8 @@ body.pv-lock { overflow: hidden; }
       '<div class="tt"><span class="lbl">Total geral</span><div class="tv dsp">' + R(c.total) + '</div></div></div>' +
       '<div class="rt"><div class="card pay av"><div class="top"><span class="lbl">À vista</span>' + (eco > 0 ? '<span class="eco">economia de ' + R(eco) + '</span>' : '') + '</div><div class="big dsp">' + R(c.avista) + '</div><div class="s">Transferência bancária, boleto ou Pix</div></div>' +
       '<div class="card pay"><div class="top"><span class="lbl">Parcelado</span><span class="s">' + c.parcelas.length + '× sem acréscimo</span></div><div class="big dsp">' + c.parcelas.length + (c.parcelas.length === 1 ? ' parcela' : ' parcelas') + '</div>' + meses + '</div></div></div>' +
-      '<div class="nts"><div><i class="it">01</i>Transferência bancária ou Pix.</div><div><i class="it">02</i>Cartão de crédito — consulte as taxas da operadora.' + (cartaoTxt ? '<br><span style="font-size:8px">' + cartaoTxt + '</span>' : '') + '</div><div><i class="it">03</i>Pagamento total até 7 dias antes do evento.</div></div>' +
+      '<div class="nts"><div><i class="it">01</i>Transferência bancária ou Pix.</div><div><i class="it">02</i>Cartão de crédito — ' + (c.cartaoCC ? 'parcelas com os juros do cartão.' : 'consulte as taxas da operadora.') + (!c.cartaoCC && cartaoTxt ? '<br><span style="font-size:8px">' + cartaoTxt + '</span>' : '') + '</div><div><i class="it">03</i>Pagamento total até 7 dias antes do evento.</div></div>' +
+      (c.cartaoCC ? '<div class="card pay ccpdf"><div class="top"><span class="lbl">Cartão de crédito</span><span class="s">parcelas com juros do cartão</span></div><div class="ccg">' + c.cartaoCC.map(function (x) { return '<div><b class="dsp">' + x.meses + '× ' + R(x.parcela) + '</b><span>total ' + R(x.total) + ' · juros ' + String(x.taxa).replace('.', ',') + '%</span></div>'; }).join('') + '</div></div>' : '') +
       '<div class="two" style="margin-top:22px"><div><div class="sec" style="margin:0 0 4px"><h3 class="dsp" style="font-size:23px">Dados para contrato</h3></div>' +
       ['Nome / Razão social', 'CPF / CNPJ', 'RG', 'Endereço', 'CEP', 'E-mail'].map(function (x) { return '<div class="ctr">' + x + '</div>'; }).join('') + '</div>' +
       '<div><div class="sec" style="margin:0 0 8px"><h3 class="dsp" style="font-size:23px">Contatos</h3></div>' +
@@ -2060,11 +2164,12 @@ body.pv-lock { overflow: hidden; }
       const bars = it.segs.map(function (s) {
         const ini = QE.toMin(s[0]), fim = QE.toMin(s[1]);
         if (fim <= a0 || ini >= a1 || fim <= ini) return '';
-        const l = xp(ini), r = xp(fim), w = r - l, cls = CORB[it.sec] || 'c-out';
+        const l = xp(ini), r = xp(fim), w = r - l, cls = it.cor || CORB[it.sec] || 'c-out';
         const cx = Math.min(94, Math.max(6, l + w / 2));
         return '<div class="cn-b ' + cls + '" style="left:' + l.toFixed(3) + '%;width:' + w.toFixed(3) + '%"></div><div class="cn-bl" style="left:' + cx.toFixed(3) + '%">' + s[0] + '–' + s[1] + '</div>';
       }).join('');
       if (!bars) return;
+      if (it.cor) usados['•' + it.nome] = it.cor;
       if (it.sec !== sc) { sc = it.sec; nS++; body += '<div class="cn-s"><i class="dot ' + (CORB[sc] || 'c-out') + '"></i>' + esc(NOMES[sc] || sc) + '</div>'; usados[sc] = true; }
       nR++;
       body += '<div class="cn-r"><div class="cn-l">' + esc(it.nome) + '</div><div class="cn-t">' + bars + '</div></div>';
@@ -2074,7 +2179,7 @@ body.pv-lock { overflow: hidden; }
     const rowsH = nS * SH + nR * RH, frameH = rowsH + 16 + 12 + 26;
     const p5 = '<section class="pg"><div class="hb"><h2 class="dsp">Cronograma<span>do evento</span></h2><em>' + hh(j[0]).toUpperCase() + ' ÀS ' + hh(j[1]).toUpperCase() + '</em></div>' +
       '<div class="card crn" style="--rh:' + RH + 'px;--sh:' + SH + 'px;height:' + frameH + 'px"><div class="cn-h"><div></div><div class="cn-hs">' + hs + '</div></div><div class="cn-rows" style="height:' + rowsH + 'px"><div class="cn-gl">' + gl + '</div>' + body + '</div></div>' +
-      '<div class="cn-leg">' + Object.keys(usados).map(function (k) { return '<span><i class="' + (CORB[k] || 'c-out') + '"></i>' + esc(NOMES[k] || k) + '</span>'; }).join('') + '</div>' + footer(5 + off) + '</section>';
+      '<div class="cn-leg">' + Object.keys(usados).map(function (k) { const cc = k.charAt(0) === '•' ? usados[k] : (CORB[k] || 'c-out'); return '<span><i class="' + cc + '"></i>' + esc(k.charAt(0) === '•' ? k.slice(1) : (NOMES[k] || k)) + '</span>'; }).join('') + '</div>' + footer(5 + off) + '</section>';
 
     const anexos = QE.menusAnexo(req, c).map(function (m) { return '<section class="pg mnp" data-img="' + QE.foto(m) + '" style="background-image:url(' + QE.foto(m) + ')"></section>'; }).join('');
     return p1 + p2 + p3 + p3b + p4 + p5 + anexos;
@@ -2117,6 +2222,211 @@ body.pv-lock { overflow: hidden; }
     return paginas.map(function (cards, i) {
       return '<section class="pg fp">' + bar(nome) + '<div class="fp-b">' + (i === 0 ? intro + djs : '') + cards.join('') + (cards.length ? '' : '<p class="fp-i">Nenhum evento selecionado.</p>') + '</div><div class="fp-r">Documento gerado em ' + esc(hoje) + '</div>' + footer(i + 1) + '</section>';
     }).join('');
+  };
+})(typeof window !== 'undefined' ? window.QE : require('./core.js'));
+
+/* ==========================================================================
+   Contrato de locação de espaço e fornecimento de serviços
+   Amarelo = campo editável · Vermelho = vem da proposta · Verde = vem dos dados do início do contrato
+   ========================================================================== */
+(function (QE) {
+  'use strict';
+  const U = ['zero', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove', 'dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+  const D = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+  const C = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+  const ate999 = function (n) {
+    if (n === 100) return 'cem';
+    const c = Math.floor(n / 100), r = n % 100, p = [];
+    if (c) p.push(C[c]);
+    if (r) { if (r < 20) p.push(U[r]); else { const d = Math.floor(r / 10), u = r % 10; p.push(D[d] + (u ? ' e ' + U[u] : '')); } }
+    return p.join(' e ');
+  };
+  const inteiroExt = function (n) {
+    if (n === 0) return 'zero';
+    const esc = [['', ''], ['mil', 'mil'], ['milhão', 'milhões'], ['bilhão', 'bilhões']], partes = [];
+    let i = 0;
+    while (n > 0 && i < esc.length) {
+      const g = n % 1000; n = Math.floor(n / 1000);
+      if (g) {
+        let t;
+        if (i === 1) t = g === 1 ? 'mil' : ate999(g) + ' mil';
+        else if (i >= 2) t = ate999(g) + ' ' + (g === 1 ? esc[i][0] : esc[i][1]);
+        else t = ate999(g);
+        partes.unshift({ t: t, g: g });
+      }
+      i++;
+    }
+    let out = partes[0].t;
+    for (let k = 1; k < partes.length; k++) {
+      const p = partes[k], ultimo = k === partes.length - 1;
+      out += (ultimo && (p.g < 100 || p.g % 100 === 0)) ? ' e ' + p.t : ', ' + p.t;
+    }
+    return out;
+  };
+  /* 17802.5 -> "dezessete mil, oitocentos e dois reais e cinquenta centavos" */
+  QE.extenso = function (v) {
+    v = Math.round((+v || 0) * 100) / 100;
+    const r = Math.floor(v + 1e-9), cent = Math.round((v - r) * 100);
+    const partes = [];
+    if (r > 0 || cent === 0) partes.push(inteiroExt(r) + ((r >= 1000000 && r % 1000000 === 0) ? ' de ' : ' ') + (r === 1 ? 'real' : 'reais'));
+    if (cent > 0) partes.push(inteiroExt(cent) + (cent === 1 ? ' centavo' : ' centavos'));
+    return partes.join(' e ');
+  };
+  const cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };
+  QE.rs = function (v) { return 'R$' + (Math.round((+v || 0) * 100) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+  /* "R$17.802,50 (Dezessete mil, oitocentos e dois reais e cinquenta centavos)" */
+  QE.rsExt = function (v) { return QE.rs(v) + ' (' + cap(QE.extenso(v)) + ')'; };
+
+  const ESC = function (s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  const MESES_EXT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+  /* nome de cada anexo de cardápio, como entra na cláusula vigésima quinta */
+  QE.NOME_ANEXO = {
+    'menu-churrasco-premium': 'Cardápio Churrasco Premium', 'menu-churrasco-standard': 'Cardápio Churrasco Standard',
+    'menu-carnes': 'Cardápio Carnes e Massas', 'menu-carnes-standard': 'Cardápio Carnes e Massas Standard',
+    'menu-feijoada': 'Cardápio Feijoada', 'menu-crepe': 'Cardápio Crepe', 'menu-finger': 'Cardápio Finger Food', 'menu-pizza': 'Cardápio Pizza',
+    'menu-cafe': 'Cardápio Café da Manhã', 'menu-doces': 'Cardápio Mesa de Café e Doces',
+    'menu-bar-prata': 'Cardápio Bar de Drinks Prata', 'menu-bar-ouro': 'Cardápio Bar de Drinks Ouro'
+  };
+  QE.contratoAnexos = function (req, c) {
+    const out = ['Proposta de Serviços'];
+    QE.menusAnexo(req, c).forEach(function (m) { out.push(QE.NOME_ANEXO[m] || ('Cardápio ' + m.replace(/^menu-/, ''))); });
+    return out;
+  };
+
+  /* dados iniciais do contrato (editáveis; o que já foi preenchido é mantido) */
+  QE.contratoPadrao = function (req, ct) {
+    const ev = QE.evento(req);
+    const d = Object.assign({
+      nome: req.empresa || '', doc: '', rg: '', end: '', cep: '', email: req.email || '',
+      dataAss: QE.hoje(),
+      t1: { nome: 'Júlia Alves Ferreira', cpf: '470.079.728-29', email: 'juliaalvesferreira241203@gmail.com' },
+      t2on: false, t2: { nome: '', cpf: '', email: '' },
+      pctAcr: 10, staffAdic: null
+    }, ct || {});
+    d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {});
+    d.t2 = Object.assign({ nome: '', cpf: '', email: '' }, d.t2 || {});
+    d.social = ev.social;
+    return d;
+  };
+  /* valores que vêm da proposta (vermelho) */
+  QE.contratoProposta = function (req, cfg) {
+    const c = QE.calc(req, cfg), ev = QE.evento(req);
+    const lin = function (id) { let r = null; c.grupos.forEach(function (g) { g.linhas.forEach(function (l) { if (l.id === id) r = l; }); }); return r; };
+    const a1 = lin('a1'), a3 = lin('a3');
+    return { c: c, ev: ev, qtd: +req.qtd || 0, excedente: a1 ? a1.unit : 0, staff: a3 ? a3.unit : 0, anexos: QE.contratoAnexos(req, c) };
+  };
+  QE.contratoNomeArquivo = function (req, ct) {
+    const limpa = function (s) { return String(s || '').replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, ' ').trim(); };
+    const ev = QE.evento(req), d = QE.contratoPadrao(req, ct), ano = (req.dataEvento || '').slice(0, 4) || String(new Date().getFullYear());
+    if (!ev.social) return 'Quinta dos Esquilos - Contrato Confraternização ' + limpa(d.nome || req.empresa) + ' ' + ano + (req.contato ? ' - ' + limpa(req.contato) : '');
+    return 'Quinta dos Esquilos - Contrato ' + limpa(ev.tag.replace(/^Outros: /, '').replace(/ \/ .*$/, '')) + ' ' + limpa(d.nome || req.empresa);
+  };
+
+  /* Blocos do contrato (cada um é um parágrafo/cláusula). marcar = pinta amarelo/vermelho/verde para conferência na tela */
+  QE.contratoBlocos = function (req, cfg, ctIn, marcar) {
+    const ct = QE.contratoPadrao(req, ctIn), P = QE.contratoProposta(req, cfg), c = P.c, ev = P.ev, social = ev.social;
+    const Y = function (t) { return marcar ? '<span class="hl-y">' + ESC(t) + '</span>' : ESC(t); };
+    const R = function (t) { return marcar ? '<span class="hl-r">' + ESC(t) + '</span>' : ESC(t); };
+    const G = function (t) { return marcar ? '<span class="hl-g">' + ESC(t) + '</span>' : ESC(t); };
+    const Yb = function (t) { return marcar ? '<span class="hl-y"><b>' + ESC(t) + '</b></span>' : '<b>' + ESC(t) + '</b>'; };
+    const dataEv = QE.fmtData(req.dataEvento) || '__/__/____';
+    const tipoUp = social ? ev.tag.toUpperCase() : 'CONFRATERNIZAÇÃO DE EMPRESA';
+    const tipoNm = social ? ev.tag : 'Confraternização de empresa';
+    const B = []; const add = function (h, o) { B.push(Object.assign({ h: h }, o || {})); };
+    const p = function (t) { return '<p>' + t + '</p>'; };
+    const hd = function (t) { return '<p class="ctch">' + t + '</p>'; };
+
+    const contratante = social
+      ? Yb(ct.nome || '________') + ', ' + Y('CPF: ' + (ct.doc || '________') + ', R.G. ' + (ct.rg || '________') + ', residente e domiciliado(a) em ' + (ct.end || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'))
+      : Yb(ct.nome || '________') + ', ' + Y('CNPJ: ' + (ct.doc || '________') + ', ' + (ct.end || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'));
+
+    add('<p class="ctt">CONTRATO DE LOCAÇÃO DE ESPAÇO e FORNECIMENTOS DE SERVIÇOS</p>');
+    add(p('Pelo presente instrumento particular, de um lado Quinta dos Esquilos Festas e Eventos Ltda., CNPJ: 47.131.561/0001-93, neste ato, representada por Ana Lúcia Alves Ferreira, CPF: 274.893.198-03, R.G. 32.684.312-7, residente e domiciliada na Rua Alexandre de Gusmão, 935 – Cotia – São Paulo cep: 06706-080, doravante denominado CONTRATADO; e de outro lado ' + contratante + ', doravante simplesmente denominado CONTRATANTE, têm justo e acertado o presente CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, mediante as cláusulas e condições seguintes, que mutuamente aceitam, a saber:'));
+    add(p('CLÁUSULA PRIMEIRA - O CONTRATADO se obriga, neste ato, a dar em locação e fornecer serviços ao CONTRATANTE em imóvel de sua propriedade, localizado à Travessa Yoshinaga, 07 – CEP 06728-000 – Aguassai - Cotia - SP'));
+    add(p('CLÁUSULA SEGUNDA - O prazo do presente contrato de locação do Espaço e serviços a serem prestados é de 1 dia, com início e término no mesmo dia, conforme cronograma anexo a proposta, data em que o CONTRATANTE se obriga a restituir o imóvel locado em perfeito estado de conservação.'));
+    add(p('CLÁUSULA TERCEIRA - O presente contrato destina-se a fins exclusivamente do evento (' + ESC(tipoUp) + ') a ser realizado no dia ' + R(dataEv) + ', conforme cronograma e proposta anexo ao contrato, estando proibida qualquer alteração desta destinação, salvo mediante concordância expressa por escrito pelo CONTRATADO.'));
+
+    /* Cláusula quarta: valor e parcelas (vermelho) */
+    add(p('CLÁUSULA QUARTA - O valor total do contrato é de ' + R(QE.rsExt(c.total)) + ', a ser pago da seguinte forma:'), { keep: true });
+    const n = c.parcelas.length;
+    c.parcelas.forEach(function (pc, i) {
+      const rot = n === 1 ? '- Pagamento único:' : (i === 0 ? '- Sinal:' : '- Parcela ' + i + ':');
+      add('<p class="ctpc"><b>' + R(rot) + '</b><br>' + R(QE.rsExt(pc.valor) + ' a ser pago até o dia ' + (QE.fmtData(pc.data) || '__/__/____') + ';') + '</p>', { keep: i < n - 1 && false });
+    });
+    add('<p class="ctbk"><b>Dados Bancários:</b><br>Banco: 0260<br>Nu Pagamentos S.A.<br>Quinta dos Esquilos Festas e Eventos Ltda.<br>Agência: 0001<br>Conta corrente: 12.017.996-2<br>CNPJ: 47.131.561/0001-93<br>CHAVE PIX: 47.131.561/0001-93</p>');
+
+    add(p('CLÁUSULA QUINTA - O CONTRATADO, caso solicitado, expedirá recibo discriminado no qual conste o valor recebido, ou servirá como tal, o comprovante de depósito bancário feito pelo CONTRATANTE de acordo com as datas pré-determinadas acima.'));
+    add(p('CLÁUSULA SEXTA - O CONTRATADO será responsável, enquanto durar o evento, por todos os custos e despesas provenientes do Espaço, inclusive dos custos decorrentes da limpeza do espaço após o evento.'));
+    add(p('Parágrafo único - O CONTRATANTE, no curso da locação e dos serviços prestados, obriga-se, ainda, a satisfazer todas as exigências do Poder Público, a que der causa, que não constituirão motivo para rescisão deste contrato.'));
+    add(p('CLÁUSULA SÉTIMA - Não será permitida a transferência deste contrato, nem a sublocação, cessão ou empréstimo total ou parcial do imóvel locado bem como dos serviços ora contratados.'));
+
+    /* Cláusula oitava: pessoas, excedente e staff */
+    const pct = +ct.pctAcr > 0 ? +ct.pctAcr : 10, xAcr = Math.max(1, Math.round(P.qtd * pct / 100));
+    const exc = P.excedente, exc30 = Math.round(exc * 1.3 * 100) / 100;
+    const stf = P.staff, stfAd = (ct.staffAdic !== null && ct.staffAdic !== '' && !isNaN(ct.staffAdic)) ? +ct.staffAdic : Math.round((stf + 50) * 100) / 100;
+    add(hd('CLÁUSULA OITAVA – QUANTIDADE DE PESSOAS') + '<p>§ 1º - EVENTO: ' + R(String(P.qtd)) + ' pessoas conforme proposta de serviços (ANEXO)</p>');
+    add(p('§ 2º - ACRÉSCIMO OU DECRÉSCIMO DE PESSOAS:<br>- Acréscimo de até ' + R(String(xAcr)) + ' (' + Y(pct + '%') + ') pessoas, avisado com antecedência de até 2 dias, paga-se a quantia de ' + R(QE.rsExt(exc)) + ' por pessoa, no entanto, acima dessa quantidade, a CONTRATANTE deverá solicitar orçamento para a nova quantidade participantes do evento;'));
+    add(p('§ 3º - ACRÉSCIMO OU DECRÉSCIMO DE PESSOAS:<br>- Caso no dia do evento, exceda a quantidade de convidados, paga-se a quantia de ' + R(QE.rsExt(exc30)) + ' (valor do item acima + 30%) por pessoa;'));
+    add(p('§ 4º - LISTA DE COLABORADORES: A CONTRATANTE deverá enviar lista de participantes, convidados e/ou colabores em até 15 dias anteriores ao evento;'));
+    add(p('§ 5º - STAFF LEVADOS PELO CONTRATANTE:<br>- Para cada staff levado pela CONTRATATANTE paga-se a quantia de ' + R(QE.rsExt(stf)) + '.<br>- Entende-se por Staff do CONTRATANTE, aqueles levados por conta própria, tais como motoristas de ônibus e vans, fotógrafos externos, ajudantes, prestadores de serviços adicionais levados pela mesma, ou qualquer outro que não esteja incluso no total de pessoas citadas no parágrafo primeiro dessa mesma cláusula.<br>- Deverá ser avisado com antecedência de até 15 dias, ou será cobrado no primeiro dia útil posterior ao evento a quantia de ' + R(QE.rsExt(stfAd)) + ' por staff adicional.<br>- Para músicos contratados pela CONTRATANTE, que não sejam das bandas do escopo da CONTRATADA, haverá custo da alimentação dos mesmos, que deverá ser orçado anterior ao evento conforme necessidade dos mesmos. Caso não tenham uma alimentação específica contratada poderão ser inclusos como staff da contratada com os custos citados acima.<br>- Para todos os serviços prestados pela CONTRATADA, descritos na proposta, não haverá custos extras de Staffs.'));
+
+    add(p('CLÁUSULA NONA - O CONTRATANTE se responsabiliza por qualquer dano que venha a causar ao imóvel, ou aos bens que guarnecem o imóvel do evento, devendo restituí-los nas mesmas condições em que o recebeu, desde que comprovados ou comunicados pela CONTRATADA durante o evento ao CONTRATANTE.'));
+    add(p('§ 1º - Em havendo qualquer dano o CONTRATANTE deve repará-lo, às suas expensas, ao final locação.'));
+    add(p('§ 2º - Em não cumprindo o determinado no parágrafo acima, o CONTRATADO fica autorizado a executar os reparos, independentemente de orçamento.'));
+    add(p('CLÁUSULA DÉCIMA - Fica estipulada para ambas as partes uma multa no valor de 10% (Dez por cento) do valor total do contrato, por qualquer infração ao determinado neste instrumento.'));
+    add(p('§ 1º - A cobrança desta multa não afasta as relativas a outras eventualmente impostas.'));
+    add(p('CLÁUSULA DÉCIMA PRIMEIRA - Todo e qualquer ajuste entre as partes, para integrar o presente contrato, deverá ser feito por escrito, mediante termo aditivo a ser assinado por ambas.'));
+    add(p('CLÁUSULA DÉCIMA SEGUNDA – Não permitido Pets. Eventuais danos causados por Pets não autorizados, em móveis e/ou jardinagem serão cobrados integralmente após término da locação e vistoria do local, cobrado via emissão de boleto bancário em nome do CONTRATANTE;'));
+    add(p('CLÁUSULA DÉCIMA TERCEIRA – Caso contratado, devidamente citado na Proposta de Serviços, o CONTRATANTE se responsabiliza pelo uso da “Tirolesa” e “Mini Arvorismo” contidos no local, manuseando-a e usando-a somente com os devidos equipamentos de segurança, evitando o uso indevido de adultos e crianças não autorizados evitando possíveis acidentes.<br>Deverá ser observado as regras do TERMO DE RESPONSABILIDADE, anexo ao contrato.<br>Haverá um monitor durante o evento conforme cronograma contido na proposta.<br>Qualquer tipo de acidente por uso incompatível com as regras, será de inteira responsabilidade do CONTRATANTE. Caso não contratado o equipamento permanecerá fechado.'));
+    add(p('CLÁUSULA DÉCIMA QUARTA - O CONTRATADO não se responsabiliza por qualquer tipo de acidente oriundo de piscina, prática de esportes e qualquer outro acidente ocorrido dentro da propriedade no período da locação. Caso a CONTRATANTE tenha a necessidade de ambulância e/ou socorrista e/ou salva vidas, a mesma deverá contratar terceiros para suprir essa necessidade.'));
+    add(p('CLÁUSULA DÉCIMA QUINTA – FOGOS DE ARTIFÍCIO<br>É terminantemente proibido soltar fogos de artifício devido a Fauna (Reserva Ambiental) e Flora do local.'));
+    add(hd('CLÁUSULA DÉCIMA SEXTA – DESISTÊNCIAS') + '<p>§ 1º - Caso o CONTRATANTE desista do evento em até 60 dias que antecedem a referida data do evento, seja por qualquer motivo, o CONTRATADO se compromete em devolver 60% (Sessenta por cento) do valor devido, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência;</p>');
+    add(p('§ 2º - Caso o CONTRATANTE desista do evento entre 26 e 59 dias que antecedem a referida data do evento, o CONTRATADO se compromete em devolver 40% (Quarenta por cento) do valor devido, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência;'));
+    add(p('§ 3º - Caso o CONTRATANTE desista do evento entre 01 e 25 dias que antecedem a referida data do evento, o CONTRATADO não devolverá os valores devidos, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência, a fim de reparar os danos da não comercialização da data, contratação de terceiros e fornecedores.'));
+    add(p('§4º Caso a CONTRATADA desista do evento, por motivo de força maior, deverá restituir integralmente a quantia paga pela CONTRATANTE em até 5 dias da data da comunicação. A CONTRATADA não responderá por danos indiretos, motivos listados a seguir:'));
+    [
+      'Desastres climáticos extremos: Enchentes severas, tempestades, furacões, ciclones ou terremotos que destruam a infraestrutura da empresa ou impeçam o acesso ao local do serviço;',
+      'Incêndios fortuitos: Queimadas ou incêndios de grandes proporções que atinjam a sede ou os equipamentos essenciais da contratada;',
+      'Instabilidade civil: Guerras, revoluções, golpes de Estado, atos de terrorismo ou distúrbios civis de grande escala;',
+      'Greves gerais ou paralisações setoriais: Greves nacionais ou de categorias essenciais (como transporte ou combustíveis) que paralisem as cadeias de suprimentos de forma prolongada;',
+      'Determinações governamentais: Decretos de estado de calamidade pública, lockdowns, expropriações ou mudanças repentinas na legislação que proíbam ou inviabilizem a atividade comercial da contratada;',
+      'Epidemias e pandemias: Surtos globais ou locais de doenças que exijam isolamento social ou adoeçam grande parte da força de trabalho da empresa;',
+      'Falhas catastróficas de infraestrutura pública: Quedas prolongadas de energia elétrica na região ou interrupção generalizada de redes de telecomunicações que não sejam de responsabilidade da contratada.'
+    ].forEach(function (t) { add(p('- ' + t)); });
+
+    /* Cláusula décima sétima — texto novo */
+    add(hd('CLÁUSULA DÉCIMA SÉTIMA – DAS OBRIGAÇÕES DO CONTRATADO'), { keep: true });
+    [
+      '§ 1º Disponibilizar o espaço ao CONTRATANTE em conformidade com as características, instalações e condições apresentadas nos anúncios e materiais de divulgação previamente consultados.',
+      '§ 2º Entregar o espaço em condições adequadas de limpeza, conservação e utilização, garantindo o funcionamento dos banheiros e o abastecimento de água durante o período contratado.',
+      '§ 3º Disponibilizar o espaço e a estrutura contratada de acordo com as condições estabelecidas neste instrumento e com a quantidade de convidados previamente informada pelo CONTRATANTE.',
+      '§ 4º Garantir que o salão e as demais áreas contratadas estejam limpos e organizados no início do período de locação.',
+      '§ 5º Disponibilizar o salão de jogos com as respectivas bolas, raquetes e demais acessórios necessários à utilização dos equipamentos existentes no local.',
+      '§ 6º Fornecer os serviços e itens expressamente previstos neste contrato e em seus anexos, respeitando as condições e especificações acordadas entre as partes.',
+      '§ 7º Providenciar, em prazo razoável, os reparos necessários em caso de falhas ou defeitos em equipamentos, mobiliários ou instalações de responsabilidade do CONTRATADO, quando comprometerem a utilização do espaço ou dos serviços contratados.'
+    ].forEach(function (t) { add(p(t)); });
+
+    add(p('CLÁUSULA DÉCIMA OITAVA – O Espaço não dispõe de gerador, podendo ser opção de contratação direta por parte da CONTRATANTE, para eventualidade de falta de energia por parte ou deficiência da Concessionária.'));
+    add(hd('CLÁUSULA DÉCIMA NONA – ESCOPO') + '<p class="ctin">1- Locação do Espaço para uso de evento (' + ESC(tipoNm) + ') a ser realizado no dia ' + R(dataEv) + ' para ' + R(String(P.qtd)) + ' pessoas.</p><p class="ctin">2- Serviços:<br>- Conforme proposta em anexo;</p>');
+    add(hd('CLÁUSULA VIGÉSIMA – ESTACIONAMENTO DE VEÍCULOS') + '<p class="ctin">1- O Espaço deixará uma pessoa para orientar os convidados na chegada e estacionamento dos veículos;</p>');
+    add('<p class="ctin">2- Não dispomos de manobrista, para essa opção (VALLET), verificar disponibilidade e valores;</p><p class="ctin">3- O estacionamento é gratuito, temos vagas limitadas;</p><p class="ctin">4- Não nos responsabilizamos por eventuais danos e/ou colisão dos veículos dentro do Estacionamento.</p>');
+    add(hd('CLÁUSULA VIGÉSIMA PRIMEIRA – QUANTO AOS HORÁRIOS') + '<p class="ctin">1- O período do Espaço está descrito na proposta;</p><p class="ctin">2- As horas extras dos serviços, caso seja necessário, poderá ser contratada mediante orçamento prévio;</p><p class="ctin">3- Início e término do evento vide cláusula específica;</p><p class="ctin">4- Os horários podem ser ajustados até 30 dias anteriores ao evento mediante disponibilidade.</p>');
+    add(p('CLÁUSULA VIGÉSIMA SEGUNDA - As partes elegem o foro da Comarca de Cotia, que é o da situação do imóvel, para dirimir as questões resultantes da execução do presente contrato, obrigando-se a parte vencida a pagar à vencedora, além das custas e despesas processuais, honorários advocatícios fixados em 20% (vinte por cento) sobre o valor da causa.'));
+    add(p('CLÁUSULA VIGÉSIMA TERCEIRA – O CONTRATANTE receberá o presente contrato via e-mail, devendo responder quanto a aceitação do mesmo, via e-mail ou devendo-o assinado, também via e-mail. A locação e serviços prestados, estará efetivada somente após assinatura do mesmo e depósito do sinal. Será aceito assinatura digital do mesmo.'));
+    add(p('CLÁUSULA VIGÉSIMA QUARTA – Em caso de LOCKDOWN ou RESTRIÇÕES decretadas pelas autoridades municipais ou federais, o CONTRATANTE poderá reagendar as datas da locação e do evento sem multas ou custos adicionais, desde que avisado com antecedência no prazo mínimo 20 dias.'));
+    add(hd('CLÁUSULA VIGÉSIMA QUINTA – ANEXOS') + '<p class="ctin">' + P.anexos.map(function (a, i) { return 'Anexo ' + (i + 1) + ': ' + R(a); }).join('<br>') + '</p>');
+
+    /* Fechamento e assinaturas (página própria) */
+    const dt = QE.parseData(ct.dataAss) || new Date();
+    const wit = function (t, i) { return '<div class="ctsg">' + Y(t.nome + ' – TESTEMUNHA ' + i) + '<br>' + Y('CPF: ' + t.cpf) + '<br>' + Y('e-mail: ' + t.email) + '</div>'; };
+    const docRot = social ? 'CPF: ' : 'CNPJ: ';
+    add('<p>E, assim, por estarem justas e convencionadas, as partes assinam o presente instrumento particular de CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, juntamente com as testemunhas abaixo:</p>' +
+      '<p style="margin-top:26px">Cotia, ' + Y(String(dt.getDate())) + ' de ' + Y(MESES_EXT[dt.getMonth()]) + ' de ' + Y(String(dt.getFullYear())) + '</p>' +
+      '<div class="ctsg" style="margin-top:58px">Quinta dos Esquilos Festas e Eventos Ltda. – CONTRATADA<br>Ana Lúcia Alves Ferreira – Representante Legal<br>CPF: 274.893.198-03<br>CNPJ: 47.131.561/0001-93<br>e-mail: quintadosesquilos@gmail.com</div>' +
+      '<div class="ctsg">' + G((ct.nome || '________') + ' – CONTRATANTE') + '<br>' + (social && ct.rg ? G('RG: ' + ct.rg) + '<br>' : '') + G(docRot + (ct.doc || '________')) + '<br>' + G('e-mail: ' + (ct.email || '________')) + '</div>' +
+      wit(ct.t1, 1) + (ct.t2on ? wit(ct.t2, 2) : ''), { pb: true });
+    return B;
   };
 })(typeof window !== 'undefined' ? window.QE : require('./core.js'));
 
@@ -2197,7 +2507,7 @@ body.pv-lock { overflow: hidden; }
 
   /* ---------- Navegação ---------- */
   function view(v) {
-    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
+    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
     $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === (v === 'edit' ? 'lista' : v)); });
     if (v === 'disp') renderDisp();
     if (v === 'tab') renderTab();
@@ -2207,6 +2517,7 @@ body.pv-lock { overflow: hidden; }
     if (v === 'forn') renderForn();
     if (v === 'fin') renderFin();
     if (v === 'vis') carregaVis().then(renderVis);
+    if (v === 'obras') { if (OB.carregado) obRender(); else obCarrega(); }
     window.scrollTo(0, 0);
   }
   $('#tabs').addEventListener('click', function (e) {
@@ -2298,7 +2609,7 @@ body.pv-lock { overflow: hidden; }
     const novoCong = semOrc || !cur.orc.cfgSnap;
     if (novoCong) { cur.orc.cfgSnap = QE.snapCfg(cfg); cur.orc.cfgEm = QE.hoje(); }
     if (!cur.orc.banda) cur.orc.banda = [];
-    view('edit'); buildControls(); refresh();
+    view('edit'); buildControls(); refresh(); ctBtn();
     if (novoCong) salvar(true);
   }
 
@@ -2364,6 +2675,9 @@ body.pv-lock { overflow: hidden; }
       '<div id="parBox"></div><div class="parbt"><button class="btn sm" type="button" data-parm="ant">+ Mês anterior</button><button class="btn sm" type="button" data-parm="dep">+ Mês seguinte</button><button class="btn sm ghost" type="button" data-parm="rmini">− Primeiro mês</button><button class="btn sm ghost" type="button" data-parm="rmfim">− Último mês</button></div>' +
       '<p class="hint">Todas as parcelas vencem no dia padrão (30, ou o último dia do mês quando ele for menor); edite a data de uma parcela para mudar só ela. Ao alterar o valor de um mês, os meses seguintes são recalculados em parcelas iguais. Apague o valor para voltar ao automático. A divisão automática vai até 15 parcelas; para passar disso, use + Mês anterior / + Mês seguinte ou digite o número de parcelas. Para propostas antigas, adicione meses anteriores.</p>' +
       '<button class="btn sm" id="resetPar" type="button">Recalcular valores automaticamente</button> <button class="btn sm ghost" id="resetMeses" type="button">Meses padrão</button>' +
+      '<h4 class="sh">Cartão de crédito</h4>' +
+      '<label class="chk"><input type="checkbox" data-cc="on"' + ((cur.orc.cartaoCredito || {}).on ? ' checked' : '') + '> Pagamento no cartão de crédito (mostra as parcelas com juros no orçamento)</label>' +
+      '<div class="g2" id="ccTax"' + ((cur.orc.cartaoCredito || {}).on ? '' : ' hidden') + '>' + [[3, 6.12], [6, 8.28], [9, 10.38], [12, 12.4]].map(function (m) { const v = (cur.orc.cartaoCredito || {})['t' + m[0]]; return '<div class="f"><label>Juros ' + m[0] + 'x (%)</label><input type="text" inputmode="decimal" data-cc="t' + m[0] + '" placeholder="' + String(m[1]).replace('.', ',') + '" value="' + (v === undefined || v === '' ? '' : String(v).replace('.', ',')) + '"></div>'; }).join('') + '</div><div id="ccBox"></div>' +
       '<h4 class="sh">Desconto</h4>' +
       '<label class="chk"><input type="checkbox" id="descOn"' + (dOn ? ' checked' : '') + '> Aplicar desconto no total</label><div class="g2" id="descBox"' + (dOn ? '' : ' hidden') + '><div class="f"><label>Tipo</label><select data-p="orc.desconto.tipo"><option value="valor"' + ((cur.orc.desconto || {}).tipo !== 'pct' ? ' selected' : '') + '>Valor em R$</option><option value="pct"' + ((cur.orc.desconto || {}).tipo === 'pct' ? ' selected' : '') + '>Percentual (%)</option></select></div><div class="f"><label>Quanto</label><input type="number" step="0.01" min="0" data-p="orc.desconto.valor" value="' + esc((cur.orc.desconto || {}).valor || '') + '"></div></div><p class="hint" id="descInfo"></p>' +
       '<h4 class="sh">Nota fiscal</h4>' + N('Valor da nota fiscal (R$)', 'orc.nfVal') + '<p class="hint">Vazio = 9% sobre o total final. Sem nota fiscal, o valor aparece riscado no PDF e não soma no total.</p>' +
@@ -2464,6 +2778,12 @@ body.pv-lock { overflow: hidden; }
   }
 
   const SECOES = [['RECEPÇÃO', 'Recepção'], ['BUFFET / DOCES', 'Buffet & Doces'], ['BEBIDAS', 'Bebidas'], ['MÚSICA', 'Música'], ['ATRAÇÕES', 'Atrações'], ['OUTROS', 'Outros']];
+  function corPick(sel, attr) {
+    return '<span class="cpk" ' + attr + '>' + [['', 'Cor da seção']].concat(QE.CORES_CRON).map(function (c) {
+      return '<button type="button" class="cw ' + (c[0] || 'c-out') + (c[0] === (sel || '') ? ' on' : '') + (c[0] ? '' : ' auto') + '" data-cv="' + c[0] + '" title="' + c[1] + '" aria-label="' + c[1] + '"></button>';
+    }).join('') + '</span>';
+  }
+  let novaCor = '';
   function buildCron() {
     const c = QE.calc(cur, cfg); let sec = '', h = '<p class="hint" style="margin:0 0 6px">Toque no nome de qualquer item para trocar o texto que sai no cronograma. Apagar o texto volta ao nome original.</p>';
     c.cron.filter(function (x) { return !x.hidden; }).forEach(function (it, idx, vis) {
@@ -2473,7 +2793,7 @@ body.pv-lock { overflow: hidden; }
       const bt = '<span class="crb"><button type="button" class="btn sm ghost" data-crmv="' + it.id + ':-1" title="Subir"' + (idx === 0 ? ' disabled' : '') + '>↑</button><button type="button" class="btn sm ghost" data-crmv="' + it.id + ':1" title="Descer"' + (idx === vis.length - 1 ? ' disabled' : '') + '>↓</button></span>';
       if (it.custom) {
         /* item adicionado por você: o nome ocupa a linha toda e os horários ficam logo abaixo */
-        h += '<div class="crl cust">' + cb + '<input class="crn" data-crn="' + it.id + '" value="' + esc(it.nome) + '" aria-label="Nome do item">' + bt + '<div class="crt">' + tIni + tFim + '</div></div>';
+        h += '<div class="crl cust">' + cb + '<input class="crn" data-crn="' + it.id + '" value="' + esc(it.nome) + '" aria-label="Nome do item">' + bt + '<div class="crt">' + tIni + tFim + '</div><div class="crcor" style="grid-column:2/4"><small>Cor da barra</small>' + corPick(it.cor, 'data-crcor="' + it.id + '"') + '</div></div>';
       } else {
         h += '<div class="crl">' + cb + '<input class="crn" data-crn="' + it.id + '" value="' + esc(it.nome) + '" aria-label="Nome do item" title="Escreva para trocar o nome no cronograma">' + tIni + tFim + bt + '</div>';
       }
@@ -2484,6 +2804,7 @@ body.pv-lock { overflow: hidden; }
     h += '<div class="cradd"><b>Adicionar item ao cronograma</b><input id="crNovoNome" placeholder="Nome do item (ex.: Parabéns, Sorteio)">' +
       '<div class="g2"><div class="f"><label>Seção</label><select id="crNovoSec">' + SECOES.map(function (s) { return '<option value="' + s[0] + '">' + s[1] + '</option>'; }).join('') + '</select></div>' +
       '<div class="f"><label>Inserir depois de</label><select id="crNovoPos"><option value="">No início</option>' + c.cron.map(function (x, i) { return '<option value="' + x.id + '"' + (i === c.cron.length - 1 ? ' selected' : '') + '>' + esc(x.nome) + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="f"><label>Cor da barra</label>' + corPick(novaCor, 'id="crNovaCor"') + '</div>' +
       '<div class="g2"><div class="f"><label>Início</label><input type="time" id="crNovoIni" value="' + QE.calc(cur, cfg).janela[0] + '"></div><div class="f"><label>Fim</label><input type="time" id="crNovoFim" value="' + QE.calc(cur, cfg).janela[1] + '"></div></div>' +
       '<button class="btn sm" type="button" id="crAdd">Adicionar</button></div>';
     return h;
@@ -2517,6 +2838,10 @@ body.pv-lock { overflow: hidden; }
       if (t.dataset.p === 'doces') { if (v) cur.orc.sel.d1 = cur.orc.sel.d1 || -1; else delete cur.orc.sel.d1; syncLines(); }
       if (t.dataset.p === 'cardapio') cur.cardapios = v ? [v] : [];
       if (t.dataset.p === 'empresa') $('#edTitulo').textContent = 'Orçamento — ' + (v || 'sem nome');
+    } else if (t.dataset.cc !== undefined) {
+      const cc = (cur.orc.cartaoCredito = cur.orc.cartaoCredito || {});
+      if (t.dataset.cc === 'on') { cc.on = t.checked; const tx = $('#ccTax'); if (tx) tx.hidden = !t.checked; }
+      else cc[t.dataset.cc] = t.value.trim();
     } else if (t.dataset.sub !== undefined) {
       const ij = t.dataset.sub.split(':'), x = cur.orc.extras[+ij[0]]; if (!x) return;
       x.subs[+ij[1]] = t.value;
@@ -2640,10 +2965,17 @@ body.pv-lock { overflow: hidden; }
     }
     const cd = e.target.closest('[data-crdel]');
     if (cd) { const id = cd.dataset.crdel; cur.orc.cronExtra = (cur.orc.cronExtra || []).filter(function (x) { return x.id !== id; }); if (cur.orc.cronOrder) cur.orc.cronOrder = cur.orc.cronOrder.filter(function (x) { return x !== id; }); delete cur.orc.cron[id]; $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); }
+    const cw = e.target.closest('.cw');
+    if (cw) {
+      const pk = cw.closest('.cpk');
+      if (pk.id === 'crNovaCor') { novaCor = cw.dataset.cv; pk.querySelectorAll('.cw').forEach(function (b) { b.classList.toggle('on', b === cw); }); }
+      else { const x = (cur.orc.cronExtra || []).find(function (z) { return z.id === pk.dataset.crcor; }); if (x) { x.cor = cw.dataset.cv; pk.querySelectorAll('.cw').forEach(function (b) { b.classList.toggle('on', b === cw); }); dirty = true; refresh(); } }
+      return;
+    }
     if (e.target.id === 'crAdd') {
       const nome = $('#crNovoNome').value.trim(); if (!nome) return toast('Dê um nome ao item do cronograma.', true);
       const id = 'x' + Date.now().toString(36), ids = QE.calc(cur, cfg).cron.map(function (x) { return x.id; }), pos = $('#crNovoPos').value;
-      (cur.orc.cronExtra = cur.orc.cronExtra || []).push({ id: id, sec: $('#crNovoSec').value, nome: nome, ini: $('#crNovoIni').value || '12:00', fim: $('#crNovoFim').value || '13:00' });
+      (cur.orc.cronExtra = cur.orc.cronExtra || []).push({ id: id, sec: $('#crNovoSec').value, nome: nome, cor: novaCor, ini: $('#crNovoIni').value || '12:00', fim: $('#crNovoFim').value || '13:00' });
       const at = pos ? ids.indexOf(pos) + 1 : 0; ids.splice(at, 0, id); cur.orc.cronOrder = ids;
       $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); toast('Item adicionado ao cronograma');
     }
@@ -2653,7 +2985,7 @@ body.pv-lock { overflow: hidden; }
       QE.db.excluir(curId).then(async function () { lista = await QE.db.listar(); dirty = false; view('lista'); renderLista(); toast('Solicitação excluída'); }).catch(function () { toast('Não foi possível excluir.', true); });
     }
   });
-  $('#edStatus').addEventListener('change', function () { cur.status = this.value; dirty = true; });
+  $('#edStatus').addEventListener('change', function () { cur.status = this.value; dirty = true; ctBtn(); });
 
   /* Atualiza prévia, resumo, avisos e placeholders */
   function refresh() {
@@ -2662,6 +2994,8 @@ body.pv-lock { overflow: hidden; }
     fit();
 
     const Rr = QE.brl;
+    const ccb = $('#ccBox');
+    if (ccb) ccb.innerHTML = c.cartaoCC ? '<table class="cctab"><tr><th>Parcelas</th><th>Juros</th><th>Valor da parcela</th><th>Total no cartão</th></tr>' + c.cartaoCC.map(function (x) { return '<tr><td>' + x.meses + 'x</td><td>' + String(x.taxa).replace('.', ',') + '%</td><td><b>' + Rr(x.parcela) + '</b></td><td>' + Rr(x.total) + '</td></tr>'; }).join('') + '</table>' : '';
     $('#sum').innerHTML = '<div><span>Pacote</span><span>' + Rr(c.pacote) + '</span></div><div><span>Complementares</span><span>' + Rr(c.compl) + '</span></div>' +
       (c.desconto.val > 0 ? '<div><span>Desconto' + (c.desconto.tipo === 'pct' ? ' (' + String(c.desconto.valor).replace('.', ',') + '%)' : '') + '</span><span>– ' + Rr(c.desconto.val) + '</span></div>' : '') +
       (cur.nf ? '<div><span>Nota fiscal (' + String(c.nfPct).replace('.', ',') + '%)</span><span>' + Rr(c.nfVal) + '</span></div>' : (c.evento.social ? '' : '<div><span>Nota fiscal (não soma)</span><span style="text-decoration:line-through;opacity:.7">' + Rr(c.nfRef) + '</span></div>')) +
@@ -2832,7 +3166,9 @@ body.pv-lock { overflow: hidden; }
     const v = id ? visitas.find(function (x) { return x.id === id; }) : null; VIS.editId = id || null;
     const d = v || base || {};
     $('#visTitulo').textContent = v ? 'Editar visita' : 'Nova visita';
-    $('#vOrc').innerHTML = '<option value="">— visita avulsa (sem orçamento) —</option>' + lista.slice().sort(function (a, b) { return (b.criadoEm || 0) - (a.criadoEm || 0); }).map(function (x) { return '<option value="' + esc(x.id) + '"' + (d.reqId === x.id ? ' selected' : '') + '>' + esc(x.empresa) + ' · ' + esc(QE.evento(x).tag) + (x.dataEvento ? ' · ' + esc(QE.fmtData(x.dataEvento)) : '') + '</option>'; }).join('');
+    VIS.selId = d.reqId || '';
+    $('#vOrcBusca').value = '';
+    vOrcOpcoes();
     $('#vTipo').innerHTML = QE.EVENTOS.map(function (e) { return '<option value="' + e[0] + '"' + ((d.tipo || 'corporativo') === e[0] ? ' selected' : '') + '>' + e[1] + '</option>'; }).join('');
     $('#vOutro').value = d.tipoOutro || ''; $('#vOutroBox').hidden = $('#vTipo').value !== 'outros';
     $('#vEmpresa').value = d.empresa || ''; $('#vContato').value = d.contato || ''; $('#vDataEv').value = d.dataEvento || ''; $('#vQtd').value = d.qtd || '';
@@ -2847,6 +3183,17 @@ body.pv-lock { overflow: hidden; }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#visModal').hidden) visFechar(); });
   $('#vTipo').addEventListener('change', function () { $('#vOutroBox').hidden = this.value !== 'outros'; });
   /* escolher um orçamento preenche os dados do evento; falta só a data e o horário da visita */
+  /* lista de propostas para vincular: ordem alfabética e busca por texto (nome, tipo, data) */
+  function vOrcOpcoes() {
+    const norm = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); };
+    const q = norm($('#vOrcBusca').value).split(/\s+/).filter(Boolean), atual = $('#vOrc').value || VIS.selId || '';
+    const rot = function (x) { return x.empresa + ' · ' + QE.evento(x).tag + (x.dataEvento ? ' · ' + QE.fmtData(x.dataEvento) : ''); };
+    const itens = lista.slice().sort(function (a, b) { return norm(a.empresa).localeCompare(norm(b.empresa), 'pt-BR') || String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')); })
+      .filter(function (x) { const t = norm(rot(x)); return x.id === atual || q.every(function (w) { return t.indexOf(w) >= 0; }); });
+    $('#vOrc').innerHTML = '<option value="">— visita avulsa (sem orçamento) —</option>' + itens.map(function (x) { return '<option value="' + esc(x.id) + '"' + (atual === x.id ? ' selected' : '') + '>' + esc(rot(x)) + '</option>'; }).join('');
+    $('#vOrcInfo').textContent = q.length ? (itens.length - (itens.some(function (x) { return x.id === atual; }) ? 1 : 0)) + ' proposta(s) encontrada(s)' : '';
+  }
+  $('#vOrcBusca').addEventListener('input', function () { VIS.selId = $('#vOrc').value; vOrcOpcoes(); });
   $('#vOrc').addEventListener('change', function () {
     const x = lista.find(function (r) { return r.id === $('#vOrc').value; }); $('#vAbrirOrc').hidden = !x; if (!x) return;
     const ev = QE.evento(x);
@@ -3602,8 +3949,190 @@ body.pv-lock { overflow: hidden; }
     if (!td.tabela.length || !td.chopp.length || Object.keys(td.tabelasEvento).some(function (k) { return !td.tabelasEvento[k].length; })) return toast('As tabelas precisam ter pelo menos uma faixa.', true);
     try { await QE.db.salvarConfig(td); cfg = QE.mergeConfig(td); toast('Tabelas salvas. Valem para os próximos cálculos.'); drawTab(); } catch (e) { toast('Não foi possível salvar.', true); }
   });
-})();
 
+  /* ======================================================================
+     Contrato (a partir da proposta em "Em contrato")
+     ====================================================================== */
+  const CT_LIM = 975;   /* altura útil de cada página do contrato (px) */
+  function ctBtn() { const b = $('#gerarContrato'); if (b) b.hidden = !cur || ['contrato', 'ganho'].indexOf(QE.normStatus(cur.status)) < 0; }
+  function ctMede(blocos) {
+    const host = document.createElement('div'); host.className = 'pdf-host ctm'; host.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1';
+    host.innerHTML = '<section class="pg ctp" style="height:auto"><div class="ctb"></div></section>'; document.body.appendChild(host);
+    const box = host.querySelector('.ctb'), hs = blocos.map(function (b) { box.innerHTML = b.h; return box.offsetHeight; });
+    host.remove(); return hs;
+  }
+  function ctPaginas(blocos) {
+    const hs = ctMede(blocos), pags = [[]]; let usado = 0;
+    blocos.forEach(function (b, i) {
+      const need = hs[i] + (b.keep && hs[i + 1] ? hs[i + 1] : 0);
+      if (pags[pags.length - 1].length && (b.pb || usado + need > CT_LIM)) { pags.push([]); usado = 0; }
+      pags[pags.length - 1].push(b.h); usado += hs[i];
+    });
+    return pags.map(function (p, i) { return '<section class="pg ctp"><div class="ctb">' + p.join('') + '</div><div class="pn">' + (i + 1) + '</div></section>'; }).join('');
+  }
+  function ctFormHTML() {
+    const ct = cur.contrato, P = QE.contratoProposta(cur, cfg), social = P.ev.social;
+    const I = function (k, lab, ph, tipo, extra) { const v = getP(ct, k); return '<div class="f"><label>' + lab + '</label><input type="' + (tipo || 'text') + '" data-ct="' + k + '" value="' + esc(v === null || v === undefined ? '' : v) + '" placeholder="' + esc(ph || '') + '"' + (extra || '') + '></div>'; };
+    const rows = P.c.parcelas.map(function (pc, i) { return '<li>' + (P.c.parcelas.length === 1 ? 'Pagamento único' : i === 0 ? 'Sinal' : 'Parcela ' + i) + ': <b>' + QE.rs(pc.valor) + '</b> até ' + QE.fmtData(pc.data) + '</li>'; }).join('');
+    return '<div class="box open"><div class="in">' +
+      '<p class="hint" style="margin-top:0"><span class="hl-y">Amarelo</span> = você preenche aqui · <span class="hl-r">Vermelho</span> = vem da proposta · <span class="hl-g">Verde</span> = vem destes dados. As cores aparecem só na tela; o PDF sai sem elas.</p>' +
+      '<h4 class="sh first">' + (social ? 'Dados do contratante (pessoa física)' : 'Dados da empresa contratante') + '</h4>' +
+      I('nome', social ? 'Nome completo' : 'Razão social') + '<div class="g2">' + I('doc', social ? 'CPF' : 'CNPJ') + (social ? I('rg', 'RG') : I('cep', 'CEP')) + '</div>' +
+      I('end', social ? 'Endereço de moradia (rua, nº, bairro, cidade – UF)' : 'Endereço (rua, nº, bairro, cidade – UF)') + '<div class="g2">' + (social ? I('cep', 'CEP') : '') + I('email', 'E-mail', '', 'email') + '</div>' +
+      '<h4 class="sh">Assinatura</h4>' + I('dataAss', 'Data da assinatura', '', 'date') +
+      '<h4 class="sh">Testemunhas</h4><p class="hint" style="margin:0 0 4px">Testemunha 1</p>' + I('t1.nome', 'Nome') + '<div class="g2">' + I('t1.cpf', 'CPF') + I('t1.email', 'E-mail') + '</div>' +
+      '<label class="chk"><input type="checkbox" data-ct="t2on"' + (ct.t2on ? ' checked' : '') + '> Adicionar 2ª testemunha (só aparece no contrato se marcado)</label>' +
+      '<div id="ctT2"' + (ct.t2on ? '' : ' hidden') + '>' + I('t2.nome', 'Nome da 2ª testemunha') + '<div class="g2">' + I('t2.cpf', 'CPF') + I('t2.email', 'E-mail') + '</div></div>' +
+      '<h4 class="sh">Regras de acréscimo e staff</h4><div class="g2">' + I('pctAcr', 'Acréscimo de pessoas (%)', '10', 'number', ' min="1" max="100"') + I('staffAdic', 'Staff adicional fora do prazo (R$)', String((P.staff + 50) || ''), 'number', ' min="0" step="0.01"') + '</div>' +
+      '<p class="hint">Staff adicional: se ficar vazio, usa o valor do staff da proposta + R$ 50,00.</p>' +
+      '<h4 class="sh">Vem da proposta (vermelho)</h4><ul class="ctinfo"><li>Evento: <b>' + esc(P.ev.tag) + '</b> em <b>' + esc(QE.fmtData(cur.dataEvento) || 'sem data') + '</b> para <b>' + P.qtd + '</b> pessoas</li>' +
+      '<li>Valor total: <b>' + QE.rs(P.c.total) + '</b></li>' + rows + '<li>Pessoa excedente: <b>' + QE.rs(P.excedente) + '</b> · Staff do cliente: <b>' + QE.rs(P.staff) + '</b></li>' +
+      '<li>Anexos: ' + esc(P.anexos.join(' · ')) + '</li></ul><p class="hint">Para mudar algo vermelho, volte à proposta, ajuste e abra o contrato de novo.</p>' +
+      '</div></div>';
+  }
+  let ctTimer = null;
+  function ctPreview() {
+    const html = ctPaginas(QE.contratoBlocos(cur, cfg, cur.contrato, true)), pv = $('#ctPvIn');
+    pv.innerHTML = html;
+    const w = $('#ctPv').clientWidth - 20; pv.style.zoom = w > 0 ? Math.min(1, w / 794) : 1;
+  }
+  function ctAbrir() {
+    cur.contrato = QE.contratoPadrao(cur, cur.contrato);
+    $('#ctTitulo').textContent = 'Contrato — ' + (cur.contrato.nome || cur.empresa || 'sem nome');
+    $('#ctForm').innerHTML = ctFormHTML();
+    view('contrato'); ctPreview();
+  }
+  $('#gerarContrato').addEventListener('click', ctAbrir);
+  $('#ctVoltar').addEventListener('click', function () { view('edit'); });
+  $('#ctSalvar').addEventListener('click', function () { salvar(); });
+  function ctMuda(e) {
+    const t = e.target; if (!t.dataset || t.dataset.ct === undefined) return;
+    const k = t.dataset.ct;
+    let v = t.type === 'checkbox' ? t.checked : t.value;
+    if (k === 'pctAcr' || k === 'staffAdic') v = v === '' ? null : Number(v);
+    setP(cur.contrato, k, v); dirty = true;
+    if (k === 't2on') $('#ctT2').hidden = !v;
+    if (k === 'nome') $('#ctTitulo').textContent = 'Contrato — ' + (v || cur.empresa || 'sem nome');
+    clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250);
+  }
+  $('#ctForm').addEventListener('input', ctMuda); $('#ctForm').addEventListener('change', ctMuda);
+  window.addEventListener('resize', function () { if (!$('#v-contrato').hidden) ctPreview(); });
+  $('#ctPdf').addEventListener('click', async function () {
+    const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
+    try {
+      await salvar(true);
+      const paginas = ctPaginas(QE.contratoBlocos(cur, cfg, cur.contrato, false));
+      const blob = await gerarPdfBlob(null, paginas + QE.proposalHTML(cur, cfg, avail));
+      baixarBlob(blob, QE.contratoNomeArquivo(cur, cur.contrato));
+      toast('Contrato baixado (com a proposta e os cardápios em anexo).');
+    } catch (err) { console.error(err); toast('Não consegui gerar o PDF (' + (err && err.message || err) + ').', true); }
+    finally { btn.disabled = false; btn.textContent = txt; }
+  });
+
+  /* ======================================================================
+     Obras — planejamento em dias
+     ====================================================================== */
+  const OB = { obras: [], sel: null, carregado: false };
+  const obNovaObra = function () {
+    return { id: 'o' + Date.now().toString(36), nome: 'Nova obra', inicio: '', itens: [
+      { id: 'i1', sec: 'PREPARAÇÃO', nome: 'Planejamento e compra de materiais', ini: 1, fim: 3, cor: '' },
+      { id: 'i2', sec: 'EXECUÇÃO', nome: 'Execução', ini: 4, fim: 10, cor: '' }
+    ] };
+  };
+  const obAtual = function () { return OB.obras.find(function (o) { return o.id === OB.sel; }); };
+  const obData = function (o, dia) {
+    const d = QE.parseData(o.inicio); if (!d) return null;
+    const r = new Date(d.getFullYear(), d.getMonth(), d.getDate() + dia - 1);
+    return r;
+  };
+  const obDM = function (d) { return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0'); };
+  async function obCarrega() {
+    try { const d = await QE.db.obras(); OB.obras = (d && d.obras) || []; } catch (e) { console.error(e); toast('Não consegui carregar as obras.', true); }
+    if (!OB.obras.length) OB.obras = [obNovaObra()];
+    if (!OB.sel || !obAtual()) OB.sel = OB.obras[0].id;
+    OB.carregado = true; obRender();
+  }
+  let obTimer = null;
+  function obSalva() { clearTimeout(obTimer); obTimer = setTimeout(function () { QE.db.salvarObras({ obras: OB.obras }).catch(function () { toast('Não consegui salvar as obras.', true); }); }, 600); }
+  function obTotalDias(o) { return Math.max(7, o.itens.reduce(function (m, it) { return Math.max(m, +it.fim || 0); }, 0)); }
+  function obGantt(o, nTot) {
+    const N = nTot || obTotalDias(o), step = Math.max(1, Math.ceil(N / 16));
+    let hs = '', gl = '';
+    for (let d = 1; d <= N; d++) {
+      const x = (d - 1) / N * 100, w = 100 / N;
+      if ((d - 1) % step === 0) { const dt = obData(o, d); hs += '<span style="left:' + x.toFixed(3) + '%;width:' + (w * step).toFixed(3) + '%">' + (dt ? obDM(dt) : 'D' + d) + '</span>'; gl += '<i style="left:' + x.toFixed(3) + '%"></i>'; }
+    }
+    let body = '', sc = null; const usados = {};
+    o.itens.forEach(function (it) {
+      if (it.sec !== sc) { sc = it.sec; body += '<div class="ob-s">' + esc(it.sec || 'Etapas') + '</div>'; }
+      const i0 = Math.max(1, +it.ini || 1), f0 = Math.max(i0, +it.fim || i0), l = (i0 - 1) / N * 100, w = (f0 - i0 + 1) / N * 100;
+      const dias = f0 - i0 + 1, a = obData(o, i0), b = obData(o, f0);
+      body += '<div class="ob-r"><div class="ob-l">' + esc(it.nome) + '</div><div class="ob-t"><div class="ob-b ' + (it.cor || 'c-out') + '" style="left:' + l.toFixed(3) + '%;width:' + w.toFixed(3) + '%"></div><div class="ob-bl" style="left:' + Math.min(92, Math.max(8, l + w / 2)).toFixed(3) + '%">' + dias + (dias === 1 ? ' dia' : ' dias') + (a ? ' · ' + obDM(a) + (dias > 1 ? '–' + obDM(b) : '') : '') + '</div></div></div>';
+    });
+    return '<div class="ob-g"><div class="ob-h"><div></div><div class="ob-hs">' + hs + '</div></div><div class="ob-rows"><div class="ob-gl">' + gl + '</div>' + body + '</div></div>';
+  }
+  function obRender() {
+    const o = obAtual(); if (!o) return;
+    $('#obSel').innerHTML = OB.obras.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === OB.sel ? ' selected' : '') + '>' + esc(x.nome) + '</option>'; }).join('');
+    $('#obNome').value = o.nome; $('#obIni').value = o.inicio || '';
+    const secs = []; o.itens.forEach(function (it) { if (it.sec && secs.indexOf(it.sec) < 0) secs.push(it.sec); });
+    $('#obSecs').innerHTML = secs.map(function (s) { return '<option value="' + esc(s) + '">'; }).join('');
+    $('#obItens').innerHTML = o.itens.map(function (it, i) {
+      const dias = Math.max(1, (+it.fim || 0) - (+it.ini || 1) + 1);
+      return '<div class="obl" data-i="' + i + '"><input class="obn" data-k="nome" value="' + esc(it.nome) + '" aria-label="Nome da etapa" placeholder="Nome da etapa">' +
+        '<input data-k="sec" list="obSecs" value="' + esc(it.sec) + '" aria-label="Seção" placeholder="Seção">' +
+        '<label>Início (dia)<input type="number" min="1" data-k="ini" value="' + (+it.ini || 1) + '"></label><label>Fim (dia)<input type="number" min="1" data-k="fim" value="' + (+it.fim || 1) + '"></label><span class="obd">' + dias + (dias === 1 ? ' dia' : ' dias') + '</span>' +
+        '<span class="crb"><button type="button" class="btn sm ghost" data-ob="up"' + (i === 0 ? ' disabled' : '') + '>↑</button><button type="button" class="btn sm ghost" data-ob="dn"' + (i === o.itens.length - 1 ? ' disabled' : '') + '>↓</button><button type="button" class="btn sm ghost" data-ob="del" title="Excluir etapa">×</button></span>' +
+        '<div class="crcor">' + corPick(it.cor, 'data-obcor="' + i + '"') + '</div></div>';
+    }).join('');
+    obPreview();
+  }
+  function obPreview() {
+    const o = obAtual(); if (!o) return;
+    $('#obPv').innerHTML = '<div class="ob-doc"><h3 class="dsp">' + esc(o.nome) + '</h3><p>' + (obData(o, 1) ? obDM(obData(o, 1)) + ' a ' + obDM(obData(o, obTotalDias(o))) + ' · ' : '') + obTotalDias(o) + ' dias</p>' + obGantt(o) + '</div>';
+  }
+  function obMuda(e) {
+    const o = obAtual(), t = e.target; if (!o) return;
+    if (t.id === 'obNome') { o.nome = t.value; $('#obSel').options[$('#obSel').selectedIndex].textContent = t.value; }
+    else if (t.id === 'obIni') o.inicio = t.value;
+    else if (t.dataset.k) { const l = t.closest('.obl'), it = o.itens[+l.dataset.i]; if (!it) return; it[t.dataset.k] = (t.dataset.k === 'ini' || t.dataset.k === 'fim') ? (t.value === '' ? '' : Math.max(1, Math.round(+t.value))) : t.value; if (it.fim !== '' && +it.fim < +it.ini && t.dataset.k === 'ini') it.fim = it.ini; }
+    else return;
+    obSalva(); obPreview();
+    if (e.type === 'change') obRender();
+  }
+  $('#v-obras').addEventListener('input', obMuda); $('#v-obras').addEventListener('change', obMuda);
+  $('#obSel').addEventListener('change', function () { OB.sel = this.value; obRender(); });
+  $('#v-obras').addEventListener('click', function (e) {
+    const o = obAtual(), t = e.target;
+    const cw = t.closest('.cw');
+    if (cw && o) { const pk = cw.closest('.cpk'), it = o.itens[+pk.dataset.obcor]; if (it) { it.cor = cw.dataset.cv; obSalva(); obRender(); } return; }
+    if (t.id === 'obNova') { const n = obNovaObra(); OB.obras.push(n); OB.sel = n.id; obSalva(); obRender(); return; }
+    if (t.id === 'obExcluir') { if (!confirm('Excluir a obra "' + o.nome + '"?')) return; OB.obras = OB.obras.filter(function (x) { return x !== o; }); if (!OB.obras.length) OB.obras = [obNovaObra()]; OB.sel = OB.obras[0].id; obSalva(); obRender(); return; }
+    if (t.id === 'obAdd') {
+      const ult = o.itens[o.itens.length - 1], fim = ult ? (+ult.fim || 0) : 0;
+      o.itens.push({ id: 'i' + Date.now().toString(36), sec: ult ? ult.sec : '', nome: 'Nova etapa', ini: fim + 1, fim: fim + 3, cor: ult ? ult.cor : '' }); obSalva(); obRender(); return;
+    }
+    if (t.dataset.ob) {
+      const i = +t.closest('.obl').dataset.i;
+      if (t.dataset.ob === 'del') o.itens.splice(i, 1);
+      else { const k = i + (t.dataset.ob === 'up' ? -1 : 1); if (k < 0 || k >= o.itens.length) return; const x = o.itens[i]; o.itens[i] = o.itens[k]; o.itens[k] = x; }
+      obSalva(); obRender();
+    }
+    if (t.id === 'obPdf') obPdf(t);
+  });
+  async function obPdf(btn) {
+    const o = obAtual(); if (!o) return; const txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
+    try {
+      const POR = 22, pags = []; for (let i = 0; i < o.itens.length; i += POR) pags.push(o.itens.slice(i, i + POR));
+      const html = pags.map(function (its, k) {
+        return '<section class="pg obp"><div class="obh"><h2 class="dsp">' + esc(o.nome) + '</h2><em>' + (obData(o, 1) ? obDM(obData(o, 1)) + ' a ' + obDM(obData(o, obTotalDias(o))) + ' · ' : '') + obTotalDias(o) + ' dias</em></div>' + obGantt(Object.assign({}, o, { itens: its }), obTotalDias(o)) + '<div class="pn">' + (k + 1) + '/' + pags.length + '</div></section>';
+      }).join('');
+      const blob = await gerarPdfBlob(null, html);
+      baixarBlob(blob, 'Quinta dos Esquilos - Cronograma de obra - ' + String(o.nome).replace(/[\\/:*?"<>|]/g, '-'));
+    } catch (err) { console.error(err); toast('Não consegui gerar o PDF.', true); }
+    finally { btn.disabled = false; btn.textContent = txt; }
+  }
+})();
 </script>
 </body>
 </html>
