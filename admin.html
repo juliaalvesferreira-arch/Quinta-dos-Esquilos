@@ -702,15 +702,15 @@ body.pv-lock { overflow: hidden; }
 .hl-y { background: #ffff00; } .hl-r { background: #ff0000; color: #000; } .hl-g { background: #00ff00; }
 .ctinfo { margin: 0 0 6px; padding-left: 18px; font-size: .88rem; } .ctinfo li { margin: 2px 0; }
 .ct-pvin .pg { margin-bottom: 14px; box-shadow: 0 1px 8px rgba(0, 0, 0, .25); }
-.pg.ctp { background: #fff; color: #000; font-family: 'Times New Roman', Times, serif; font-size: 12.5px; font-weight: 400; line-height: 1.38; padding: 62px 72px 70px; }
-.pg.ctp .ctb { display: flow-root; width: 650px; }
-.pg.ctp .ctb p { margin: 0 0 11px; text-align: justify; }
-.pg.ctp .ctb p.ctt { font-size: 15px; font-weight: 700; text-decoration: underline; margin-bottom: 18px; text-align: center; }
+.pg.ctp { background: #fff; color: #000; font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: 400; line-height: 1.4; padding: 56px 64px 64px; }
+.pg.ctp .ctb { display: flow-root; width: 666px; }
+.pg.ctp .ctb p { margin: 0 0 10px; text-align: justify; }
+.pg.ctp .ctb p.ctt { font-size: 16px; font-weight: 700; text-decoration: underline; margin-bottom: 18px; text-align: center; }
 .pg.ctp .ctb p.ctch { margin-bottom: 3px; }
 .pg.ctp .ctb p.ctin { padding-left: 22px; }
 .pg.ctp .ctb p.ctpc { margin-bottom: 8px; }
 .pg.ctp .ctb .ctsg { margin-top: 44px; line-height: 1.35; }
-.pg.ctp .pn { position: absolute; bottom: 34px; left: 0; right: 72px; text-align: right; font-size: 11px; }
+.pg.ctp .pn { position: absolute; bottom: 30px; left: 0; right: 64px; text-align: right; font-size: 11px; }
 .ctm .pg.ctp { height: auto; }
 /* ===== Obras ===== */
 .obl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px; padding: 8px 0; border-top: 1px dashed var(--line); align-items: end; }
@@ -736,6 +736,15 @@ body.pv-lock { overflow: hidden; }
 
 #vOrcBusca, #vOrc { width: 100%; box-sizing: border-box; display: block; font: inherit; }
 #vOrcBusca { margin-bottom: 6px; }
+
+.ctm1 { display: flex; gap: 6px; margin-bottom: 6px; } .ctm1 input { flex: 1; }
+.ctcl { border: 1px solid var(--line); border-radius: 8px; margin: 6px 0; background: #fff; }
+.ctcl > summary { cursor: pointer; padding: 8px 10px; font-weight: 600; font-size: .9rem; }
+.ctcl summary em { font-weight: 400; color: #a33; font-size: .8rem; }
+.ctclb { padding: 4px 10px 10px; display: grid; gap: 8px; }
+.ctit { display: grid; gap: 3px; } .ctit > label:first-child { font-size: .78rem; color: var(--taupe); }
+.ctit textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: .85rem; line-height: 1.35; resize: vertical; }
+.ctcl .chk { font-size: .8rem; }
 </style>
 </head>
 <body>
@@ -777,6 +786,7 @@ body.pv-lock { overflow: hidden; }
       <div class="head">
         <h2>Solicitações de orçamento</h2>
         <div class="head-r">
+          <input id="fBusca" type="text" placeholder="Buscar proposta (nome, contato, data…)" autocomplete="off" style="width:260px;max-width:100%">
           <select id="fStatus" aria-label="Filtrar por status"><option value="">Todos os status</option></select>
           <button id="atualizar" class="btn">Atualizar lista</button>
           <button id="novo" class="btn pri">Nova solicitação manual</button>
@@ -1459,7 +1469,7 @@ body.pv-lock { overflow: hidden; }
     if (req.doces) sel.d1 = -1;
     if (req.estadia && QE.ehSocial(req)) sel.est1 = 1;
     return {
-      data: QE.hoje(), validade: cfg.validade, bar: 'prata',
+      data: QE.hoje(), validade: cfg.validade, bar: 'prata', limite7: true,
       pacote: null, cafe: null, doces: null, b50: null, b30: null, parcelas: null,
       sel: sel, preco: {}, cron: {},
       cfgSnap: QE.snapCfg(cfg), cfgEm: QE.hoje()
@@ -1541,14 +1551,17 @@ body.pv-lock { overflow: hidden; }
     const dq = QE.parseData(o.data) || new Date();
     const de = QE.parseData(req.dataEvento);
     let nAuto = 1;
-    if (de) nAuto = Math.max(1, (de.getFullYear() * 12 + de.getMonth()) - (dq.getFullYear() * 12 + dq.getMonth()) + 1);
+    /* orçamentos novos: a última parcela vence no máximo 7 dias antes do evento (os antigos ficam como estavam) */
+    const p2 = function (n) { return String(n).padStart(2, '0'); };
+    let limData = null, dref = de;
+    if (de && o.limite7) { dref = new Date(de.getFullYear(), de.getMonth(), de.getDate() - 7); limData = dref.getFullYear() + '-' + p2(dref.getMonth() + 1) + '-' + p2(dref.getDate()); }
+    if (dref) nAuto = Math.max(1, (dref.getFullYear() * 12 + dref.getMonth()) - (dq.getFullYear() * 12 + dq.getMonth()) + 1);
     const nAutoCap = Math.min(QE.MAX_PARCELAS, nAuto);   // automático: no máximo 15x
     const n = Math.min(QE.LIMITE_PARCELAS, Math.max(1, Math.round(pick(o.parcelas, nAutoCap))));   // manual (botões ou campo): pode passar de 15
     const cents = Math.round(total * 100), man = o.parcFix || {};
     const parcelas = []; let resto = cents;
     const off = Math.round(+o.parcOff || 0);
     const parcDia = Math.min(31, Math.max(1, Math.round(+o.parcDia) || 30)), dts = o.parcDatas || {};
-    const p2 = function (n) { return String(n).padStart(2, '0'); };
     for (let i = 0; i < n; i++) {
       const dm = new Date(dq.getFullYear(), dq.getMonth() + off + i, 1), m = dm.getMonth();
       const fixo = man[i] !== undefined && man[i] !== null && man[i] !== '' && !isNaN(man[i]);
@@ -1559,7 +1572,8 @@ body.pv-lock { overflow: hidden; }
       if (v < 0) v = 0;
       resto -= v;
       const ultimo = new Date(dm.getFullYear(), m + 1, 0).getDate();
-      const dataPad = dm.getFullYear() + '-' + p2(m + 1) + '-' + p2(Math.min(parcDia, ultimo));
+      let dataPad = dm.getFullYear() + '-' + p2(m + 1) + '-' + p2(Math.min(parcDia, ultimo));
+      if (limData && dataPad > limData) dataPad = limData;
       parcelas.push({ mes: MESES[m], ano: dm.getFullYear(), data: dts[i] || dataPad, dataFixa: !!dts[i], valor: v / 100, fixo: fixo });
     }
     const difParc = Math.round(resto) / 100; /* diferença entre a soma das parcelas e o total (deve ser 0) */
@@ -1751,12 +1765,15 @@ body.pv-lock { overflow: hidden; }
         add('chopp-' + marca, '', el, function (eds) {
           const cons = edv(eds, 'consig');
           const linhas = [['Tipo de chopp', QE.MARCAS_CHOPP[marca]], ['Barris de 50 L', t50 + (ex50 ? ' (' + ex50 + ' extra' + (ex50 > 1 ? 's' : '') + ')' : '')], ['Barris de 30 L', t30 + (ex30 ? ' (' + ex30 + ' extra' + (ex30 > 1 ? 's' : '') + ')' : '')], ['Total de barris', t50 + t30]];
-          if (cons !== '' && cons !== undefined && cons !== null) linhas.push(['Barris em consignação', cons]);   // só aparece quando você preenche
+          const tem = function (v) { return v !== '' && v !== undefined && v !== null; }, c30 = edv(eds, 'consig30'), c50 = edv(eds, 'consig50');
+          if (tem(c30)) linhas.push(['Consignação · barris de 30 L', c30]);   // só aparece quando você preenche
+          if (tem(c50)) linhas.push(['Consignação · barris de 50 L', c50]);
+          if (!tem(c30) && !tem(c50) && tem(cons)) linhas.push(['Barris em consignação', cons]);
           linhas.push(['Horário de entrega', edv(eds, 'entrega') || 'a combinar']);
           return linhas;
-        }, [{ k: 'consig', label: 'Barris em consignação (qtd.)', tipo: 'number', padrao: '' }, { k: 'entrega', label: 'Horário de entrega', tipo: 'time', padrao: '' }]);
+        }, [{ k: 'consig30', label: 'Consignação: barris de 30 L (qtd.)', tipo: 'number', padrao: '' }, { k: 'consig50', label: 'Consignação: barris de 50 L (qtd.)', tipo: 'number', padrao: '' }, { k: 'entrega', label: 'Horário de entrega', tipo: 'time', padrao: '' }]);
       });
-      if (!itens.length) add('chopp-bh', '', false, function (eds) { return [['Tipo de chopp', 'a definir'], ['Horário de entrega', edv(eds, 'entrega') || 'a combinar']]; }, [{ k: 'consig', label: 'Barris em consignação (qtd.)', tipo: 'number', padrao: '' }, { k: 'entrega', label: 'Horário de entrega', tipo: 'time', padrao: '' }]);
+      if (!itens.length) add('chopp-bh', '', false, function (eds) { return [['Tipo de chopp', 'a definir'], ['Horário de entrega', edv(eds, 'entrega') || 'a combinar']]; }, [{ k: 'consig30', label: 'Consignação: barris de 30 L (qtd.)', tipo: 'number', padrao: '' }, { k: 'consig50', label: 'Consignação: barris de 50 L (qtd.)', tipo: 'number', padrao: '' }, { k: 'entrega', label: 'Horário de entrega', tipo: 'time', padrao: '' }]);
     } else if (tipo === 'buffet') {
       add('buffet', '', !ex.buffet, function () {
         const m = QE.cardSel(req).map(nomeMenu);
@@ -2297,24 +2314,43 @@ body.pv-lock { overflow: hidden; }
     return out;
   };
 
+  /* máscaras (padrão Brasil) */
+  const dig = function (v, n) { return String(v || '').replace(/\D/g, '').slice(0, n); };
+  QE.mascCEP = function (v) { const d = dig(v, 8); return d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d; };
+  QE.mascCNPJ = function (v) {
+    const d = dig(v, 14); let o = d.slice(0, 2);
+    if (d.length > 2) o += '.' + d.slice(2, 5); if (d.length > 5) o += '.' + d.slice(5, 8);
+    if (d.length > 8) o += '/' + d.slice(8, 12); if (d.length > 12) o += '-' + d.slice(12);
+    return o;
+  };
+  QE.mascCPF = function (v) {
+    const d = dig(v, 11); let o = d.slice(0, 3);
+    if (d.length > 3) o += '.' + d.slice(3, 6); if (d.length > 6) o += '.' + d.slice(6, 9); if (d.length > 9) o += '-' + d.slice(9);
+    return o;
+  };
+
   /* dados iniciais do contrato (editáveis; o que já foi preenchido é mantido) */
   QE.contratoPadrao = function (req, ct) {
     const ev = QE.evento(req);
     const d = Object.assign({
-      nome: req.empresa || '', doc: '', rg: '', end: '', rua: '', num: '', bairro: '', cidade: '', uf: '', cep: '', email: req.email || '',
+      nome: req.empresa || '', doc: '', rg: '', im: '', ie: '', end: '', rua: '', num: '', bairro: '', cidade: '', uf: '', cep: '',
+      email: req.email || '', emails: null,
       dataAss: QE.hoje(),
       t1: { nome: 'Júlia Alves Ferreira', cpf: '470.079.728-29', email: 'juliaalvesferreira241203@gmail.com' },
       t2on: false, t2: { nome: '', cpf: '', email: '' },
-      pctAcr: 10, staffAdic: null
+      pctAcr: 10, staffAdic: null, ed: {}, add: {}
     }, ct || {});
     d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {});
     d.t2 = Object.assign({ nome: '', cpf: '', email: '' }, d.t2 || {});
+    if (!Array.isArray(d.emails) || !d.emails.length) d.emails = [d.email || ''];
+    d.ed = d.ed || {}; d.add = d.add || {};
     d.social = ev.social;
     const partes = [[d.rua, d.num ? ', ' + d.num : ''], [d.bairro, ''], [d.cidade, d.uf ? ' – ' + d.uf : '']].map(function (x) { return x[0] ? x[0] + x[1] : ''; }).filter(Boolean);
     d.endTxt = partes.length ? partes.join(', ') : (d.end || '');
+    d.emailTxt = d.emails.map(function (e) { return String(e || '').trim(); }).filter(Boolean).join(', ');
     return d;
   };
-  /* valores que vêm da proposta (vermelho) */
+  /* valores que vêm da proposta */
   QE.contratoProposta = function (req, cfg) {
     const c = QE.calc(req, cfg), ev = QE.evento(req);
     const lin = function (id) { let r = null; c.grupos.forEach(function (g) { g.linhas.forEach(function (l) { if (l.id === id) r = l; }); }); return r; };
@@ -2328,108 +2364,141 @@ body.pv-lock { overflow: hidden; }
     return 'Quinta dos Esquilos - Contrato ' + limpa(ev.tag.replace(/^Outros: /, '').replace(/ \/ .*$/, '')) + ' ' + limpa(d.nome || req.empresa);
   };
 
-  /* Blocos do contrato (cada um é um parágrafo/cláusula). marcar = pinta amarelo/vermelho/verde para conferência na tela */
-  QE.contratoBlocos = function (req, cfg, ctIn, marcar) {
-    const ct = QE.contratoPadrao(req, ctIn), P = QE.contratoProposta(req, cfg), c = P.c, ev = P.ev, social = ev.social;
-    const Y = function (t) { return marcar ? '<b>' + ESC(t) + '</b>' : ESC(t); };
-    const R = Y, G = Y;
-    const Yb = function (t) { return '<b>' + ESC(t) + '</b>'; };
-    const dataEv = QE.fmtData(req.dataEvento) || '__/__/____';
-    const tipoUp = social ? ev.tag.toUpperCase() : 'CONFRATERNIZAÇÃO DE EMPRESA';
-    const tipoNm = social ? ev.tag : 'Confraternização de empresa';
-    const B = []; const add = function (h, o) { B.push(Object.assign({ h: h }, o || {})); };
-    const p = function (t) { return '<p>' + t + '</p>'; };
-    const hd = function (t) { return '<p class="ctch">' + t + '</p>'; };
-
-    const contratante = social
-      ? Yb(ct.nome || '________') + ', ' + Y('CPF: ' + (ct.doc || '________') + ', R.G. ' + (ct.rg || '________') + ', residente e domiciliado(a) em ' + (ct.endTxt || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'))
-      : Yb(ct.nome || '________') + ', ' + Y('CNPJ: ' + (ct.doc || '________') + ', ' + (ct.endTxt || '________') + ', CEP: ' + (ct.cep || '________') + ', e-mail: ' + (ct.email || '________'));
-
-    add('<p class="ctt">CONTRATO DE LOCAÇÃO DE ESPAÇO e FORNECIMENTOS DE SERVIÇOS</p>');
-    add(p('Pelo presente instrumento particular, de um lado Quinta dos Esquilos Festas e Eventos Ltda., CNPJ: 47.131.561/0001-93, neste ato, representada por Ana Lúcia Alves Ferreira, CPF: 274.893.198-03, R.G. 32.684.312-7, residente e domiciliada na Rua Alexandre de Gusmão, 935 – Cotia – São Paulo cep: 06706-080, doravante denominado CONTRATADO; e de outro lado ' + contratante + ', doravante simplesmente denominado CONTRATANTE, têm justo e acertado o presente CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, mediante as cláusulas e condições seguintes, que mutuamente aceitam, a saber:'));
-    add(p('CLÁUSULA PRIMEIRA - O CONTRATADO se obriga, neste ato, a dar em locação e fornecer serviços ao CONTRATANTE em imóvel de sua propriedade, localizado à Travessa Yoshinaga, 07 – CEP 06728-000 – Aguassai - Cotia - SP'));
-    add(p('CLÁUSULA SEGUNDA - O prazo do presente contrato de locação do Espaço e serviços a serem prestados é de 1 dia, com início e término no mesmo dia, conforme cronograma anexo a proposta, data em que o CONTRATANTE se obriga a restituir o imóvel locado em perfeito estado de conservação.'));
-    add(p('CLÁUSULA TERCEIRA - O presente contrato destina-se a fins exclusivamente do evento (' + ESC(tipoUp) + ') a ser realizado no dia ' + R(dataEv) + ', conforme cronograma e proposta anexo ao contrato, estando proibida qualquer alteração desta destinação, salvo mediante concordância expressa por escrito pelo CONTRATADO.'));
-
-    /* Cláusula quarta: valor e parcelas (vermelho) */
-    add(p('CLÁUSULA QUARTA - O valor total do contrato é de ' + R(QE.rsExt(c.total)) + ', a ser pago da seguinte forma:'), { keep: true });
-    const n = c.parcelas.length;
-    c.parcelas.forEach(function (pc, i) {
-      const rot = n === 1 ? '- Pagamento único:' : (i === 0 ? '- Sinal:' : '- Parcela ' + i + ':');
-      add('<p class="ctpc"><b>' + R(rot) + '</b><br>' + R(QE.rsExt(pc.valor) + ' a ser pago até o dia ' + (QE.fmtData(pc.data) || '__/__/____') + ';') + '</p>', { keep: i < n - 1 && false });
-    });
-    add('<p class="ctbk"><b>Dados Bancários:</b><br>Banco: 0260<br>Nu Pagamentos S.A.<br>Quinta dos Esquilos Festas e Eventos Ltda.<br>Agência: 0001<br>Conta corrente: 12.017.996-2<br>CNPJ: 47.131.561/0001-93<br>CHAVE PIX: 47.131.561/0001-93</p>');
-
-    add(p('CLÁUSULA QUINTA - O CONTRATADO, caso solicitado, expedirá recibo discriminado no qual conste o valor recebido, ou servirá como tal, o comprovante de depósito bancário feito pelo CONTRATANTE de acordo com as datas pré-determinadas acima.'));
-    add(p('CLÁUSULA SEXTA - O CONTRATADO será responsável, enquanto durar o evento, por todos os custos e despesas provenientes do Espaço, inclusive dos custos decorrentes da limpeza do espaço após o evento.'));
-    add(p('Parágrafo único - O CONTRATANTE, no curso da locação e dos serviços prestados, obriga-se, ainda, a satisfazer todas as exigências do Poder Público, a que der causa, que não constituirão motivo para rescisão deste contrato.'));
-    add(p('CLÁUSULA SÉTIMA - Não será permitida a transferência deste contrato, nem a sublocação, cessão ou empréstimo total ou parcial do imóvel locado bem como dos serviços ora contratados.'));
-
-    /* Cláusula oitava: pessoas, excedente e staff */
-    const pct = +ct.pctAcr > 0 ? +ct.pctAcr : 10, xAcr = Math.max(1, Math.round(P.qtd * pct / 100));
-    const exc = P.excedente, exc30 = Math.round(exc * 1.3 * 100) / 100;
-    const stf = P.staff, stfAd = (ct.staffAdic !== null && ct.staffAdic !== '' && !isNaN(ct.staffAdic)) ? +ct.staffAdic : Math.round((stf + 50) * 100) / 100;
-    add(hd('CLÁUSULA OITAVA – QUANTIDADE DE PESSOAS') + '<p>§ 1º - EVENTO: ' + R(String(P.qtd)) + ' pessoas conforme proposta de serviços (ANEXO)</p>');
-    add(p('§ 2º - ACRÉSCIMO OU DECRÉSCIMO DE PESSOAS:<br>- Acréscimo de até ' + R(String(xAcr)) + ' (' + Y(pct + '%') + ') pessoas, avisado com antecedência de até 2 dias, paga-se a quantia de ' + R(QE.rsExt(exc)) + ' por pessoa, no entanto, acima dessa quantidade, a CONTRATANTE deverá solicitar orçamento para a nova quantidade participantes do evento;'));
-    add(p('§ 3º - ACRÉSCIMO OU DECRÉSCIMO DE PESSOAS:<br>- Caso no dia do evento, exceda a quantidade de convidados, paga-se a quantia de ' + R(QE.rsExt(exc30)) + ' (valor do item acima + 30%) por pessoa;'));
-    add(p('§ 4º - LISTA DE COLABORADORES: A CONTRATANTE deverá enviar lista de participantes, convidados e/ou colabores em até 15 dias anteriores ao evento;'));
-    add(p('§ 5º - STAFF LEVADOS PELO CONTRATANTE:<br>- Para cada staff levado pela CONTRATATANTE paga-se a quantia de ' + R(QE.rsExt(stf)) + '.<br>- Entende-se por Staff do CONTRATANTE, aqueles levados por conta própria, tais como motoristas de ônibus e vans, fotógrafos externos, ajudantes, prestadores de serviços adicionais levados pela mesma, ou qualquer outro que não esteja incluso no total de pessoas citadas no parágrafo primeiro dessa mesma cláusula.<br>- Deverá ser avisado com antecedência de até 15 dias, ou será cobrado no primeiro dia útil posterior ao evento a quantia de ' + R(QE.rsExt(stfAd)) + ' por staff adicional.<br>- Para músicos contratados pela CONTRATANTE, que não sejam das bandas do escopo da CONTRATADA, haverá custo da alimentação dos mesmos, que deverá ser orçado anterior ao evento conforme necessidade dos mesmos. Caso não tenham uma alimentação específica contratada poderão ser inclusos como staff da contratada com os custos citados acima.<br>- Para todos os serviços prestados pela CONTRATADA, descritos na proposta, não haverá custos extras de Staffs.'));
-
-    add(p('CLÁUSULA NONA - O CONTRATANTE se responsabiliza por qualquer dano que venha a causar ao imóvel, ou aos bens que guarnecem o imóvel do evento, devendo restituí-los nas mesmas condições em que o recebeu, desde que comprovados ou comunicados pela CONTRATADA durante o evento ao CONTRATANTE.'));
-    add(p('§ 1º - Em havendo qualquer dano o CONTRATANTE deve repará-lo, às suas expensas, ao final locação.'));
-    add(p('§ 2º - Em não cumprindo o determinado no parágrafo acima, o CONTRATADO fica autorizado a executar os reparos, independentemente de orçamento.'));
-    add(p('CLÁUSULA DÉCIMA - Fica estipulada para ambas as partes uma multa no valor de 10% (Dez por cento) do valor total do contrato, por qualquer infração ao determinado neste instrumento.'));
-    add(p('§ 1º - A cobrança desta multa não afasta as relativas a outras eventualmente impostas.'));
-    add(p('CLÁUSULA DÉCIMA PRIMEIRA - Todo e qualquer ajuste entre as partes, para integrar o presente contrato, deverá ser feito por escrito, mediante termo aditivo a ser assinado por ambas.'));
-    add(p('CLÁUSULA DÉCIMA SEGUNDA – Não permitido Pets. Eventuais danos causados por Pets não autorizados, em móveis e/ou jardinagem serão cobrados integralmente após término da locação e vistoria do local, cobrado via emissão de boleto bancário em nome do CONTRATANTE;'));
-    add(p('CLÁUSULA DÉCIMA TERCEIRA – Caso contratado, devidamente citado na Proposta de Serviços, o CONTRATANTE se responsabiliza pelo uso da “Tirolesa” e “Mini Arvorismo” contidos no local, manuseando-a e usando-a somente com os devidos equipamentos de segurança, evitando o uso indevido de adultos e crianças não autorizados evitando possíveis acidentes.<br>Deverá ser observado as regras do TERMO DE RESPONSABILIDADE, anexo ao contrato.<br>Haverá um monitor durante o evento conforme cronograma contido na proposta.<br>Qualquer tipo de acidente por uso incompatível com as regras, será de inteira responsabilidade do CONTRATANTE. Caso não contratado o equipamento permanecerá fechado.'));
-    add(p('CLÁUSULA DÉCIMA QUARTA - O CONTRATADO não se responsabiliza por qualquer tipo de acidente oriundo de piscina, prática de esportes e qualquer outro acidente ocorrido dentro da propriedade no período da locação. Caso a CONTRATANTE tenha a necessidade de ambulância e/ou socorrista e/ou salva vidas, a mesma deverá contratar terceiros para suprir essa necessidade.'));
-    add(p('CLÁUSULA DÉCIMA QUINTA – FOGOS DE ARTIFÍCIO<br>É terminantemente proibido soltar fogos de artifício devido a Fauna (Reserva Ambiental) e Flora do local.'));
-    add(hd('CLÁUSULA DÉCIMA SEXTA – DESISTÊNCIAS') + '<p>§ 1º - Caso o CONTRATANTE desista do evento em até 60 dias que antecedem a referida data do evento, seja por qualquer motivo, o CONTRATADO se compromete em devolver 60% (Sessenta por cento) do valor devido, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência;</p>');
-    add(p('§ 2º - Caso o CONTRATANTE desista do evento entre 26 e 59 dias que antecedem a referida data do evento, o CONTRATADO se compromete em devolver 40% (Quarenta por cento) do valor devido, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência;'));
-    add(p('§ 3º - Caso o CONTRATANTE desista do evento entre 01 e 25 dias que antecedem a referida data do evento, o CONTRATADO não devolverá os valores devidos, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência, a fim de reparar os danos da não comercialização da data, contratação de terceiros e fornecedores.'));
-    add(p('§4º Caso a CONTRATADA desista do evento, por motivo de força maior, deverá restituir integralmente a quantia paga pela CONTRATANTE em até 5 dias da data da comunicação. A CONTRATADA não responderá por danos indiretos, motivos listados a seguir:'));
-    [
-      'Desastres climáticos extremos: Enchentes severas, tempestades, furacões, ciclones ou terremotos que destruam a infraestrutura da empresa ou impeçam o acesso ao local do serviço;',
-      'Incêndios fortuitos: Queimadas ou incêndios de grandes proporções que atinjam a sede ou os equipamentos essenciais da contratada;',
-      'Instabilidade civil: Guerras, revoluções, golpes de Estado, atos de terrorismo ou distúrbios civis de grande escala;',
-      'Greves gerais ou paralisações setoriais: Greves nacionais ou de categorias essenciais (como transporte ou combustíveis) que paralisem as cadeias de suprimentos de forma prolongada;',
-      'Determinações governamentais: Decretos de estado de calamidade pública, lockdowns, expropriações ou mudanças repentinas na legislação que proíbam ou inviabilizem a atividade comercial da contratada;',
-      'Epidemias e pandemias: Surtos globais ou locais de doenças que exijam isolamento social ou adoeçam grande parte da força de trabalho da empresa;',
-      'Falhas catastróficas de infraestrutura pública: Quedas prolongadas de energia elétrica na região ou interrupção generalizada de redes de telecomunicações que não sejam de responsabilidade da contratada.'
-    ].forEach(function (t) { add(p('- ' + t)); });
-
-    /* Cláusula décima sétima — texto novo */
-    add(hd('CLÁUSULA DÉCIMA SÉTIMA – DAS OBRIGAÇÕES DO CONTRATADO'), { keep: true });
-    [
+  /* ---------- Texto do contrato: cláusulas e parágrafos (todos editáveis no painel) ----------
+     {{campos}} são trocados pelos dados da proposta e do início do contrato.
+     inl = o primeiro parágrafo vai na mesma linha do título. */
+  const BANC = 'Banco: 0260\nNu Pagamentos S.A.\nQuinta dos Esquilos Festas e Eventos Ltda.\nAgência: 0001\nConta corrente: 12.017.996-2\nCNPJ: 47.131.561/0001-93\nCHAVE PIX: 47.131.561/0001-93';
+  QE.CONTRATO_BASE = [
+    { id: 'titulo', tit: 'CONTRATO DE LOCAÇÃO DE ESPAÇO e FORNECIMENTOS DE SERVIÇOS', cls: 'ctt', it: [] },
+    { id: 'abertura', tit: 'Abertura', semTit: true, it: ['Pelo presente instrumento particular, de um lado Quinta dos Esquilos Festas e Eventos Ltda., CNPJ: 47.131.561/0001-93, neste ato, representada por Ana Lúcia Alves Ferreira, CPF: 274.893.198-03, R.G. 32.684.312-7, residente e domiciliada na Rua Alexandre de Gusmão, 935 – Cotia – São Paulo cep: 06706-080, doravante denominado CONTRATADO; e de outro lado {{contratante}}, doravante simplesmente denominado CONTRATANTE, têm justo e acertado o presente CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, mediante as cláusulas e condições seguintes, que mutuamente aceitam, a saber:'] },
+    { id: 'c1', tit: 'CLÁUSULA PRIMEIRA -', inl: true, it: ['O CONTRATADO se obriga, neste ato, a dar em locação e fornecer serviços ao CONTRATANTE em imóvel de sua propriedade, localizado à Travessa Yoshinaga, 07 – CEP 06728-000 – Aguassai - Cotia - SP'] },
+    { id: 'c2', tit: 'CLÁUSULA SEGUNDA -', inl: true, it: ['O prazo do presente contrato de locação do Espaço e serviços a serem prestados é de 1 dia, com início e término no mesmo dia, conforme cronograma anexo a proposta, data em que o CONTRATANTE se obriga a restituir o imóvel locado em perfeito estado de conservação.'] },
+    { id: 'c3', tit: 'CLÁUSULA TERCEIRA -', inl: true, it: ['O presente contrato destina-se a fins exclusivamente do evento ({{tipoUp}}) a ser realizado no dia {{dataEvento}}, conforme cronograma e proposta anexo ao contrato, estando proibida qualquer alteração desta destinação, salvo mediante concordância expressa por escrito pelo CONTRATADO.'] },
+    { id: 'c4', tit: 'CLÁUSULA QUARTA -', inl: true, it: ['O valor total do contrato é de {{valorTotal}}, a ser pago da seguinte forma:', '{{parcelas}}', '**Dados Bancários:**\n' + BANC] },
+    { id: 'c5', tit: 'CLÁUSULA QUINTA -', inl: true, it: ['O CONTRATADO, caso solicitado, expedirá recibo discriminado no qual conste o valor recebido, ou servirá como tal, o comprovante de depósito bancário feito pelo CONTRATANTE de acordo com as datas pré-determinadas acima.'] },
+    { id: 'c6', tit: 'CLÁUSULA SEXTA -', inl: true, it: ['O CONTRATADO será responsável, enquanto durar o evento, por todos os custos e despesas provenientes do Espaço, inclusive dos custos decorrentes da limpeza do espaço após o evento.', 'Parágrafo único - O CONTRATANTE, no curso da locação e dos serviços prestados, obriga-se, ainda, a satisfazer todas as exigências do Poder Público, a que der causa, que não constituirão motivo para rescisão deste contrato.'] },
+    { id: 'c7', tit: 'CLÁUSULA SÉTIMA -', inl: true, it: ['Não será permitida a transferência deste contrato, nem a sublocação, cessão ou empréstimo total ou parcial do imóvel locado bem como dos serviços ora contratados.'] },
+    { id: 'c8', tit: 'CLÁUSULA OITAVA – QUANTIDADE DE PESSOAS', it: [
+      '§ 1º - EVENTO: {{qtd}} pessoas conforme proposta de serviços (ANEXO)',
+      '§ 2º - ACRÉSCIMO OU DECRÉSCIMO DE PESSOAS:\n- Acréscimo de até {{acrescimo}} pessoas, avisado com antecedência de até 2 dias, paga-se a quantia de {{valorExcedente}} por pessoa, no entanto, acima dessa quantidade, a CONTRATANTE deverá solicitar orçamento para a nova quantidade participantes do evento;',
+      '§ 3º - ACRÉSCIMO OU DECRÉSCIMO DE PESSOAS:\n- Caso no dia do evento, exceda a quantidade de convidados, paga-se a quantia de {{valorExcedente30}} por pessoa;',
+      '§ 4º - LISTA DE COLABORADORES: A CONTRATANTE deverá enviar lista de participantes, convidados e/ou colabores em até 15 dias anteriores ao evento;',
+      '§ 5º - STAFF LEVADOS PELO CONTRATANTE:\n- Para cada staff levado pela CONTRATATANTE paga-se a quantia de {{valorStaff}}.\n- Entende-se por Staff do CONTRATANTE, aqueles levados por conta própria, tais como motoristas de ônibus e vans, fotógrafos externos, ajudantes, prestadores de serviços adicionais levados pela mesma, ou qualquer outro que não esteja incluso no total de pessoas citadas no parágrafo primeiro dessa mesma cláusula.\n- Deverá ser avisado com antecedência de até 15 dias, ou será cobrado no primeiro dia útil posterior ao evento a quantia de {{valorStaffAdic}} por staff adicional.\n- Para músicos contratados pela CONTRATANTE, que não sejam das bandas do escopo da CONTRATADA, haverá custo da alimentação dos mesmos, que deverá ser orçado anterior ao evento conforme necessidade dos mesmos. Caso não tenham uma alimentação específica contratada poderão ser inclusos como staff da contratada com os custos citados acima.\n- Para todos os serviços prestados pela CONTRATADA, descritos na proposta, não haverá custos extras de Staffs.'] },
+    { id: 'c9', tit: 'CLÁUSULA NONA -', inl: true, it: ['O CONTRATANTE se responsabiliza por qualquer dano que venha a causar ao imóvel, ou aos bens que guarnecem o imóvel do evento, devendo restituí-los nas mesmas condições em que o recebeu, desde que comprovados ou comunicados pela CONTRATADA durante o evento ao CONTRATANTE.', '§ 1º - Em havendo qualquer dano o CONTRATANTE deve repará-lo, às suas expensas, ao final locação.', '§ 2º - Em não cumprindo o determinado no parágrafo acima, o CONTRATADO fica autorizado a executar os reparos, independentemente de orçamento.'] },
+    { id: 'c10', tit: 'CLÁUSULA DÉCIMA -', inl: true, it: ['Fica estipulada para ambas as partes uma multa no valor de 10% (Dez por cento) do valor total do contrato, por qualquer infração ao determinado neste instrumento.', '§ 1º - A cobrança desta multa não afasta as relativas a outras eventualmente impostas.'] },
+    { id: 'c11', tit: 'CLÁUSULA DÉCIMA PRIMEIRA -', inl: true, it: ['Todo e qualquer ajuste entre as partes, para integrar o presente contrato, deverá ser feito por escrito, mediante termo aditivo a ser assinado por ambas.'] },
+    { id: 'c12', tit: 'CLÁUSULA DÉCIMA SEGUNDA –', inl: true, it: ['Não permitido Pets. Eventuais danos causados por Pets não autorizados, em móveis e/ou jardinagem serão cobrados integralmente após término da locação e vistoria do local, cobrado via emissão de boleto bancário em nome do CONTRATANTE;'] },
+    { id: 'c13', tit: 'CLÁUSULA DÉCIMA TERCEIRA –', inl: true, it: ['Caso contratado, devidamente citado na Proposta de Serviços, o CONTRATANTE se responsabiliza pelo uso da “Tirolesa” e “Mini Arvorismo” contidos no local, manuseando-a e usando-a somente com os devidos equipamentos de segurança, evitando o uso indevido de adultos e crianças não autorizados evitando possíveis acidentes.\nDeverá ser observado as regras do TERMO DE RESPONSABILIDADE, anexo ao contrato.\nHaverá um monitor durante o evento conforme cronograma contido na proposta.\nQualquer tipo de acidente por uso incompatível com as regras, será de inteira responsabilidade do CONTRATANTE. Caso não contratado o equipamento permanecerá fechado.'] },
+    { id: 'c14', tit: 'CLÁUSULA DÉCIMA QUARTA -', inl: true, it: ['O CONTRATADO não se responsabiliza por qualquer tipo de acidente oriundo de piscina, prática de esportes e qualquer outro acidente ocorrido dentro da propriedade no período da locação. Caso a CONTRATANTE tenha a necessidade de ambulância e/ou socorrista e/ou salva vidas, a mesma deverá contratar terceiros para suprir essa necessidade.'] },
+    { id: 'c15', tit: 'CLÁUSULA DÉCIMA QUINTA – FOGOS DE ARTIFÍCIO', it: ['É terminantemente proibido soltar fogos de artifício devido a Fauna (Reserva Ambiental) e Flora do local.'] },
+    { id: 'c16', tit: 'CLÁUSULA DÉCIMA SEXTA – DESISTÊNCIAS', it: [
+      '§ 1º - Caso o CONTRATANTE desista do evento em até 60 dias que antecedem a referida data do evento, seja por qualquer motivo, o CONTRATADO se compromete em devolver 60% (Sessenta por cento) do valor devido, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência;',
+      '§ 2º - Caso o CONTRATANTE desista do evento entre 26 e 59 dias que antecedem a referida data do evento, o CONTRATADO se compromete em devolver 40% (Quarenta por cento) do valor devido, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência;',
+      '§ 3º - Caso o CONTRATANTE desista do evento entre 01 e 25 dias que antecedem a referida data do evento, o CONTRATADO não devolverá os valores devidos, incluindo as parcelas vencidas e ainda não pagas, até a presente data da desistência, a fim de reparar os danos da não comercialização da data, contratação de terceiros e fornecedores.',
+      '§4º Caso a CONTRATADA desista do evento, por motivo de força maior, deverá restituir integralmente a quantia paga pela CONTRATANTE em até 5 dias da data da comunicação. A CONTRATADA não responderá por danos indiretos, motivos listados a seguir:',
+      '- Desastres climáticos extremos: Enchentes severas, tempestades, furacões, ciclones ou terremotos que destruam a infraestrutura da empresa ou impeçam o acesso ao local do serviço;',
+      '- Incêndios fortuitos: Queimadas ou incêndios de grandes proporções que atinjam a sede ou os equipamentos essenciais da contratada;',
+      '- Instabilidade civil: Guerras, revoluções, golpes de Estado, atos de terrorismo ou distúrbios civis de grande escala;',
+      '- Greves gerais ou paralisações setoriais: Greves nacionais ou de categorias essenciais (como transporte ou combustíveis) que paralisem as cadeias de suprimentos de forma prolongada;',
+      '- Determinações governamentais: Decretos de estado de calamidade pública, lockdowns, expropriações ou mudanças repentinas na legislação que proíbam ou inviabilizem a atividade comercial da contratada;',
+      '- Epidemias e pandemias: Surtos globais ou locais de doenças que exijam isolamento social ou adoeçam grande parte da força de trabalho da empresa;',
+      '- Falhas catastróficas de infraestrutura pública: Quedas prolongadas de energia elétrica na região ou interrupção generalizada de redes de telecomunicações que não sejam de responsabilidade da contratada.'] },
+    { id: 'c17', tit: 'CLÁUSULA DÉCIMA SÉTIMA – DAS OBRIGAÇÕES DO CONTRATADO', it: [
       '§ 1º Disponibilizar o espaço ao CONTRATANTE em conformidade com as características, instalações e condições apresentadas nos anúncios e materiais de divulgação previamente consultados.',
       '§ 2º Entregar o espaço em condições adequadas de limpeza, conservação e utilização, garantindo o funcionamento dos banheiros e o abastecimento de água durante o período contratado.',
       '§ 3º Disponibilizar o espaço e a estrutura contratada de acordo com as condições estabelecidas neste instrumento e com a quantidade de convidados previamente informada pelo CONTRATANTE.',
       '§ 4º Garantir que o salão e as demais áreas contratadas estejam limpos e organizados no início do período de locação.',
       '§ 5º Disponibilizar o salão de jogos com as respectivas bolas, raquetes e demais acessórios necessários à utilização dos equipamentos existentes no local.',
       '§ 6º Fornecer os serviços e itens expressamente previstos neste contrato e em seus anexos, respeitando as condições e especificações acordadas entre as partes.',
-      '§ 7º Providenciar, em prazo razoável, os reparos necessários em caso de falhas ou defeitos em equipamentos, mobiliários ou instalações de responsabilidade do CONTRATADO, quando comprometerem a utilização do espaço ou dos serviços contratados.'
-    ].forEach(function (t) { add(p(t)); });
+      '§ 7º Providenciar, em prazo razoável, os reparos necessários em caso de falhas ou defeitos em equipamentos, mobiliários ou instalações de responsabilidade do CONTRATADO, quando comprometerem a utilização do espaço ou dos serviços contratados.'] },
+    { id: 'c18', tit: 'CLÁUSULA DÉCIMA OITAVA –', inl: true, it: ['O Espaço não dispõe de gerador, podendo ser opção de contratação direta por parte da CONTRATANTE, para eventualidade de falta de energia por parte ou deficiência da Concessionária.'] },
+    { id: 'c19', tit: 'CLÁUSULA DÉCIMA NONA – ESCOPO', recuo: true, it: ['1- Locação do Espaço para uso de evento ({{tipoNm}}) a ser realizado no dia {{dataEvento}} para {{qtd}} pessoas.', '2- Serviços:\n- Conforme proposta em anexo;'] },
+    { id: 'c20', tit: 'CLÁUSULA VIGÉSIMA – ESTACIONAMENTO DE VEÍCULOS', recuo: true, it: ['1- O Espaço deixará uma pessoa para orientar os convidados na chegada e estacionamento dos veículos;', '2- Não dispomos de manobrista, para essa opção (VALLET), verificar disponibilidade e valores;', '3- O estacionamento é gratuito, temos vagas limitadas;', '4- Não nos responsabilizamos por eventuais danos e/ou colisão dos veículos dentro do Estacionamento.'] },
+    { id: 'c21', tit: 'CLÁUSULA VIGÉSIMA PRIMEIRA – QUANTO AOS HORÁRIOS', recuo: true, it: ['1- O período do Espaço está descrito na proposta;', '2- As horas extras dos serviços, caso seja necessário, poderá ser contratada mediante orçamento prévio;', '3- Início e término do evento vide cláusula específica;', '4- Os horários podem ser ajustados até 30 dias anteriores ao evento mediante disponibilidade.'] },
+    { id: 'c22', tit: 'CLÁUSULA VIGÉSIMA SEGUNDA -', inl: true, it: ['As partes elegem o foro da Comarca de Cotia, que é o da situação do imóvel, para dirimir as questões resultantes da execução do presente contrato, obrigando-se a parte vencida a pagar à vencedora, além das custas e despesas processuais, honorários advocatícios fixados em 20% (vinte por cento) sobre o valor da causa.'] },
+    { id: 'c23', tit: 'CLÁUSULA VIGÉSIMA TERCEIRA –', inl: true, it: ['O CONTRATANTE receberá o presente contrato via e-mail, devendo responder quanto a aceitação do mesmo, via e-mail ou devendo-o assinado, também via e-mail. A locação e serviços prestados, estará efetivada somente após assinatura do mesmo e depósito do sinal. Será aceito assinatura digital do mesmo.'] },
+    { id: 'c24', tit: 'CLÁUSULA VIGÉSIMA QUARTA –', inl: true, it: ['Em caso de LOCKDOWN ou RESTRIÇÕES decretadas pelas autoridades municipais ou federais, o CONTRATANTE poderá reagendar as datas da locação e do evento sem multas ou custos adicionais, desde que avisado com antecedência no prazo mínimo 20 dias.'] },
+    { id: 'c25', tit: 'CLÁUSULA VIGÉSIMA QUINTA – ANEXOS', recuo: true, it: ['{{anexos}}'] },
+    { id: 'ass', tit: 'Fechamento e assinaturas', semTit: true, it: [
+      'E, assim, por estarem justas e convencionadas, as partes assinam o presente instrumento particular de CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, juntamente com as testemunhas abaixo:',
+      'Cotia, {{diaAss}} de {{mesAss}} de {{anoAss}}',
+      '#Quinta dos Esquilos Festas e Eventos Ltda. – CONTRATADA\nAna Lúcia Alves Ferreira – Representante Legal\nCPF: 274.893.198-03\nCNPJ: 47.131.561/0001-93\ne-mail: quintadosesquilos@gmail.com',
+      '#{{contratanteNome}} – CONTRATANTE\n{{docAss}}\ne-mail: {{emails}}',
+      '#{{t1nome}} – TESTEMUNHA 1\nCPF: {{t1cpf}}\ne-mail: {{t1email}}',
+      '#?{{t2nome}} – TESTEMUNHA 2\nCPF: {{t2cpf}}\ne-mail: {{t2email}}'] }
+  ];
+  /* Textos de cada parágrafo: padrão ou o que você editou no painel */
+  QE.contratoTextos = function (ct) {
+    const d = QE.contratoPadrao({}, ct);
+    return QE.CONTRATO_BASE.map(function (cl) {
+      const itens = cl.it.map(function (t, i) { const k = cl.id + '.' + i; return { k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: t, extra: false }; });
+      (d.add[cl.id] || []).forEach(function (t, j) { const k = cl.id + '+' + j; itens.push({ k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: '', extra: true, j: j }); });
+      return { cl: cl, tit: d.ed[cl.id + '.t'] !== undefined ? d.ed[cl.id + '.t'] : cl.tit, oculto: !!d.ed[cl.id + '.h'], itens: itens };
+    });
+  };
 
-    add(p('CLÁUSULA DÉCIMA OITAVA – O Espaço não dispõe de gerador, podendo ser opção de contratação direta por parte da CONTRATANTE, para eventualidade de falta de energia por parte ou deficiência da Concessionária.'));
-    add(hd('CLÁUSULA DÉCIMA NONA – ESCOPO') + '<p class="ctin">1- Locação do Espaço para uso de evento (' + ESC(tipoNm) + ') a ser realizado no dia ' + R(dataEv) + ' para ' + R(String(P.qtd)) + ' pessoas.</p><p class="ctin">2- Serviços:<br>- Conforme proposta em anexo;</p>');
-    add(hd('CLÁUSULA VIGÉSIMA – ESTACIONAMENTO DE VEÍCULOS') + '<p class="ctin">1- O Espaço deixará uma pessoa para orientar os convidados na chegada e estacionamento dos veículos;</p>');
-    add('<p class="ctin">2- Não dispomos de manobrista, para essa opção (VALLET), verificar disponibilidade e valores;</p><p class="ctin">3- O estacionamento é gratuito, temos vagas limitadas;</p><p class="ctin">4- Não nos responsabilizamos por eventuais danos e/ou colisão dos veículos dentro do Estacionamento.</p>');
-    add(hd('CLÁUSULA VIGÉSIMA PRIMEIRA – QUANTO AOS HORÁRIOS') + '<p class="ctin">1- O período do Espaço está descrito na proposta;</p><p class="ctin">2- As horas extras dos serviços, caso seja necessário, poderá ser contratada mediante orçamento prévio;</p><p class="ctin">3- Início e término do evento vide cláusula específica;</p><p class="ctin">4- Os horários podem ser ajustados até 30 dias anteriores ao evento mediante disponibilidade.</p>');
-    add(p('CLÁUSULA VIGÉSIMA SEGUNDA - As partes elegem o foro da Comarca de Cotia, que é o da situação do imóvel, para dirimir as questões resultantes da execução do presente contrato, obrigando-se a parte vencida a pagar à vencedora, além das custas e despesas processuais, honorários advocatícios fixados em 20% (vinte por cento) sobre o valor da causa.'));
-    add(p('CLÁUSULA VIGÉSIMA TERCEIRA – O CONTRATANTE receberá o presente contrato via e-mail, devendo responder quanto a aceitação do mesmo, via e-mail ou devendo-o assinado, também via e-mail. A locação e serviços prestados, estará efetivada somente após assinatura do mesmo e depósito do sinal. Será aceito assinatura digital do mesmo.'));
-    add(p('CLÁUSULA VIGÉSIMA QUARTA – Em caso de LOCKDOWN ou RESTRIÇÕES decretadas pelas autoridades municipais ou federais, o CONTRATANTE poderá reagendar as datas da locação e do evento sem multas ou custos adicionais, desde que avisado com antecedência no prazo mínimo 20 dias.'));
-    add(hd('CLÁUSULA VIGÉSIMA QUINTA – ANEXOS') + '<p class="ctin">' + P.anexos.map(function (a, i) { return 'Anexo ' + (i + 1) + ': ' + R(a); }).join('<br>') + '</p>');
-
-    /* Fechamento e assinaturas (página própria) */
-    const dt = QE.parseData(ct.dataAss) || new Date();
-    const wit = function (t, i) { return '<div class="ctsg">' + Y(t.nome + ' – TESTEMUNHA ' + i) + '<br>' + Y('CPF: ' + t.cpf) + '<br>' + Y('e-mail: ' + t.email) + '</div>'; };
-    const docRot = social ? 'CPF: ' : 'CNPJ: ';
-    add('<p>E, assim, por estarem justas e convencionadas, as partes assinam o presente instrumento particular de CONTRATO DE LOCAÇÃO DE ESPAÇO E FORNECIMENTO DE SERVIÇOS, juntamente com as testemunhas abaixo:</p>' +
-      '<p style="margin-top:26px">Cotia, ' + Y(String(dt.getDate())) + ' de ' + Y(MESES_EXT[dt.getMonth()]) + ' de ' + Y(String(dt.getFullYear())) + '</p>' +
-      '<div class="ctsg" style="margin-top:58px">Quinta dos Esquilos Festas e Eventos Ltda. – CONTRATADA<br>Ana Lúcia Alves Ferreira – Representante Legal<br>CPF: 274.893.198-03<br>CNPJ: 47.131.561/0001-93<br>e-mail: quintadosesquilos@gmail.com</div>' +
-      '<div class="ctsg">' + G((ct.nome || '________') + ' – CONTRATANTE') + '<br>' + (social && ct.rg ? G('RG: ' + ct.rg) + '<br>' : '') + G(docRot + (ct.doc || '________')) + '<br>' + G('e-mail: ' + (ct.email || '________')) + '</div>' +
-      wit(ct.t1, 1) + (ct.t2on ? wit(ct.t2, 2) : ''), { pb: true });
+  /* Blocos do contrato (cada um é um parágrafo). marcar = deixa em negrito o que vem da proposta/dados preenchidos */
+  QE.contratoBlocos = function (req, cfg, ctIn, marcar) {
+    const ct = QE.contratoPadrao(req, ctIn), P = QE.contratoProposta(req, cfg), c = P.c, ev = P.ev, social = ev.social;
+    const dataEv = QE.fmtData(req.dataEvento) || '__/__/____';
+    const pct = +ct.pctAcr > 0 ? +ct.pctAcr : 10, xAcr = Math.max(1, Math.round(P.qtd * pct / 100));
+    const exc = P.excedente, exc30 = Math.round(exc * 1.3 * 100) / 100, stf = P.staff;
+    const stfAd = (ct.staffAdic !== null && ct.staffAdic !== '' && !isNaN(ct.staffAdic)) ? +ct.staffAdic : Math.round((stf + 50) * 100) / 100;
+    const n = c.parcelas.length, dt = QE.parseData(ct.dataAss) || new Date();
+    const vz = function (v) { return v || '________'; };
+    const docLinha = social ? 'CPF: ' + vz(ct.doc) + ', R.G. ' + vz(ct.rg) : 'CNPJ: ' + vz(ct.doc) + (ct.im ? ', Inscrição Municipal: ' + ct.im : '') + (ct.ie ? ', Inscrição Estadual: ' + ct.ie : '');
+    const contratante = '\u0001' + vz(ct.nome) + '\u0002, ' + docLinha + (social ? ', residente e domiciliado(a) em ' : ', ') + vz(ct.endTxt) + ', CEP: ' + vz(ct.cep) + ', e-mail: ' + vz(ct.emailTxt);
+    const parcelas = c.parcelas.map(function (pc, i) {
+      return '\u0001' + (n === 1 ? '- Pagamento único:' : (i === 0 ? '- Sinal:' : '- Parcela ' + i + ':')) + '\u0002\n' + '\u0001' + QE.rsExt(pc.valor) + ' a ser pago até o dia ' + (QE.fmtData(pc.data) || '__/__/____') + ';\u0002';
+    }).join('\n\n');
+    const wit = function (t) { return t || '________'; };
+    const T = {
+      contratante: contratante, contratanteNome: vz(ct.nome), docAss: social ? 'CPF: ' + vz(ct.doc) + (ct.rg ? '\nRG: ' + ct.rg : '') : 'CNPJ: ' + vz(ct.doc), emails: vz(ct.emailTxt),
+      tipoUp: social ? ev.tag.toUpperCase() : 'CONFRATERNIZAÇÃO DE EMPRESA', tipoNm: social ? ev.tag : 'Confraternização de empresa',
+      dataEvento: dataEv, valorTotal: QE.rsExt(c.total), parcelas: parcelas, qtd: String(P.qtd), acrescimo: String(xAcr),
+      valorExcedente: QE.rsExt(exc), valorExcedente30: QE.rsExt(exc30), valorStaff: QE.rsExt(stf), valorStaffAdic: QE.rsExt(stfAd),
+      anexos: P.anexos.map(function (a, i) { return 'Anexo ' + (i + 1) + ': ' + a; }).join('\n'),
+      diaAss: String(dt.getDate()), mesAss: MESES_EXT[dt.getMonth()], anoAss: String(dt.getFullYear()),
+      t1nome: wit(ct.t1.nome), t1cpf: wit(ct.t1.cpf), t1email: wit(ct.t1.email), t2nome: wit(ct.t2.nome), t2cpf: wit(ct.t2.cpf), t2email: wit(ct.t2.email)
+    };
+    const B = []; const add = function (h, o) { B.push(Object.assign({ h: h }, o || {})); };
+    /* texto -> html: escapa, troca {{campos}} (em negrito na prévia) e **negrito** */
+    const html = function (t) {
+      let out = ESC(t).replace(/\{\{(\w+)\}\}/g, function (m, k) { return T[k] !== undefined ? ESC(T[k]).replace(/\u0001/g, '').replace(/\u0002/g, '') : m; });
+      return out;
+    };
+    const fmt = function (t) {
+      /* \u0001..\u0002 marca trechos preenchidos; **x** é negrito escolhido por você */
+      let s = String(t).replace(/\{\{(\w+)\}\}/g, function (m, k) {
+        if (T[k] === undefined) return m;
+        const v = T[k];
+        return v.indexOf('\u0001') >= 0 ? v : '\u0001' + v + '\u0002';
+      });
+      s = ESC(s).replace(/\u0001/g, marcar ? '<b>' : '').replace(/\u0002/g, marcar ? '</b>' : '').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+      return s;
+    };
+    QE.contratoTextos(ct).forEach(function (sec) {
+      const cl = sec.cl; if (sec.oculto) return;
+      if (cl.id === 'titulo') { if (sec.tit.trim()) add('<p class="ctt">' + ESC(sec.tit) + '</p>'); return; }
+      const itens = sec.itens.filter(function (it) { return !it.oculto && String(it.t).trim(); });
+      const cab = !cl.semTit && String(sec.tit).trim();
+      itens.forEach(function (it, idx) {
+        if (it.t.charAt(0) === '#') {   /* bloco de assinatura */
+          let tx = it.t.slice(1); if (tx.charAt(0) === '?') { if (!ct.t2on) return; tx = tx.slice(1); }
+          add('<div class="ctsg">' + fmt(tx).replace(/\n/g, '<br>') + '</div>', { sig: true }); return;
+        }
+        if (it.k === 'ass.1') { add('<p style="margin-top:22px">' + fmt(it.t) + '</p>', { keep: true }); return; }
+        const paras = fmt((idx === 0 && cab && cl.inl ? sec.tit + ' ' : '') + it.t).split(/\n\n/);
+        if (idx === 0 && cab && !cl.inl) add('<p class="ctch">' + ESC(sec.tit) + '</p>', { keep: true });
+        paras.forEach(function (pp, pi) {
+          const linhas = pp.split('\n');
+          linhas.forEach(function (ln, li) {
+            const ult = li === linhas.length - 1;
+            add('<p class="' + (cl.recuo ? 'ctin' : '') + '"' + (ult ? '' : ' style="margin-bottom:2px"') + '>' + ln + '</p>');
+          });
+        });
+      });
+    });
     return B;
   };
 })(typeof window !== 'undefined' ? window.QE : require('./core.js'));
@@ -2534,7 +2603,14 @@ body.pv-lock { overflow: hidden; }
   const tagEvento = function (x) { const e = QE.evento(x); return '<span class="tag ev-' + e.id + '">' + esc(e.tag) + '</span>'; };
   function renderLista() {
     const f = $('#fStatus').value;
-    const itens = lista.filter(function (x) { return !f || stOf(x) === f; });
+    const nz = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); };
+    const bq = nz(($('#fBusca') || { value: '' }).value).split(/\s+/).filter(Boolean);
+    const itens = lista.filter(function (x) {
+      if (f && stOf(x) !== f) return false;
+      if (!bq.length) return true;
+      const t = nz([x.empresa, x.contato, x.email, x.telefone, QE.evento(x).tag, QE.fmtData(x.dataEvento), x.dataEvento, x.qtd, STATUS[stOf(x)]].join(' '));
+      return bq.every(function (w) { return t.indexOf(w) >= 0; });
+    }).sort(function (a, b) { return bq.length ? nz(a.empresa).localeCompare(nz(b.empresa), 'pt-BR') : 0; });
     $('#lista').innerHTML = itens.length ? itens.map(function (x) {
       return '<div class="sol" role="button" tabindex="0" data-id="' + x.id + '"><b>' + esc(x.empresa) + ' <small>— ' + esc(x.contato) + '</small> ' + tagEvento(x) + '</b><span class="badge ' + stOf(x) + '">' + STATUS[stOf(x)] + '</span>' +
         '<small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas · ' + (x.escopo === 'standard' ? 'Standard' : 'Premium') + ' · ' + esc(cardNome(x)) + '</small>' +
@@ -2573,6 +2649,7 @@ body.pv-lock { overflow: hidden; }
     catch (e) { console.error(e); const bn = $('#demo'); bn.textContent = 'Não consegui ler os pedidos (' + (e.code || e.message) + '). Confira as regras do Firestore.'; bn.hidden = false; }
   }
   $('#fStatus').addEventListener('change', renderLista);
+  $('#fBusca').addEventListener('input', renderLista);
   $('#lista').addEventListener('change', function (e) { const s = e.target.closest('[data-st]'); if (s) { e.stopPropagation(); mudarStatus(s.dataset.st, s.value); } });
   $('#atualizar').addEventListener('click', function () { recarregar(true); });
   $('#atualizarK').addEventListener('click', function () { recarregar(true); });
@@ -3957,7 +4034,7 @@ body.pv-lock { overflow: hidden; }
   /* ======================================================================
      Contrato (a partir da proposta em "Em contrato")
      ====================================================================== */
-  const CT_LIM = 975;   /* altura útil de cada página do contrato (px) */
+  const CT_LIM = 985;   /* altura útil de cada página do contrato (px) */
   function ctBtn() { const b = $('#gerarContrato'); if (b) b.hidden = !cur || ['contrato', 'ganho'].indexOf(QE.normStatus(cur.status)) < 0; }
   function ctMede(blocos) {
     const host = document.createElement('div'); host.className = 'pdf-host ctm'; host.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1';
@@ -3975,24 +4052,56 @@ body.pv-lock { overflow: hidden; }
     return pags.map(function (p, i) { return '<section class="pg ctp"><div class="ctb">' + p.join('') + '</div><div class="pn">' + (i + 1) + '</div></section>'; }).join('');
   }
   function ctFormHTML() {
-    const ct = cur.contrato, P = QE.contratoProposta(cur, cfg), social = P.ev.social;
+    const ct = QE.contratoPadrao(cur, cur.contrato), P = QE.contratoProposta(cur, cfg), social = P.ev.social;
     const I = function (k, lab, ph, tipo, extra) { const v = getP(ct, k); return '<div class="f"><label>' + lab + '</label><input type="' + (tipo || 'text') + '" data-ct="' + k + '" value="' + esc(v === null || v === undefined ? '' : v) + '" placeholder="' + esc(ph || '') + '"' + (extra || '') + '></div>'; };
     const rows = P.c.parcelas.map(function (pc, i) { return '<li>' + (P.c.parcelas.length === 1 ? 'Pagamento único' : i === 0 ? 'Sinal' : 'Parcela ' + i) + ': <b>' + QE.rs(pc.valor) + '</b> até ' + QE.fmtData(pc.data) + '</li>'; }).join('');
     return '<div class="box open"><div class="in">' +
       '<p class="hint" style="margin-top:0">Na prévia, em <b>negrito</b> ficam os dados preenchidos aqui ou vindos da proposta. O PDF sai sem negrito nesses trechos.</p>' +
       '<h4 class="sh first">' + (social ? 'Dados do contratante (pessoa física)' : 'Dados da empresa contratante') + '</h4>' +
-      I('nome', social ? 'Nome completo' : 'Razão social') + '<div class="g2">' + I('doc', social ? 'CPF' : 'CNPJ') + (social ? I('rg', 'RG') : I('cep', 'CEP')) + '</div>' +
-      '<p class="hint" style="margin:6px 0 2px">' + (social ? 'Endereço de moradia' : 'Endereço') + '</p>' + I('rua', 'Rua') + '<div class="g2">' + I('num', 'Número') + I('bairro', 'Bairro') + '</div><div class="g2">' + I('cidade', 'Cidade') + I('uf', 'UF', 'SP', 'text', ' maxlength="2" style="text-transform:uppercase"') + '</div>' + '<div class="g2">' + (social ? I('cep', 'CEP') : '') + I('email', 'E-mail', '', 'email') + '</div>' +
+      I('nome', social ? 'Nome completo' : 'Razão social') + '<div class="g2">' + I('doc', social ? 'CPF' : 'CNPJ', social ? '000.000.000-00' : '00.000.000/0000-00', 'text', ' inputmode="numeric"') + (social ? I('rg', 'RG') : I('cep', 'CEP', '00000-000', 'text', ' inputmode="numeric"')) + '</div>' +
+      (social ? '' : '<div class="g2">' + I('im', 'Inscrição Municipal') + I('ie', 'Inscrição Estadual') + '</div>') +
+      '<p class="hint" style="margin:6px 0 2px">' + (social ? 'Endereço de moradia' : 'Endereço') + '</p>' + I('rua', 'Rua') + '<div class="g2">' + I('num', 'Número') + I('bairro', 'Bairro') + '</div><div class="g2">' + I('cidade', 'Cidade') + I('uf', 'UF', 'SP', 'text', ' maxlength="2" style="text-transform:uppercase"') + '</div>' +
+      (social ? '<div class="g2">' + I('cep', 'CEP', '00000-000', 'text', ' inputmode="numeric"') + '</div>' : '') +
+      '<div class="f"><label>E-mail(s) do contratante</label><div id="ctMails">' + ctMailsHTML(ct) + '</div></div>' +
       '<h4 class="sh">Assinatura</h4>' + I('dataAss', 'Data da assinatura', '', 'date') +
-      '<h4 class="sh">Testemunhas</h4><p class="hint" style="margin:0 0 4px">Testemunha 1</p>' + I('t1.nome', 'Nome') + '<div class="g2">' + I('t1.cpf', 'CPF') + I('t1.email', 'E-mail') + '</div>' +
+      '<h4 class="sh">Testemunhas</h4><p class="hint" style="margin:0 0 4px">Testemunha 1</p>' + I('t1.nome', 'Nome') + '<div class="g2">' + I('t1.cpf', 'CPF', '000.000.000-00') + I('t1.email', 'E-mail') + '</div>' +
       '<label class="chk"><input type="checkbox" data-ct="t2on"' + (ct.t2on ? ' checked' : '') + '> Adicionar 2ª testemunha (só aparece no contrato se marcado)</label>' +
-      '<div id="ctT2"' + (ct.t2on ? '' : ' hidden') + '>' + I('t2.nome', 'Nome da 2ª testemunha') + '<div class="g2">' + I('t2.cpf', 'CPF') + I('t2.email', 'E-mail') + '</div></div>' +
+      '<div id="ctT2"' + (ct.t2on ? '' : ' hidden') + '>' + I('t2.nome', 'Nome da 2ª testemunha') + '<div class="g2">' + I('t2.cpf', 'CPF', '000.000.000-00') + I('t2.email', 'E-mail') + '</div></div>' +
       '<h4 class="sh">Regras de acréscimo e staff</h4><div class="g2">' + I('pctAcr', 'Acréscimo de pessoas (%)', '10', 'number', ' min="1" max="100"') + I('staffAdic', 'Staff adicional fora do prazo (R$)', String((P.staff + 50) || ''), 'number', ' min="0" step="0.01"') + '</div>' +
       '<p class="hint">Staff adicional: se ficar vazio, usa o valor do staff da proposta + R$ 50,00.</p>' +
       '<h4 class="sh">Vem da proposta</h4><ul class="ctinfo"><li>Evento: <b>' + esc(P.ev.tag) + '</b> em <b>' + esc(QE.fmtData(cur.dataEvento) || 'sem data') + '</b> para <b>' + P.qtd + '</b> pessoas</li>' +
       '<li>Valor total: <b>' + QE.rs(P.c.total) + '</b></li>' + rows + '<li>Pessoa excedente: <b>' + QE.rs(P.excedente) + '</b> · Staff do cliente: <b>' + QE.rs(P.staff) + '</b></li>' +
-      '<li>Anexos: ' + esc(P.anexos.join(' · ')) + '</li></ul><p class="hint">Para mudar algo vermelho, volte à proposta, ajuste e abra o contrato de novo.</p>' +
-      '</div></div>';
+      '<li>Anexos: ' + esc(P.anexos.join(' · ')) + '</li></ul><p class="hint">Para mudar algo da proposta, volte à proposta, ajuste e abra o contrato de novo.</p>' +
+      '</div></div>' +
+      '<details class="box" id="ctAdvBox"><summary>Texto do contrato (avançado) — editar cláusulas</summary><div class="in" id="ctAdv">' + ctAdvHTML(ct) + '</div></details>';
+  }
+  function ctMailsHTML(ct) {
+    return ct.emails.map(function (m, i) {
+      return '<div class="ctm1"><input type="email" data-ctmail="' + i + '" value="' + esc(m) + '" placeholder="email@empresa.com.br">' + (ct.emails.length > 1 ? '<button type="button" class="btn sm ghost" data-ctmaildel="' + i + '" title="Remover e-mail">×</button>' : '') + '</div>';
+    }).join('') + '<button type="button" class="btn sm" id="ctMailAdd">+ Adicionar e-mail</button>';
+  }
+  const CT_ROT = { titulo: 'Título do contrato', abertura: 'Abertura (partes)', ass: 'Fechamento e assinaturas' };
+  function ctAdvHTML(ct) {
+    const secs = QE.contratoTextos(ct);
+    return '<p class="hint" style="margin-top:0">Normalmente você não precisa mexer aqui. Abra a cláusula que quiser ajustar: o texto, o título e cada parágrafo são editáveis, e dá para ocultar o que não vale neste contrato. Trechos como <code>{{valorTotal}}</code>, <code>{{dataEvento}}</code>, <code>{{qtd}}</code>, <code>{{valorExcedente}}</code>, <code>{{parcelas}}</code> e <code>{{anexos}}</code> são preenchidos sozinhos; <code>**texto**</code> deixa em negrito. Uma linha em branco separa parágrafos.</p>' +
+      secs.map(function (sec) {
+        const cl = sec.cl, lab = CT_ROT[cl.id] || String(sec.tit).replace(/\s*[-–]\s*$/, '');
+        return '<details class="ctcl" data-cl="' + cl.id + '"><summary>' + esc(lab) + (sec.oculto ? ' <em>(oculta no contrato)</em>' : '') + '</summary><div class="ctclb">' +
+          '<div class="f"><label>' + (cl.semTit ? 'Nome (só para você)' : 'Título') + '</label>' + (cl.semTit ? '<input value="' + esc(lab) + '" disabled>' : '<input data-cted="' + cl.id + '.t" value="' + esc(sec.tit) + '">') + '</div>' +
+          '<label class="chk"><input type="checkbox" data-ctedh="' + cl.id + '.h"' + (sec.oculto ? ' checked' : '') + '> Ocultar esta cláusula no contrato</label>' +
+          sec.itens.map(function (it, i) {
+            const linhas = String(it.t).split('\n').length, rows = Math.min(12, Math.max(2, linhas + Math.ceil(String(it.t).length / 85)));
+            return '<div class="ctit"><label>' + (it.extra ? 'Parágrafo adicionado' : 'Parágrafo ' + (i + 1)) + '</label><textarea data-cted="' + it.k + '" rows="' + rows + '">' + esc(it.t) + '</textarea><label class="chk"><input type="checkbox" data-ctedh="' + it.k + '.h"' + (it.oculto ? ' checked' : '') + '> Ocultar este parágrafo</label></div>';
+          }).join('') +
+          (cl.id === 'titulo' ? '' : '<button type="button" class="btn sm" data-ctadd="' + cl.id + '">+ Adicionar parágrafo</button> ') +
+          '<button type="button" class="btn sm ghost" data-ctrst="' + cl.id + '">Restaurar texto padrão desta cláusula</button></div></details>';
+      }).join('') + '<button type="button" class="btn sm ghost" id="ctRstTudo">Restaurar todo o texto padrão</button>';
+  }
+  function ctAdvRender() {
+    const aberto = Array.prototype.slice.call(document.querySelectorAll('#ctAdv .ctcl[open]')).map(function (d) { return d.dataset.cl; }), box = $('#ctAdv'), sc = window.scrollY;
+    box.innerHTML = ctAdvHTML(QE.contratoPadrao(cur, cur.contrato));
+    aberto.forEach(function (id) { const d = box.querySelector('.ctcl[data-cl="' + id + '"]'); if (d) d.open = true; });
+    window.scrollTo(0, sc);
   }
   let ctTimer = null;
   function ctPreview() {
@@ -4010,17 +4119,43 @@ body.pv-lock { overflow: hidden; }
   $('#ctVoltar').addEventListener('click', function () { view('edit'); });
   $('#ctSalvar').addEventListener('click', function () { salvar(); });
   function ctMuda(e) {
-    const t = e.target; if (!t.dataset || t.dataset.ct === undefined) return;
+    const t = e.target; if (!t.dataset) return;
+    const ct = cur.contrato;
+    if (t.dataset.ctmail !== undefined) { ct.emails = ct.emails || ['']; ct.emails[+t.dataset.ctmail] = t.value.trim(); ct.email = ct.emails[0] || ''; dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250); return; }
+    if (t.dataset.cted !== undefined || t.dataset.ctedh !== undefined) {
+      const k = t.dataset.cted !== undefined ? t.dataset.cted : t.dataset.ctedh;
+      ct.ed = ct.ed || {};
+      if (t.dataset.ctedh !== undefined) { if (t.checked) ct.ed[k] = true; else delete ct.ed[k]; if (e.type === 'change' && /^[a-z0-9]+\.h$/.test(k)) { const sm = t.closest('.ctcl').querySelector('summary'); sm.querySelector('em') && sm.querySelector('em').remove(); if (t.checked) sm.insertAdjacentHTML('beforeend', ' <em>(oculta no contrato)</em>'); } }
+      else ct.ed[k] = t.value;
+      dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 300); return;
+    }
+    if (t.dataset.ct === undefined) return;
     const k = t.dataset.ct;
     let v = t.type === 'checkbox' ? t.checked : t.value;
     if (k === 'pctAcr' || k === 'staffAdic') v = v === '' ? null : Number(v);
-    setP(cur.contrato, k, v); dirty = true;
+    if (k === 'cep') { v = QE.mascCEP(v); t.value = v; }
+    if (k === 'doc') { v = P_social() ? QE.mascCPF(v) : QE.mascCNPJ(v); t.value = v; }
+    if (k === 't1.cpf' || k === 't2.cpf') { v = QE.mascCPF(v); t.value = v; }
+    if (k === 'uf') { v = String(v).toUpperCase(); t.value = v; }
+    setP(ct, k, v); dirty = true;
     if (k === 't2on') $('#ctT2').hidden = !v;
-    if (k === 'uf') { v = String(v).toUpperCase(); t.value = v; setP(cur.contrato, k, v); }
     if (k === 'nome') $('#ctTitulo').textContent = 'Contrato — ' + (v || cur.empresa || 'sem nome');
     clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250);
   }
+  const P_social = function () { return QE.evento(cur).social; };
   $('#ctForm').addEventListener('input', ctMuda); $('#ctForm').addEventListener('change', ctMuda);
+  $('#ctForm').addEventListener('click', function (e) {
+    const t = e.target, ct = cur.contrato;
+    if (t.id === 'ctMailAdd') { ct.emails.push(''); $('#ctMails').innerHTML = ctMailsHTML(QE.contratoPadrao(cur, ct)); const i = $('#ctMails').querySelectorAll('input'); i[i.length - 1].focus(); dirty = true; return; }
+    if (t.dataset.ctmaildel !== undefined) { ct.emails.splice(+t.dataset.ctmaildel, 1); ct.email = ct.emails[0] || ''; $('#ctMails').innerHTML = ctMailsHTML(QE.contratoPadrao(cur, ct)); dirty = true; ctPreview(); return; }
+    if (t.dataset.ctadd) { const id = t.dataset.ctadd; ct.add = ct.add || {}; (ct.add[id] = ct.add[id] || []).push('Novo parágrafo'); dirty = true; ctAdvRender(); ctPreview(); return; }
+    if (t.dataset.ctrst) {
+      const id = t.dataset.ctrst; if (!confirm('Voltar esta cláusula ao texto padrão?')) return;
+      Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id];
+      dirty = true; ctAdvRender(); ctPreview(); return;
+    }
+    if (t.id === 'ctRstTudo') { if (!confirm('Voltar TODO o texto do contrato ao padrão? Suas edições de texto serão perdidas.')) return; ct.ed = {}; ct.add = {}; dirty = true; ctAdvRender(); ctPreview(); }
+  });
   window.addEventListener('resize', function () { if (!$('#v-contrato').hidden) ctPreview(); });
   $('#ctPdf').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
