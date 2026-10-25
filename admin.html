@@ -745,6 +745,7 @@ body.pv-lock { overflow: hidden; }
 .ctit { display: grid; gap: 3px; } .ctit > label:first-child { font-size: .78rem; color: var(--taupe); }
 .ctit textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: .85rem; line-height: 1.35; resize: vertical; }
 .ctcl .chk { font-size: .8rem; }
+.ctins { display: flex; gap: 6px; flex-wrap: wrap; } .ctcl summary em.nv { color: #2b7a3b; }
 </style>
 </head>
 <body>
@@ -2338,12 +2339,12 @@ body.pv-lock { overflow: hidden; }
       dataAss: QE.hoje(),
       t1: { nome: 'Júlia Alves Ferreira', cpf: '470.079.728-29', email: 'juliaalvesferreira241203@gmail.com' },
       t2on: false, t2: { nome: '', cpf: '', email: '' },
-      pctAcr: 10, staffAdic: null, ed: {}, add: {}
+      pctAcr: 10, staffAdic: null, ed: {}, add: {}, cl: []
     }, ct || {});
     d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {});
     d.t2 = Object.assign({ nome: '', cpf: '', email: '' }, d.t2 || {});
     if (!Array.isArray(d.emails) || !d.emails.length) d.emails = [d.email || ''];
-    d.ed = d.ed || {}; d.add = d.add || {};
+    d.ed = d.ed || {}; d.add = d.add || {}; d.cl = Array.isArray(d.cl) ? d.cl : [];
     d.social = ev.social;
     const partes = [[d.rua, d.num ? ', ' + d.num : ''], [d.bairro, ''], [d.cidade, d.uf ? ' – ' + d.uf : '']].map(function (x) { return x[0] ? x[0] + x[1] : ''; }).filter(Boolean);
     d.endTxt = partes.length ? partes.join(', ') : (d.end || '');
@@ -2428,12 +2429,33 @@ body.pv-lock { overflow: hidden; }
       '#?{{t2nome}} – TESTEMUNHA 2\nCPF: {{t2cpf}}\ne-mail: {{t2email}}'] }
   ];
   /* Textos de cada parágrafo: padrão ou o que você editou no painel */
+  /* Numeração automática das cláusulas: Primeira, Segunda… (as ocultas não contam) */
+  const ORD_U = ['', 'PRIMEIRA', 'SEGUNDA', 'TERCEIRA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÉTIMA', 'OITAVA', 'NONA'];
+  const ORD_D = ['', 'DÉCIMA', 'VIGÉSIMA', 'TRIGÉSIMA', 'QUADRAGÉSIMA', 'QÜINQUAGÉSIMA', 'SEXAGÉSIMA', 'SEPTUAGÉSIMA', 'OCTOGÉSIMA', 'NONAGÉSIMA'];
+  QE.ordinal = function (n) { const d = Math.floor(n / 10), u = n % 10; return (ORD_D[d] + (d && u ? ' ' : '') + ORD_U[u]).trim(); };
+  QE.CONTRATO_BASE.forEach(function (cl) {
+    const m = /^c(\d+)$/.exec(cl.id);
+    if (m) { cl.num = true; cl.suf = cl.tit.slice(('CLÁUSULA ' + QE.ordinal(+m[1])).length).trim(); }
+  });
   QE.contratoTextos = function (ct) {
-    const d = QE.contratoPadrao({}, ct);
-    return QE.CONTRATO_BASE.map(function (cl) {
+    const d = QE.contratoPadrao({}, ct), customs = d.cl || [], seq = [];
+    const colocar = function (cl) { seq.push(cl); customs.filter(function (c) { return c.after === cl.id; }).forEach(colocar); };
+    QE.CONTRATO_BASE.forEach(colocar);
+    customs.forEach(function (c) { if (seq.indexOf(c) < 0) { const i = seq.findIndex(function (x) { return x.id === 'ass'; }); seq.splice(i < 0 ? seq.length : i, 0, c); } });
+    let n = 0;
+    return seq.map(function (cl) {
       const itens = cl.it.map(function (t, i) { const k = cl.id + '.' + i; return { k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: t, extra: false }; });
       (d.add[cl.id] || []).forEach(function (t, j) { const k = cl.id + '+' + j; itens.push({ k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: '', extra: true, j: j }); });
-      return { cl: cl, tit: d.ed[cl.id + '.t'] !== undefined ? d.ed[cl.id + '.t'] : cl.tit, oculto: !!d.ed[cl.id + '.h'], itens: itens };
+      const oculto = !!d.ed[cl.id + '.h'];
+      let tit, suf = null, num = 0;
+      if (cl.num) {
+        suf = d.ed[cl.id + '.t'] !== undefined ? String(d.ed[cl.id + '.t']) : cl.suf;
+        suf = suf.replace(/^\s*CLÁUSULA\s+[A-ZÀ-Ú]+(?:\s+(?:PRIMEIRA|SEGUNDA|TERCEIRA|QUARTA|QUINTA|SEXTA|SÉTIMA|OITAVA|NONA))?/, '').trim();
+        if (!oculto) num = ++n;
+        tit = num ? 'CLÁUSULA ' + QE.ordinal(num) + (suf ? ' ' + suf : '') : 'CLÁUSULA' + (suf ? ' ' + suf : '');
+      } else tit = d.ed[cl.id + '.t'] !== undefined ? d.ed[cl.id + '.t'] : cl.tit;
+      const inl = d.ed[cl.id + '.i'] !== undefined ? !!d.ed[cl.id + '.i'] : !!cl.inl;
+      return { cl: cl, tit: tit, suf: suf, num: num, inl: inl, oculto: oculto, itens: itens };
     });
   };
 
@@ -2488,8 +2510,8 @@ body.pv-lock { overflow: hidden; }
           add('<div class="ctsg">' + fmt(tx).replace(/\n/g, '<br>') + '</div>', { sig: true }); return;
         }
         if (it.k === 'ass.1') { add('<p style="margin-top:22px">' + fmt(it.t) + '</p>', { keep: true }); return; }
-        const paras = fmt((idx === 0 && cab && cl.inl ? sec.tit + ' ' : '') + it.t).split(/\n\n/);
-        if (idx === 0 && cab && !cl.inl) add('<p class="ctch">' + ESC(sec.tit) + '</p>', { keep: true });
+        const paras = fmt((idx === 0 && cab && sec.inl ? sec.tit + ' ' : '') + it.t).split(/\n\n/);
+        if (idx === 0 && cab && !sec.inl) add('<p class="ctch">' + ESC(sec.tit) + '</p>', { keep: true });
         paras.forEach(function (pp, pi) {
           const linhas = pp.split('\n');
           linhas.forEach(function (ln, li) {
@@ -4083,18 +4105,21 @@ body.pv-lock { overflow: hidden; }
   const CT_ROT = { titulo: 'Título do contrato', abertura: 'Abertura (partes)', ass: 'Fechamento e assinaturas' };
   function ctAdvHTML(ct) {
     const secs = QE.contratoTextos(ct);
-    return '<p class="hint" style="margin-top:0">Normalmente você não precisa mexer aqui. Abra a cláusula que quiser ajustar: o texto, o título e cada parágrafo são editáveis, e dá para ocultar o que não vale neste contrato. Trechos como <code>{{valorTotal}}</code>, <code>{{dataEvento}}</code>, <code>{{qtd}}</code>, <code>{{valorExcedente}}</code>, <code>{{parcelas}}</code> e <code>{{anexos}}</code> são preenchidos sozinhos; <code>**texto**</code> deixa em negrito. Uma linha em branco separa parágrafos.</p>' +
+    const ins = function (id) { return '<div class="ctins"><button type="button" class="btn sm" data-ctins="antes:' + id + '">+ Inserir cláusula antes</button> <button type="button" class="btn sm" data-ctins="depois:' + id + '">+ Inserir cláusula depois</button></div>'; };
+    return '<p class="hint" style="margin-top:0">Normalmente você não precisa mexer aqui. Abra a cláusula que quiser ajustar: o título e cada parágrafo são editáveis, e dá para ocultar o que não vale neste contrato. Para criar uma cláusula nova, use <b>Inserir cláusula antes/depois</b>: a numeração (Primeira, Segunda…) se ajusta sozinha. Trechos como <code>{{valorTotal}}</code>, <code>{{dataEvento}}</code>, <code>{{qtd}}</code>, <code>{{valorExcedente}}</code>, <code>{{parcelas}}</code> e <code>{{anexos}}</code> são preenchidos sozinhos; <code>**texto**</code> deixa em negrito. Uma linha em branco separa parágrafos.</p>' +
       secs.map(function (sec) {
-        const cl = sec.cl, lab = CT_ROT[cl.id] || String(sec.tit).replace(/\s*[-–]\s*$/, '');
-        return '<details class="ctcl" data-cl="' + cl.id + '"><summary>' + esc(lab) + (sec.oculto ? ' <em>(oculta no contrato)</em>' : '') + '</summary><div class="ctclb">' +
-          '<div class="f"><label>' + (cl.semTit ? 'Nome (só para você)' : 'Título') + '</label>' + (cl.semTit ? '<input value="' + esc(lab) + '" disabled>' : '<input data-cted="' + cl.id + '.t" value="' + esc(sec.tit) + '">') + '</div>' +
-          '<label class="chk"><input type="checkbox" data-ctedh="' + cl.id + '.h"' + (sec.oculto ? ' checked' : '') + '> Ocultar esta cláusula no contrato</label>' +
+        const cl = sec.cl, lab = CT_ROT[cl.id] || (sec.num ? 'Cláusula ' + QE.ordinal(sec.num).toLowerCase() + (sec.suf ? ' ' + sec.suf : '') : 'Cláusula (oculta)' + (sec.suf ? ' ' + sec.suf : ''));
+        return '<details class="ctcl" data-cl="' + cl.id + '"><summary>' + esc(lab) + (sec.oculto ? ' <em>(oculta no contrato)</em>' : '') + (cl.custom ? ' <em class="nv">(nova)</em>' : '') + '</summary><div class="ctclb">' +
+          (cl.num ? ins(cl.id) : '') +
+          '<div class="f"><label>' + (cl.semTit ? 'Nome (só para você)' : cl.num ? 'Título (o número “' + (sec.num ? 'Cláusula ' + QE.ordinal(sec.num).toLowerCase() : 'Cláusula') + '” é automático)' : 'Título') + '</label>' + (cl.semTit ? '<input value="' + esc(lab) + '" disabled>' : '<input data-cted="' + cl.id + '.t" value="' + esc(cl.num ? sec.suf : sec.tit) + '">') + '</div>' +
+          (cl.num ? '<label class="chk"><input type="checkbox" data-ctedi="' + cl.id + '.i"' + (sec.inl ? ' checked' : '') + '> Primeiro parágrafo na mesma linha do título</label>' : '') +
+          '<label class="chk"><input type="checkbox" data-ctedh="' + cl.id + '.h"' + (sec.oculto ? ' checked' : '') + '> Ocultar esta cláusula no contrato (as seguintes renumeram)</label>' +
           sec.itens.map(function (it, i) {
             const linhas = String(it.t).split('\n').length, rows = Math.min(12, Math.max(2, linhas + Math.ceil(String(it.t).length / 85)));
             return '<div class="ctit"><label>' + (it.extra ? 'Parágrafo adicionado' : 'Parágrafo ' + (i + 1)) + '</label><textarea data-cted="' + it.k + '" rows="' + rows + '">' + esc(it.t) + '</textarea><label class="chk"><input type="checkbox" data-ctedh="' + it.k + '.h"' + (it.oculto ? ' checked' : '') + '> Ocultar este parágrafo</label></div>';
           }).join('') +
           (cl.id === 'titulo' ? '' : '<button type="button" class="btn sm" data-ctadd="' + cl.id + '">+ Adicionar parágrafo</button> ') +
-          '<button type="button" class="btn sm ghost" data-ctrst="' + cl.id + '">Restaurar texto padrão desta cláusula</button></div></details>';
+          (cl.custom ? '<button type="button" class="btn sm ghost" data-ctdelcl="' + cl.id + '">Excluir esta cláusula</button>' : '<button type="button" class="btn sm ghost" data-ctrst="' + cl.id + '">Restaurar texto padrão desta cláusula</button>') + '</div></details>';
       }).join('') + '<button type="button" class="btn sm ghost" id="ctRstTudo">Restaurar todo o texto padrão</button>';
   }
   function ctAdvRender() {
@@ -4122,11 +4147,13 @@ body.pv-lock { overflow: hidden; }
     const t = e.target; if (!t.dataset) return;
     const ct = cur.contrato;
     if (t.dataset.ctmail !== undefined) { ct.emails = ct.emails || ['']; ct.emails[+t.dataset.ctmail] = t.value.trim(); ct.email = ct.emails[0] || ''; dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250); return; }
+    if (t.dataset.ctedi !== undefined) { ct.ed = ct.ed || {}; ct.ed[t.dataset.ctedi] = t.checked ? 1 : 0; dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 200); return; }
     if (t.dataset.cted !== undefined || t.dataset.ctedh !== undefined) {
       const k = t.dataset.cted !== undefined ? t.dataset.cted : t.dataset.ctedh;
       ct.ed = ct.ed || {};
       if (t.dataset.ctedh !== undefined) { if (t.checked) ct.ed[k] = true; else delete ct.ed[k]; if (e.type === 'change' && /^[a-z0-9]+\.h$/.test(k)) { const sm = t.closest('.ctcl').querySelector('summary'); sm.querySelector('em') && sm.querySelector('em').remove(); if (t.checked) sm.insertAdjacentHTML('beforeend', ' <em>(oculta no contrato)</em>'); } }
       else ct.ed[k] = t.value;
+      if (e.type === 'change' && /\.t$/.test(k)) ctAdvRender();
       dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 300); return;
     }
     if (t.dataset.ct === undefined) return;
@@ -4148,13 +4175,31 @@ body.pv-lock { overflow: hidden; }
     const t = e.target, ct = cur.contrato;
     if (t.id === 'ctMailAdd') { ct.emails.push(''); $('#ctMails').innerHTML = ctMailsHTML(QE.contratoPadrao(cur, ct)); const i = $('#ctMails').querySelectorAll('input'); i[i.length - 1].focus(); dirty = true; return; }
     if (t.dataset.ctmaildel !== undefined) { ct.emails.splice(+t.dataset.ctmaildel, 1); ct.email = ct.emails[0] || ''; $('#ctMails').innerHTML = ctMailsHTML(QE.contratoPadrao(cur, ct)); dirty = true; ctPreview(); return; }
+    if (t.dataset.ctins) {
+      const pr = t.dataset.ctins.split(':'), alvo = pr[1], seq = QE.contratoTextos(ct).map(function (x) { return x.cl; });
+      let ant = alvo;
+      if (pr[0] === 'antes') { const i = seq.findIndex(function (x) { return x.id === alvo; }); ant = i > 0 ? seq[i - 1].id : 'abertura'; }
+      const novo = { id: 'n' + Date.now().toString(36), after: ant, num: true, custom: true, suf: '– TÍTULO DA CLÁUSULA', inl: false, it: ['Texto da nova cláusula.'] };
+      ct.cl = ct.cl || []; ct.cl.forEach(function (c) { if (c.after === ant) c.after = novo.id; });
+      ct.cl.push(novo); dirty = true; ctAdvRender();
+      const d = document.querySelector('#ctAdv .ctcl[data-cl="' + novo.id + '"]'); if (d) { d.open = true; d.scrollIntoView({ block: 'center' }); }
+      ctPreview(); toast('Cláusula inserida. As seguintes foram renumeradas.'); return;
+    }
+    if (t.dataset.ctdelcl) {
+      const id = t.dataset.ctdelcl; if (!confirm('Excluir esta cláusula?')) return;
+      const c = ct.cl.find(function (x) { return x.id === id; }); if (!c) return;
+      ct.cl.forEach(function (x) { if (x.after === id) x.after = c.after; });
+      ct.cl = ct.cl.filter(function (x) { return x.id !== id; });
+      Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id];
+      dirty = true; ctAdvRender(); ctPreview(); toast('Cláusula excluída. As seguintes foram renumeradas.'); return;
+    }
     if (t.dataset.ctadd) { const id = t.dataset.ctadd; ct.add = ct.add || {}; (ct.add[id] = ct.add[id] || []).push('Novo parágrafo'); dirty = true; ctAdvRender(); ctPreview(); return; }
     if (t.dataset.ctrst) {
       const id = t.dataset.ctrst; if (!confirm('Voltar esta cláusula ao texto padrão?')) return;
       Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id];
       dirty = true; ctAdvRender(); ctPreview(); return;
     }
-    if (t.id === 'ctRstTudo') { if (!confirm('Voltar TODO o texto do contrato ao padrão? Suas edições de texto serão perdidas.')) return; ct.ed = {}; ct.add = {}; dirty = true; ctAdvRender(); ctPreview(); }
+    if (t.id === 'ctRstTudo') { if (!confirm('Voltar TODO o texto do contrato ao padrão? Suas edições e as cláusulas novas serão perdidas.')) return; ct.ed = {}; ct.add = {}; ct.cl = []; dirty = true; ctAdvRender(); ctPreview(); }
   });
   window.addEventListener('resize', function () { if (!$('#v-contrato').hidden) ctPreview(); });
   $('#ctPdf').addEventListener('click', async function () {
