@@ -746,6 +746,10 @@ body.pv-lock { overflow: hidden; }
 .ctit textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: .85rem; line-height: 1.35; resize: vertical; }
 .ctcl .chk { font-size: .8rem; }
 .ctins { display: flex; gap: 6px; flex-wrap: wrap; } .ctcl summary em.nv { color: #2b7a3b; }
+
+.crcrow .cpk { display: none; } .crcrow.open .cpk { display: flex; }
+.cwcur { grid-column: 2 / 4; justify-self: start; background: none; border: 0; padding: 0; font-size: .78rem; color: var(--taupe); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.cwcur i.cw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 1px var(--line); }
 </style>
 </head>
 <body>
@@ -1276,7 +1280,7 @@ body.pv-lock { overflow: hidden; }
     ['menu-churrasco-premium', 'Cardápio: Churrasco Premium', 'Cardápios em anexo no PDF'], ['menu-churrasco-standard', 'Cardápio: Churrasco Standard', 'Cardápios em anexo no PDF'],
     ['menu-carnes', 'Cardápio: Carnes e massas (Premium)', 'Cardápios em anexo no PDF'], ['menu-carnes-standard', 'Cardápio: Carnes e massas Standard (envie a foto; sem ela, usa o Premium)', 'Cardápios em anexo no PDF'], ['menu-feijoada', 'Cardápio: Feijoada', 'Cardápios em anexo no PDF'],
     ['menu-crepe', 'Cardápio: Crepe', 'Cardápios em anexo no PDF'], ['menu-finger', 'Cardápio: Finger food', 'Cardápios em anexo no PDF'],
-    ['menu-pizza', 'Cardápio: Pizza (ainda sem imagem, envie aqui)', 'Cardápios em anexo no PDF'],
+    ['menu-pizza', 'Cardápio: Pizza', 'Cardápios em anexo no PDF'],
     ['menu-cafe', 'Cardápio: Café da manhã', 'Cardápios em anexo no PDF'], ['menu-doces', 'Cardápio: Mesa de doces', 'Cardápios em anexo no PDF'],
     ['menu-bar-prata', 'Cardápio: Bar pacote Prata', 'Cardápios em anexo no PDF'], ['menu-bar-ouro', 'Cardápio: Bar pacote Ouro', 'Cardápios em anexo no PDF'],
     /* páginas Casamento, Aniversário e Chá de bebê */
@@ -1648,11 +1652,13 @@ body.pv-lock { overflow: hidden; }
       const dFim = it.id === 'chegada' ? fmtT(QE.toMin(jn[0]) + 30) : padrao.fim;
       const segs = [[ov.ini || dIni, ov.fim || dFim]];
       if (!ov.sem2 && (it.ini2 || ov.ini2)) segs.push([ov.ini2 || padrao.ini2, ov.fim2 || padrao.fim2]);
+      if (segs.length >= 2 || (!it.ini2 && !ov.ini2)) for (let k = 3; k <= 5; k++) { if (segs.length === k - 1 && ov['ini' + k]) segs.push([ov['ini' + k], ov['fim' + k] || ov['ini' + k]]); }
+      let corItem = it.custom ? (it.cor || '') : (ov.cor || '');
       let nome = it.nome;
       if (it.id === 'banda' && nBandas >= 2) nome = 'Banda 1';
       if (it.id === 'dj' && nDjs >= 2) nome = 'DJ 1';
       if (!it.custom && ov.nome && String(ov.nome).trim()) nome = String(ov.nome).trim();   // nome escrito por você no editor
-      return Object.assign({}, it, { nome: nome, on: on, hidden: hidden, segs: segs });
+      return Object.assign({}, it, { nome: nome, on: on, hidden: hidden, segs: segs, cor: corItem });
     });
 
     return {
@@ -1688,7 +1694,7 @@ body.pv-lock { overflow: hidden; }
     const mapa = function (id) {
       if (id === 'churrasco') return prem ? 'menu-churrasco-premium' : 'menu-churrasco-standard';
       if (id === 'carnes') return (!prem && tem('menu-carnes-standard')) ? 'menu-carnes-standard' : 'menu-carnes';   // Standard usa a foto própria, se enviada
-      if (id === 'pizza') return tem('menu-pizza') ? 'menu-pizza' : null;
+      if (id === 'pizza') return 'menu-pizza';
       return { feijoada: 'menu-feijoada', crepe: 'menu-crepe', finger: 'menu-finger' }[id] || null;
     };
     if (!ex.buffet) QE.cardSel(req).forEach(function (id) { const m = mapa(id); if (m && out.indexOf(m) < 0) out.push(m); });
@@ -1720,7 +1726,7 @@ body.pv-lock { overflow: hidden; }
     const linha = function (id) { let r = null; c.grupos.forEach(function (g) { g.linhas.forEach(function (l) { if (l.id === id) r = l; }); }); return r; };
     const on = function (id) { const l = linha(id); return !!(l && l.on); };
     const cron = function (id) { return c.cron.find(function (x) { return x.id === id; }); };
-    const per = function (id) { const it = cron(id); return it ? it.segs.map(function (s) { return s[0] + ' às ' + s[1]; }).join(' e ') : 'a definir'; };
+    const per = function (id) { const it = cron(id); return it ? it.segs.map(function (s) { return s[0] + ' às ' + s[1]; }).join(', ').replace(/, ([^,]*)$/, ' e $1') : 'a definir'; };
     const seg = function (id, k) { const it = cron(id); return it ? it.segs[0][k] : ''; };
     const dt = req.dataEvento ? QE.fmtData(req.dataEvento) : 'a definir', dia = req.dataEvento ? DIAS[QE.parseData(req.dataEvento).getDay()] : '';
     const sn = function (b) { return b ? 'Sim' : 'Não'; };
@@ -2589,14 +2595,24 @@ body.pv-lock { overflow: hidden; }
   });
   $('#sair').addEventListener('click', function () { QE.db.logout().then(function () { if (QE.db.demo) location.href = 'index.html'; }); });
 
+  var fotosP = Promise.resolve(), ultimaLista = 0;
   async function carregar() {
     cfg = QE.defaultConfig(); avail = QE.DISP_PADRAO.slice(); lista = [];
     const lim = function (p) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, 9000); })]); };
     const erros = [];
-    try { cfg = await lim(QE.db.config()); } catch (e) { erros.push('tabelas: ' + (e.code || e.message)); }
-    try { const di = await lim(QE.db.dispInfo()); avail = di.datas; dispOculta = !!di.ocultarForm; } catch (e) { erros.push('datas: ' + (e.code || e.message)); }
-    try { lista = await lim(QE.db.listar()); } catch (e) { erros.push('pedidos: ' + (e.code || e.message)); }
-    try { QE.FOTOS = await lim(QE.db.fotos()); } catch (e) { QE.FOTOS = {}; erros.push('fotos: ' + (e.code || e.message)); }
+    /* tudo em paralelo; as fotos (pesadas) carregam depois, sem travar a lista */
+    QE.FOTOS = QE.FOTOS || {};
+    const flim = function (p) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, 60000); })]); };
+    fotosP = flim(QE.db.fotos()).then(function (m) {
+      QE.FOTOS = m || {};
+      if (cur && !$('#v-edit').hidden) refresh();
+      if (!$('#v-fotos').hidden) renderFotos();
+    }).catch(function (e) { console.error('fotos', e); });
+    const r = await Promise.all([
+      lim(QE.db.config()).then(function (v) { cfg = v; }, function (e) { erros.push('tabelas: ' + (e.code || e.message)); }),
+      lim(QE.db.dispInfo()).then(function (di) { avail = di.datas; dispOculta = !!di.ocultarForm; }, function (e) { erros.push('datas: ' + (e.code || e.message)); }),
+      lim(QE.db.listar()).then(function (v) { lista = v; ultimaLista = Date.now(); }, function (e) { erros.push('pedidos: ' + (e.code || e.message)); })
+    ]);
     if (erros.length) throw new Error(erros.join('; '));
   }
 
@@ -2618,7 +2634,7 @@ body.pv-lock { overflow: hidden; }
   $('#tabs').addEventListener('click', function (e) {
     const b = e.target.closest('button'); if (!b) return;
     if (dirty && !confirm('Há alterações não salvas neste orçamento. Sair mesmo assim?')) return;
-    dirty = false; view(b.dataset.v); if (b.dataset.v === 'lista' || b.dataset.v === 'kanban') { recarregar(); }
+    dirty = false; view(b.dataset.v); if ((b.dataset.v === 'lista' || b.dataset.v === 'kanban') && Date.now() - ultimaLista > 60000) { recarregar(); }
   });
 
   /* ---------- Lista ---------- */
@@ -2667,7 +2683,7 @@ body.pv-lock { overflow: hidden; }
   $('#kanban').addEventListener('change', function (e) { const s = e.target.closest('[data-st]'); if (s) mudarStatus(s.dataset.st, s.value); });
   $('#kanban').addEventListener('click', function (e) { if (e.target.closest('select')) return; const c = e.target.closest('.kcard'); if (c) abrir(c.dataset.id); });
   async function recarregar(msg) {
-    try { lista = await QE.db.listar(); renderLista(); if (!$('#v-kanban').hidden) renderKanban(); if (msg) toast('Lista atualizada (' + lista.length + ')'); $('#demo').hidden = !QE.db.demo; }
+    try { lista = await QE.db.listar(); ultimaLista = Date.now(); renderLista(); if (!$('#v-kanban').hidden) renderKanban(); if (msg) toast('Lista atualizada (' + lista.length + ')'); $('#demo').hidden = !QE.db.demo; }
     catch (e) { console.error(e); const bn = $('#demo'); bn.textContent = 'Não consegui ler os pedidos (' + (e.code || e.message) + '). Confira as regras do Firestore.'; bn.hidden = false; }
   }
   $('#fStatus').addEventListener('change', renderLista);
@@ -2675,8 +2691,8 @@ body.pv-lock { overflow: hidden; }
   $('#lista').addEventListener('change', function (e) { const s = e.target.closest('[data-st]'); if (s) { e.stopPropagation(); mudarStatus(s.dataset.st, s.value); } });
   $('#atualizar').addEventListener('click', function () { recarregar(true); });
   $('#atualizarK').addEventListener('click', function () { recarregar(true); });
-  window.addEventListener('focus', function () { if ((!$('#v-lista').hidden || !$('#v-kanban').hidden) && booted) recarregar(); });
-  setInterval(function () { if ((!$('#v-lista').hidden || !$('#v-kanban').hidden) && booted && !document.hidden) recarregar(); }, 60000);
+  window.addEventListener('focus', function () { if ((!$('#v-lista').hidden || !$('#v-kanban').hidden) && booted && Date.now() - ultimaLista > 180000) recarregar(); });
+  setInterval(function () { if ((!$('#v-lista').hidden || !$('#v-kanban').hidden) && booted && !document.hidden) recarregar(); }, 300000);
   $('#lista').addEventListener('click', function (e) {
     if (e.target.closest('select')) return;
     const d = e.target.closest('[data-del]');
@@ -2901,8 +2917,12 @@ body.pv-lock { overflow: hidden; }
         h += '<div class="crl">' + cb + '<input class="crn" data-crn="' + it.id + '" value="' + esc(it.nome) + '" aria-label="Nome do item" title="Escreva para trocar o nome no cronograma">' + tIni + tFim + bt + '</div>';
       }
 
-      if (!it.segs[1] && /^(dj2?|banda2?|som)$/.test(it.id)) h += '<div class="crl b2"><span></span><button type="button" class="btn sm ghost" data-cradd2="' + it.id + '">+ Adicionar 2º horário</button></div>';
-      if (it.segs[1]) h += '<div class="crl b2"><span></span><span class="hint">2º horário</span><input type="time" data-cr="' + it.id + '" data-k="ini2" value="' + it.segs[1][0] + '"><input type="time" data-cr="' + it.id + '" data-k="fim2" value="' + it.segs[1][1] + '">' + (/^(dj2?|banda2?|som)$/.test(it.id) ? '<button type="button" class="btn sm ghost" data-crdel2="' + it.id + '" title="Remover o 2º horário">×</button>' : '') + '</div>';
+      const multi = /^(dj2?|banda2?|som)$/.test(it.id);
+      for (let k = 2; k <= it.segs.length; k++) {
+        h += '<div class="crl b2"><span></span><span class="hint">' + k + 'º horário</span><input type="time" data-cr="' + it.id + '" data-k="ini' + k + '" value="' + it.segs[k - 1][0] + '"><input type="time" data-cr="' + it.id + '" data-k="fim' + k + '" value="' + it.segs[k - 1][1] + '">' + (multi && k === it.segs.length ? '<button type="button" class="btn sm ghost" data-crdel2="' + it.id + '" title="Remover o ' + k + 'º horário">×</button>' : '<span></span>') + '</div>';
+      }
+      if (multi && it.segs.length < 5) h += '<div class="crl b2"><span></span><button type="button" class="btn sm ghost" data-cradd2="' + it.id + '">+ Adicionar ' + (it.segs.length + 1) + 'º horário</button></div>';
+      if (!it.custom) h += '<div class="crl b2 crcrow"><span></span><button type="button" class="cwcur" data-crcur="1"><i class="cw ' + (it.cor || (({ 'RECEPÇÃO': 'c-rec', 'BUFFET / DOCES': 'c-buf', BEBIDAS: 'c-beb', 'MÚSICA': 'c-mus', 'ATRAÇÕES': 'c-atr' })[it.sec] || 'c-out')) + '"></i> Cor da barra</button><div class="crcor" style="grid-column:3/-1">' + corPick(it.cor, 'data-crcor="' + it.id + '"') + '</div></div>';
     });
     h += '<div class="cradd"><b>Adicionar item ao cronograma</b><input id="crNovoNome" placeholder="Nome do item (ex.: Parabéns, Sorteio)">' +
       '<div class="g2"><div class="f"><label>Seção</label><select id="crNovoSec">' + SECOES.map(function (s) { return '<option value="' + s[0] + '">' + s[1] + '</option>'; }).join('') + '</select></div>' +
@@ -3049,6 +3069,12 @@ body.pv-lock { overflow: hidden; }
     if (a2) {
       const c0 = QE.calc(cur, cfg), it = c0.cron.find(function (x) { return x.id === a2.dataset.cradd2; }); if (!it) return;
       const ov = (cur.orc.cron[it.id] = cur.orc.cron[it.id] || {}); delete ov.sem2;
+      if (it.segs.length >= 2) {   /* 3º, 4º ou 5º horário: logo depois do último */
+        const kk = it.segs.length + 1, mm = QE.toMin(it.segs[it.segs.length - 1][1]), jf = QE.toMin(c0.janela[1]);
+        const f2 = function (t) { t = Math.max(0, Math.min(t, 23 * 60 + 59)); return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0'); };
+        ov['ini' + kk] = f2(Math.min(mm + 30, Math.max(jf - 60, mm))); ov['fim' + kk] = f2(Math.min(mm + 90, Math.max(jf, mm + 30)));
+        $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); return;
+      }
       const fim = it.segs[0][1], m = QE.toMin(fim), fmt = function (t) { t = Math.min(t, 23 * 60 + 59); return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0'); };
       const jIni = QE.toMin(c0.janela[0]), jFim = QE.toMin(c0.janela[1]), ini1 = QE.toMin(it.segs[0][0]);
       /* sugestão: logo depois do 1º horário, se couber no evento; senão, antes dele; senão, no meio */
@@ -3058,7 +3084,9 @@ body.pv-lock { overflow: hidden; }
       $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); return;
     }
     const d2 = e.target.closest('[data-crdel2]');
-    if (d2) { const ov = (cur.orc.cron[d2.dataset.crdel2] = cur.orc.cron[d2.dataset.crdel2] || {}); delete ov.ini2; delete ov.fim2; ov.sem2 = true; $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); return; }
+    if (d2) {
+      const ov = (cur.orc.cron[d2.dataset.crdel2] = cur.orc.cron[d2.dataset.crdel2] || {}), it0 = QE.calc(cur, cfg).cron.find(function (x) { return x.id === d2.dataset.crdel2; }), kk = it0 ? it0.segs.length : 2;
+      if (kk >= 3) { delete ov['ini' + kk]; delete ov['fim' + kk]; } else { delete ov.ini2; delete ov.fim2; ov.sem2 = true; } $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); return; }
     const mv = e.target.closest('[data-crmv]');
     if (mv) {
       const pr = mv.dataset.crmv.split(':'), cc = QE.calc(cur, cfg).cron, ids = cc.map(function (x) { return x.id; }), oc = {}; cc.forEach(function (x) { oc[x.id] = x.hidden; });
@@ -3068,11 +3096,19 @@ body.pv-lock { overflow: hidden; }
     }
     const cd = e.target.closest('[data-crdel]');
     if (cd) { const id = cd.dataset.crdel; cur.orc.cronExtra = (cur.orc.cronExtra || []).filter(function (x) { return x.id !== id; }); if (cur.orc.cronOrder) cur.orc.cronOrder = cur.orc.cronOrder.filter(function (x) { return x !== id; }); delete cur.orc.cron[id]; $('#cronBox').innerHTML = buildCron(); dirty = true; refresh(); }
+    const cur1 = e.target.closest('[data-crcur]');
+    if (cur1) { cur1.closest('.crcrow').classList.toggle('open'); return; }
     const cw = e.target.closest('.cw');
+    if (cw && cw.closest('.cwcur')) return;
     if (cw) {
       const pk = cw.closest('.cpk');
       if (pk.id === 'crNovaCor') { novaCor = cw.dataset.cv; pk.querySelectorAll('.cw').forEach(function (b) { b.classList.toggle('on', b === cw); }); }
-      else { const x = (cur.orc.cronExtra || []).find(function (z) { return z.id === pk.dataset.crcor; }); if (x) { x.cor = cw.dataset.cv; pk.querySelectorAll('.cw').forEach(function (b) { b.classList.toggle('on', b === cw); }); dirty = true; refresh(); } }
+      else {
+        const x = (cur.orc.cronExtra || []).find(function (z) { return z.id === pk.dataset.crcor; });
+        if (x) x.cor = cw.dataset.cv;
+        else { const ov = (cur.orc.cron[pk.dataset.crcor] = cur.orc.cron[pk.dataset.crcor] || {}); if (cw.dataset.cv) ov.cor = cw.dataset.cv; else delete ov.cor; }
+        pk.querySelectorAll('.cw').forEach(function (b) { b.classList.toggle('on', b === cw); }); dirty = true; refresh(); if (!x) $('#cronBox').innerHTML = buildCron();
+      }
       return;
     }
     if (e.target.id === 'crAdd') {
@@ -3123,7 +3159,7 @@ body.pv-lock { overflow: hidden; }
     });
 
     c.cron.forEach(function (it) {
-      [['ini', it.segs[0][0]], ['fim', it.segs[0][1]]].concat(it.segs[1] ? [['ini2', it.segs[1][0]], ['fim2', it.segs[1][1]]] : []).forEach(function (kv) {
+      [['ini', it.segs[0][0]], ['fim', it.segs[0][1]]].concat(it.segs.slice(1).reduce(function (a, sg, q) { return a.concat([['ini' + (q + 2), sg[0]], ['fim' + (q + 2), sg[1]]]); }, [])).forEach(function (kv) {
         const el = $('[data-cr="' + it.id + '"][data-k="' + kv[0] + '"]'); if (el && document.activeElement !== el) el.value = kv[1];
       });
     });
@@ -3682,7 +3718,7 @@ body.pv-lock { overflow: hidden; }
     });
   }
   async function gerarPdfBlob(req, htmlPronto) {
-    await libsPdf();
+    await libsPdf(); await fotosP;
     window.scrollTo(0, 0);
     const ov = document.createElement('div'); ov.className = 'pdf-ov'; ov.textContent = 'Gerando o PDF… aguarde alguns segundos'; document.body.appendChild(ov);
     const host = document.createElement('div'); host.className = 'pdf-host'; host.innerHTML = htmlPronto || QE.proposalHTML(req, cfg, avail); document.body.appendChild(host);
