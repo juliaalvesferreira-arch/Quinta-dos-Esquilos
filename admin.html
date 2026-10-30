@@ -841,6 +841,7 @@ body.pv-lock { overflow: hidden; }
     <section id="v-disp" class="view" hidden>
       <div class="head"><h2>Datas disponíveis</h2>
         <div class="head-r"><button id="dispLimpa" class="btn ghost">Remover datas passadas</button><button id="dispSalvar" class="btn pri">Salvar disponibilidade</button></div></div>
+      <p id="dispAviso" class="demo" hidden></p>
       <p class="lead">Esta tabela aparece no orçamento em PDF. No site, o cliente só vê o calendário de datas livres se escolher uma data já vendida.</p>
       <div class="add"><input type="date" id="dispNova" aria-label="Nova data"><button id="dispAdd" class="btn">Adicionar data</button></div>
       <div id="dispLista" class="disp"></div>
@@ -881,7 +882,7 @@ body.pv-lock { overflow: hidden; }
       <div class="head sticky">
         <button id="ctVoltar" class="btn ghost">Voltar à proposta</button>
         <h2 id="ctTitulo">Contrato</h2>
-        <div class="head-r"><button id="ctSalvar" class="btn">Salvar dados</button><button id="ctPdf" class="btn pri">Baixar contrato em PDF</button></div>
+        <div class="head-r"><button id="ctSalvar" class="btn">Salvar dados</button><button id="ctEnviar" class="btn">Enviar contrato</button><button id="ctPdf" class="btn pri">Baixar contrato em PDF</button></div>
       </div>
       <div class="ed">
         <div class="ed-ctl" id="ctForm"></div>
@@ -1196,7 +1197,7 @@ body.pv-lock { overflow: hidden; }
     { g: 'J', titulo: 'Fotografia / Vídeo', info: ['Fotógrafo · videomaker / filmmaker', 'Fotos tratadas do evento · Vídeo final de 20 minutos', 'Teaser final do evento · Vídeos curtos durante o evento para redes sociais'], linhas: [
       { id: 'j1', nome: 'Fotografia e vídeo', preco: 3500, un: 'fixo' } ] },
     { g: 'K', titulo: 'Gerador', linhas: [
-      { id: 'k1', nome: 'Gerador externo stand by', preco: 3000, un: 'fixo' } ] },
+      { id: 'k1', nome: 'Gerador estacionado em Stand by', preco: 2000, un: 'fixo' } ], info: ['Se houver necessidade de ligá-lo, seja qual for o tempo de funcionamento, será cobrado + R$ 1.000,00'] },
     { g: 'L', titulo: 'Backdrop', cols: true, info: ['Escopo: execução da lona, estrutura metálica para backdrop e instalação', '* A empresa deverá fornecer a arte em alta definição'], linhas: [
       { id: 'l1', nome: 'Backdrop 2,00 x 2,20 m', preco: 780, un: 'fixo' },
       { id: 'l2', nome: 'Backdrop 3,00 x 2,20 m', preco: 1250, un: 'fixo' },
@@ -1861,7 +1862,7 @@ body.pv-lock { overflow: hidden; }
     const fbCfg = window.QE_FIREBASE;
     const demo = !(fbCfg && window.firebase);
     let fs = null, auth = null;
-    if (!demo) { window.firebase.initializeApp(fbCfg); fs = window.firebase.firestore(); auth = typeof window.firebase.auth === 'function' ? window.firebase.auth() : null; } /* o site público não carrega o módulo de login */
+    if (!demo) { window.firebase.initializeApp(fbCfg); fs = window.firebase.firestore(); try { fs.settings({ experimentalAutoDetectLongPolling: true, merge: true }); } catch (e) { /* já iniciado */ } auth = typeof window.firebase.auth === 'function' ? window.firebase.auth() : null; } /* o site público não carrega o módulo de login */
     const LS = 'qe_demo_v1';
     const ld = function () { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) { return {}; } };
     const sv = function (o) { localStorage.setItem(LS, JSON.stringify(o)); };
@@ -1925,7 +1926,7 @@ body.pv-lock { overflow: hidden; }
         if (demo) { const o = ld(); return { datas: o.disp || QE.DISP_PADRAO, ocultarForm: !!o.dispOcultar }; }
         const d = await fs.collection('publico').doc('disponibilidade').get();
         const x = d.exists ? d.data() : {};
-        return { datas: x.datas ? x.datas : QE.DISP_PADRAO, ocultarForm: !!x.ocultarForm };
+        return { datas: x.datas ? x.datas : QE.DISP_PADRAO, ocultarForm: !!x.ocultarForm, existe: d.exists };
       },
       async disponibilidade() { return (await this.dispInfo()).datas; },
       async salvarDisponibilidade(datas, ocultarForm) {
@@ -2129,13 +2130,16 @@ body.pv-lock { overflow: hidden; }
       if (['A', 'B', 'H', 'I', 'L', 'M', 'BUQ'].indexOf(g.g) >= 0 && g.total > 0) b += '<div class="pr"><small class="g">Total dos itens selecionados</small><b class="tot">' + R(g.total) + '</b></div>';
       return '<div class="card oc' + (on ? ' on' : '') + '"' + (g.g === 'M' ? ' style="grid-column:1 / -1"' : '') + '><div class="ch"><b class="n">' + g.letra + '</b><b class="t">' + (TIT[g.g] || g.titulo) + '</b><span class="badge ' + (on ? '' : 'gr') + '">' + (on ? 'INCLUSO' : 'NÃO INCLUSO') + '</span></div>' + b + '</div>';
     };
-    const linhasExtra = [];
-    if (c.troca) linhasExtra.push('<div class="row sel"><span>Troca de chopp: Germânia → ' + esc(c.troca.nome) + ' <small>— diferença por barril' + (c.troca.b50 ? ' · ' + c.troca.b50 + ' × 50 L (' + R(c.troca.d50) + ')' : '') + (c.troca.b30 ? ' · ' + c.troca.b30 + ' × 30 L (' + R(c.troca.d30) + ')' : '') + '</small></span><b>' + R(c.troca.valor) + '</b></div>');
+    /* cada serviço adicional (e a troca de chopp) em uma caixinha própria, com a sua letra em sequência */
+    let letraN = c.letraExtras.charCodeAt(0);
+    const caixaExtra = function (titulo, corpo) { return '<div class="card oc on"><div class="ch"><b class="n">' + String.fromCharCode(letraN++) + '</b><b class="t">' + titulo + '</b><span class="badge">INCLUSO</span></div>' + corpo + '</div>'; };
+    const caixas = [];
+    if (c.troca) caixas.push(caixaExtra('Troca de chopp', '<div class="row sel"><span>Germânia → ' + esc(c.troca.nome) + ' <small>— diferença por barril' + (c.troca.b50 ? ' · ' + c.troca.b50 + ' × 50 L (' + R(c.troca.d50) + ')' : '') + (c.troca.b30 ? ' · ' + c.troca.b30 + ' × 30 L (' + R(c.troca.d30) + ')' : '') + '</small></span><b>' + R(c.troca.valor) + '</b></div>'));
     c.extras.forEach(function (x) {
-      linhasExtra.push('<div class="row sel"><span>' + esc(x.t) + (x.d ? ' <small>— ' + esc(x.d) + '</small>' : '') + '</span><b>' + (x.q !== 1 ? '<small class="g">' + x.q + ' × ' + R(x.v) + '</small> ' : '') + R(x.total) + '</b></div>' +
-        (x.subs.length ? '<ul class="sb">' + x.subs.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : ''));
+      caixas.push(caixaExtra(esc(x.t || 'Serviço adicional'), '<div class="row sel"><span>' + (x.d ? esc(x.d) : '') + '</span><b>' + (x.q !== 1 ? '<small class="g">' + x.q + ' × ' + R(x.v) + '</small> ' : '') + R(x.total) + '</b></div>' +
+        (x.subs.length ? '<ul class="sb">' + x.subs.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '')));
     });
-    const extraCard = linhasExtra.length ? '<div class="card oc on" style="grid-column:1 / -1"><div class="ch"><b class="n">' + c.letraExtras + '</b><b class="t">Serviços adicionais</b><span class="badge">INCLUSO</span></div>' + linhasExtra.join('') + '</div>' : '';
+    const extraCard = caixas.join('');
     const off = (o.extrasPg4 && extraCard) ? 1 : 0;
     const p3b = off ? '<section class="pg">' + bar('Serviços complementares', 'continuação') + '<div class="oc-g">' + extraCard + '</div>' + footer(4) + '</section>' : '';
     /* duas colunas independentes (A,C,E,G,I,K à esquerda e B,D,F,H,J,L à direita): cada cartão ocupa só o seu tamanho */
@@ -2558,16 +2562,19 @@ body.pv-lock { overflow: hidden; }
     if (!ok) { $('#login').hidden = false; $('#app').hidden = true; return; }
     $('#login').hidden = true; $('#app').hidden = false; $('#demo').hidden = !QE.db.demo;
     if (booted) return; booted = true;
-    try { await carregar(); } catch (e) {
+    $('#fStatus').innerHTML = '<option value="">Todos os status</option>' + Object.keys(STATUS).map(function (k) { return '<option value="' + k + '">' + STATUS[k] + '</option>'; }).join('');
+    $('#edStatus').innerHTML = Object.keys(STATUS).map(function (k) { return '<option value="' + k + '">' + STATUS[k] + '</option>'; }).join('');
+    /* mostra na hora o que ficou guardado neste aparelho enquanto o servidor responde */
+    const cl = !QE.db.demo && lsGet('qe_cache_lista');
+    if (cl && cl.length) { lista = cl; view('lista'); renderLista(); const bn0 = $('#demo'); bn0.textContent = 'Mostrando a última lista salva neste aparelho. Atualizando…'; bn0.hidden = false; }
+    try { await carregar(); if (!QE.db.demo) $('#demo').hidden = true; } catch (e) {
       console.error(e);
       const bn = $('#demo'); bn.textContent = 'Entrou, mas não consegui ler o Firestore (' + e.message + '). Confira se o banco foi criado em Firestore Database e se as regras do firestore.rules foram publicadas.'; bn.hidden = false;
     }
     /* orçamentos salvos antes desta regra: congela agora, com as tabelas de hoje */
-    lista.forEach(function (x) {
+    if (cfgOk) lista.forEach(function (x) {
       if (x.orc && !x.orc.cfgSnap) { x.orc.cfgSnap = QE.snapCfg(cfg); x.orc.cfgEm = QE.hoje(); QE.db.salvar(x.id, { orc: x.orc }).catch(function () { /* tenta de novo na próxima abertura */ }); }
     });
-    $('#fStatus').innerHTML = '<option value="">Todos os status</option>' + Object.keys(STATUS).map(function (k) { return '<option value="' + k + '">' + STATUS[k] + '</option>'; }).join('');
-    $('#edStatus').innerHTML = Object.keys(STATUS).map(function (k) { return '<option value="' + k + '">' + STATUS[k] + '</option>'; }).join('');
     view('lista'); renderLista();
   });
   $('#loginForm').addEventListener('submit', async function (e) {
@@ -2595,24 +2602,27 @@ body.pv-lock { overflow: hidden; }
   });
   $('#sair').addEventListener('click', function () { QE.db.logout().then(function () { if (QE.db.demo) location.href = 'index.html'; }); });
 
-  var fotosP = Promise.resolve(), ultimaLista = 0;
+  var fotosP = Promise.resolve(), ultimaLista = 0, dispOk = false, dispBase = [], cfgOk = false;
+  function lsGet(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* sem espaço: ignora */ } }
+  function limite(p, ms) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, ms || 15000); })]); }
+  function guardaLista() { if (!QE.db.demo) lsSet('qe_cache_lista', lista); }
   async function carregar() {
-    cfg = QE.defaultConfig(); avail = QE.DISP_PADRAO.slice(); lista = [];
-    const lim = function (p) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, 9000); })]); };
+    cfg = QE.defaultConfig(); cfgOk = false; dispOk = false;
+    const cd = lsGet('qe_cache_disp'); avail = cd || []; dispBase = clone(avail);
     const erros = [];
-    /* tudo em paralelo; as fotos (pesadas) carregam depois, sem travar a lista */
     QE.FOTOS = QE.FOTOS || {};
-    const flim = function (p) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, 60000); })]); };
-    fotosP = flim(QE.db.fotos()).then(function (m) {
+    const r = await Promise.all([
+      limite(QE.db.config()).then(function (v) { cfg = v; cfgOk = true; }, function (e) { erros.push('tabelas: ' + (e.code || e.message)); }),
+      limite(QE.db.dispInfo()).then(function (di) { avail = di.datas; dispBase = clone(di.datas); dispOculta = !!di.ocultarForm; dispOk = true; lsSet('qe_cache_disp', di.datas); }, function (e) { erros.push('datas: ' + (e.code || e.message)); }),
+      limite(QE.db.listar()).then(function (v) { lista = v; ultimaLista = Date.now(); guardaLista(); }, function (e) { erros.push('pedidos: ' + (e.code || e.message)); })
+    ]);
+    /* as fotos (pesadas) só começam depois da lista, para não disputar a conexão */
+    fotosP = limite(QE.db.fotos(), 90000).then(function (m) {
       QE.FOTOS = m || {};
       if (cur && !$('#v-edit').hidden) refresh();
       if (!$('#v-fotos').hidden) renderFotos();
     }).catch(function (e) { console.error('fotos', e); });
-    const r = await Promise.all([
-      lim(QE.db.config()).then(function (v) { cfg = v; }, function (e) { erros.push('tabelas: ' + (e.code || e.message)); }),
-      lim(QE.db.dispInfo()).then(function (di) { avail = di.datas; dispOculta = !!di.ocultarForm; }, function (e) { erros.push('datas: ' + (e.code || e.message)); }),
-      lim(QE.db.listar()).then(function (v) { lista = v; ultimaLista = Date.now(); }, function (e) { erros.push('pedidos: ' + (e.code || e.message)); })
-    ]);
     if (erros.length) throw new Error(erros.join('; '));
   }
 
@@ -2683,7 +2693,7 @@ body.pv-lock { overflow: hidden; }
   $('#kanban').addEventListener('change', function (e) { const s = e.target.closest('[data-st]'); if (s) mudarStatus(s.dataset.st, s.value); });
   $('#kanban').addEventListener('click', function (e) { if (e.target.closest('select')) return; const c = e.target.closest('.kcard'); if (c) abrir(c.dataset.id); });
   async function recarregar(msg) {
-    try { lista = await QE.db.listar(); ultimaLista = Date.now(); renderLista(); if (!$('#v-kanban').hidden) renderKanban(); if (msg) toast('Lista atualizada (' + lista.length + ')'); $('#demo').hidden = !QE.db.demo; }
+    try { lista = await QE.db.listar(); ultimaLista = Date.now(); guardaLista(); renderLista(); if (!$('#v-kanban').hidden) renderKanban(); if (msg) toast('Lista atualizada (' + lista.length + ')'); $('#demo').hidden = !QE.db.demo; }
     catch (e) { console.error(e); const bn = $('#demo'); bn.textContent = 'Não consegui ler os pedidos (' + (e.code || e.message) + '). Confira as regras do Firestore.'; bn.hidden = false; }
   }
   $('#fStatus').addEventListener('change', renderLista);
@@ -3139,8 +3149,7 @@ body.pv-lock { overflow: hidden; }
       (c.desconto.val > 0 ? '<div><span>Desconto' + (c.desconto.tipo === 'pct' ? ' (' + String(c.desconto.valor).replace('.', ',') + '%)' : '') + '</span><span>– ' + Rr(c.desconto.val) + '</span></div>' : '') +
       (cur.nf ? '<div><span>Nota fiscal (' + String(c.nfPct).replace('.', ',') + '%)</span><span>' + Rr(c.nfVal) + '</span></div>' : (c.evento.social ? '' : '<div><span>Nota fiscal (não soma)</span><span style="text-decoration:line-through;opacity:.7">' + Rr(c.nfRef) + '</span></div>')) +
       '<div class="t"><span>Total geral</span><span>' + Rr(c.total) + '</span></div>' +
-      '<div><span>À vista (-' + String(c.desc).replace('.', ',') + '%)</span><span>' + Rr(c.avista) + '</span></div>' +
-      '<div><span>Parcelado</span><span>' + c.parcelas.length + ' × ' + Rr(c.parcelas[0].valor) + '</span></div>';
+      '<div><span>À vista (-' + String(c.desc).replace('.', ',') + '%)</span><span>' + Rr(c.avista) + '</span></div>';
 
     ['pacote', 'cafe', 'doces', 'b50', 'b30', 'parcelas', 'nfVal'].forEach(function (k) {
       const el = $('[data-p="orc.' + k + '"]'); if (!el) return;
@@ -3775,25 +3784,28 @@ body.pv-lock { overflow: hidden; }
   $('#imprimir').addEventListener('click', function () { imprimir(true); });
 
   /* ---------- Enviar orçamento pelo WhatsApp ---------- */
-  const WA = { blob: null, nomeArq: '', registrado: false };
+  const WA = { blob: null, nomeArq: '', base: '', modo: 'orc', registrado: false };
   const waNumero = function (t) { let d = String(t || '').replace(/\D/g, ''); if (d.length >= 10 && d.length <= 11) d = '55' + d; return d; };
   const waMsg = function () {
     const ev = QE.evento(cur), nome = String(cur.contato || cur.empresa || '').trim().split(/\s+/)[0] || '', data = QE.fmtData(cur.dataEvento);
+    if (WA.modo === 'ct') return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o contrato do seu evento (' + ev.titulo + ')' + (data ? ' para o dia ' + data : '') + '. Por favor, confira os dados e, estando tudo certo, nos devolva assinado. Qualquer dúvida, é só chamar!';
     return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o orçamento do seu evento (' + ev.titulo + ')' + (data ? ' para o dia ' + data : '') + '. Qualquer dúvida, é só chamar!';
   };
   const waArquivo = function () { return new File([WA.blob], WA.nomeArq, { type: 'application/pdf' }); };
   const emOk = function (t) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(t || '').trim()); };
-  const emAssunto = function () { const ev = QE.evento(cur); return 'Orçamento Quinta dos Esquilos - ' + ev.titulo + (cur.empresa ? ' - ' + cur.empresa : ''); };
+  const emAssunto = function () { const ev = QE.evento(cur); return (WA.modo === 'ct' ? 'Contrato' : 'Orçamento') + ' Quinta dos Esquilos - ' + ev.titulo + (cur.empresa ? ' - ' + cur.empresa : ''); };
   const emMsg = function () {
     const ev = QE.evento(cur), nome = String(cur.contato || cur.empresa || '').trim().split(/\s+/)[0] || '', data = QE.fmtData(cur.dataEvento), ct = QE.CONTATOS;
-    return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem?\n\nSegue em anexo o orçamento da Quinta dos Esquilos para o seu evento (' + ev.titulo + ')' + (data ? ' no dia ' + data : '') + '.\n\nQualquer dúvida, estou à disposição.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct.telefone + ' · ' + ct.site;
+    return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem?\n\nSegue em anexo o ' + (WA.modo === 'ct' ? 'contrato' : 'orçamento') + ' da Quinta dos Esquilos para o seu evento (' + ev.titulo + ')' + (data ? ' no dia ' + data : '') + '.' + (WA.modo === 'ct' ? '\n\nPor favor, confira os dados e, estando tudo certo, nos devolva assinado.' : '') + '\n\nQualquer dúvida, estou à disposição.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct.telefone + ' · ' + ct.site;
   };
-  async function waRegistra() { if (!WA.registrado && $('#waReg').checked) { WA.registrado = true; await registrarVersao(); } }
+  async function waRegistra() { if (WA.modo === 'orc' && !WA.registrado && $('#waReg').checked) { WA.registrado = true; await registrarVersao(); } }
   function waFecha() { $('#waModal').hidden = true; document.body.classList.remove('pv-lock'); }
   function waAbre() {
     const podeShare = !!(navigator.canShare && window.File && navigator.canShare({ files: [waArquivo()] }));
     $('#waFone').value = cur.telefone || ''; $('#waTexto').value = waMsg(); $('#waReg').checked = true;
-    $('#emDest').value = cur.email || ''; $('#emAssunto').value = emAssunto(); $('#emTexto').value = emMsg();
+    const ctm = (cur.contrato && (cur.contrato.emails || []).filter(Boolean)[0]) || cur.email || '';
+    $('#waTit').textContent = WA.modo === 'ct' ? 'Enviar contrato' : 'Enviar orçamento'; $('#waReg').parentNode.hidden = WA.modo === 'ct';
+    $('#emDest').value = WA.modo === 'ct' ? ctm : (cur.email || ''); $('#emAssunto').value = emAssunto(); $('#emTexto').value = emMsg();
     $('#waArq').textContent = 'PDF pronto: ' + WA.nomeArq + ' (' + Math.round(WA.blob.size / 1024) + ' KB)';
     $('#waShare').hidden = !podeShare;
     $('#waAjuda').textContent = podeShare
@@ -3803,14 +3815,14 @@ body.pv-lock { overflow: hidden; }
   }
   $('#enviarWa').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
-    try { WA.blob = await gerarPdfBlob(cur); WA.nomeArq = QE.nomeArquivo(cur) + '.pdf'; WA.registrado = false; waAbre(); }
+    try { WA.modo = 'orc'; WA.blob = await gerarPdfBlob(cur); WA.base = QE.nomeArquivo(cur); WA.nomeArq = WA.base + '.pdf'; WA.registrado = false; waAbre(); }
     catch (e) { console.error(e); toast('Não consegui gerar o PDF para enviar (' + (e && e.message || e) + '). Tente “Baixar PDF”.', true); }
     finally { btn.disabled = false; btn.textContent = txt; }
   });
   $('#waFechar').addEventListener('click', waFecha);
   $('#waModal').addEventListener('click', function (e) { if (e.target.id === 'waModal') waFecha(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#waModal').hidden) waFecha(); });
-  $('#waBaixar').addEventListener('click', async function () { baixarBlob(WA.blob, QE.nomeArquivo(cur)); await waRegistra(); toast('PDF baixado.'); });
+  $('#waBaixar').addEventListener('click', async function () { baixarBlob(WA.blob, WA.base); await waRegistra(); toast('PDF baixado.'); });
   $('#waShare').addEventListener('click', async function () {
     try { await navigator.share({ files: [waArquivo()], text: $('#waTexto').value, title: WA.nomeArq }); await waRegistra(); waFecha(); toast('Compartilhado.'); }
     catch (e) { if (!e || e.name !== 'AbortError') toast('Não consegui abrir o compartilhamento. Use “Abrir WhatsApp do cliente”.', true); }
@@ -3819,7 +3831,7 @@ body.pv-lock { overflow: hidden; }
     const fone = waNumero($('#waFone').value);
     if (fone.length < 12 || fone.length > 13) { toast('Confira o WhatsApp do cliente (DDD + número).', true); $('#waFone').focus(); return; }
     window.open('https://wa.me/' + fone + '?text=' + encodeURIComponent($('#waTexto').value), '_blank', 'noopener');
-    baixarBlob(WA.blob, QE.nomeArquivo(cur));
+    baixarBlob(WA.blob, WA.base);
     if (!cur.telefone) { cur.telefone = $('#waFone').value.trim(); dirty = true; }
     await waRegistra(); toast('WhatsApp aberto e PDF baixado: anexe o arquivo pelo clipe.');
   });
@@ -3833,7 +3845,7 @@ body.pv-lock { overflow: hidden; }
     } else {
       const a = document.createElement('a'); a.href = 'mailto:' + para + '?subject=' + encodeURIComponent(su) + '&body=' + encodeURIComponent(corpo).replace(/%0A/g, '%0D%0A'); document.body.appendChild(a); a.click(); a.remove();
     }
-    baixarBlob(WA.blob, QE.nomeArquivo(cur));
+    baixarBlob(WA.blob, WA.base);
     if (!cur.email) { cur.email = para; dirty = true; }
     await waRegistra(); toast('E-mail aberto e PDF baixado: anexe o arquivo na mensagem.');
   }
@@ -3842,9 +3854,18 @@ body.pv-lock { overflow: hidden; }
 
   /* ---------- Disponibilidade ---------- */
   let draft = [];
+  const ordD = function (a, b) { return a.d < b.d ? -1 : 1; };
+  function avisoDisp(msg) { const el = $('#dispAviso'); if (!el) return; el.textContent = msg || ''; el.hidden = !msg; }
   function renderDisp() {
-    draft = clone(avail).sort(function (a, b) { return a.d < b.d ? -1 : 1; });
-    drawDisp();
+    draft = clone(avail).sort(ordD); drawDisp();
+    avisoDisp(dispOk ? '' : 'Atualizando as datas direto do servidor…');
+    /* sempre confere com o servidor ao abrir a aba: nunca edita em cima de dados velhos */
+    limite(QE.db.dispInfo(), 12000).then(function (di) {
+      const mexeu = JSON.stringify(draft) !== JSON.stringify(clone(avail).sort(ordD));
+      avail = di.datas; dispBase = clone(di.datas); dispOculta = !!di.ocultarForm; dispOk = true; lsSet('qe_cache_disp', di.datas);
+      if (!mexeu && !$('#v-disp').hidden) { draft = clone(avail).sort(ordD); drawDisp(); }
+      avisoDisp('');
+    }).catch(function () { avisoDisp('Não consegui ler as datas do servidor agora. Para não bagunçar nada, o botão Salvar fica bloqueado até a conexão voltar. Toque na aba novamente para tentar de novo.'); });
   }
   function drawDisp() {
     $('#dispLista').innerHTML = draft.length ? draft.map(function (x) {
@@ -3857,11 +3878,25 @@ body.pv-lock { overflow: hidden; }
   $('#dispAdd').addEventListener('click', function () {
     const v = $('#dispNova').value; if (!v) return toast('Escolha uma data.', true);
     if (draft.some(function (x) { return x.d === v; })) return toast('Essa data já está na lista.', true);
-    draft.push({ d: v, livre: true }); draft.sort(function (a, b) { return a.d < b.d ? -1 : 1; }); $('#dispNova').value = ''; drawDisp();
+    draft.push({ d: v, livre: true }); draft.sort(ordD); $('#dispNova').value = ''; drawDisp();
   });
   $('#dispLimpa').addEventListener('click', function () { const h = QE.hoje(); draft = draft.filter(function (x) { return x.d >= h; }); drawDisp(); });
   $('#dispSalvar').addEventListener('click', async function () {
-    try { await QE.db.salvarDisponibilidade(draft, false); avail = clone(draft); toast('Disponibilidade salva'); } catch (e) { toast('Não foi possível salvar.', true); }
+    if (!dispOk) { toast('Ainda não li as datas do servidor; salvar agora poderia apagar o que está lá. Aguarde um instante.', true); return; }
+    try {
+      /* junta SÓ o que você mudou nesta tela com o que está no servidor agora (evita que outro aparelho/aba desfaça o seu trabalho, e vice-versa) */
+      const srv = await limite(QE.db.dispInfo(), 15000);
+      const mapa = function (l) { const m = {}; l.forEach(function (x) { m[x.d] = x; }); return m; };
+      const base = mapa(dispBase), mine = mapa(draft), out = mapa(clone(srv.datas));
+      Object.keys(base).concat(Object.keys(mine)).forEach(function (d) {
+        if (base[d] && !mine[d]) delete out[d];
+        else if (mine[d] && (!base[d] || base[d].livre !== mine[d].livre)) out[d] = { d: d, livre: mine[d].livre };
+      });
+      const datas = Object.keys(out).map(function (d) { return { d: d, livre: !!out[d].livre }; }).sort(ordD);
+      await QE.db.salvarDisponibilidade(datas, !!srv.ocultarForm);
+      avail = clone(datas); dispBase = clone(datas); dispOculta = !!srv.ocultarForm; lsSet('qe_cache_disp', datas);
+      draft = clone(datas); drawDisp(); toast('Disponibilidade salva');
+    } catch (e) { console.error(e); toast('Não foi possível salvar (sem conexão com o servidor). Nada foi alterado.', true); }
   });
 
 
@@ -4100,11 +4135,12 @@ body.pv-lock { overflow: hidden; }
     const box = host.querySelector('.ctb'), hs = blocos.map(function (b) { box.innerHTML = b.h; return box.offsetHeight; });
     host.remove(); return hs;
   }
-  function ctPaginas(blocos) {
+  function ctPaginas(blocos, lim) {
+    lim = lim || CT_LIM;
     const hs = ctMede(blocos), pags = [[]]; let usado = 0;
     blocos.forEach(function (b, i) {
       const need = hs[i] + (b.keep && hs[i + 1] ? hs[i + 1] : 0);
-      if (pags[pags.length - 1].length && (b.pb || usado + need > CT_LIM)) { pags.push([]); usado = 0; }
+      if (pags[pags.length - 1].length && (b.pb || usado + need > lim)) { pags.push([]); usado = 0; }
       pags[pags.length - 1].push(b.h); usado += hs[i];
     });
     return pags.map(function (p, i) { return '<section class="pg ctp"><div class="ctb">' + p.join('') + '</div><div class="pn">' + (i + 1) + '</div></section>'; }).join('');
@@ -4166,9 +4202,21 @@ body.pv-lock { overflow: hidden; }
   }
   let ctTimer = null;
   function ctPreview() {
-    const html = ctPaginas(QE.contratoBlocos(cur, cfg, cur.contrato, true)), pv = $('#ctPvIn');
-    pv.innerHTML = html;
-    const w = $('#ctPv').clientWidth - 20; pv.style.zoom = w > 0 ? Math.min(1, w / 794) : 1;
+    const blocos = QE.contratoBlocos(cur, cfg, cur.contrato, true), pv = $('#ctPvIn');
+    /* a prévia usa escala por transform (o texto quebra igual ao da medição) e confere o resultado na tela: se algum navegador
+       renderizar o texto mais alto que o medido, refaz as páginas com mais folga em vez de cortar o texto */
+    pv.style.zoom = ''; pv.style.transform = 'none'; pv.style.width = '794px'; pv.style.marginBottom = '0';
+    let lim = CT_LIM;
+    for (let t = 0; t < 8; t++) {
+      pv.innerHTML = ctPaginas(blocos, lim);
+      const sobra = Array.prototype.slice.call(pv.querySelectorAll('.pg.ctp')).some(function (sec) {
+        const c = sec.querySelector('.ctb'), k = sec.getBoundingClientRect().width / 794 || 1;
+        return c.getBoundingClientRect().height / k > lim + 1 || sec.scrollHeight > sec.clientHeight + 1;
+      });
+      if (!sobra) break; lim -= 25;
+    }
+    const w = $('#ctPv').clientWidth - 20, k = w > 0 ? Math.min(1, w / 794) : 1;
+    pv.style.transformOrigin = '0 0'; pv.style.transform = k < 1 ? 'scale(' + k + ')' : 'none'; pv.style.marginBottom = k < 1 ? (-(pv.offsetHeight * (1 - k))) + 'px' : '0';
   }
   function ctAbrir() {
     cur.contrato = QE.contratoPadrao(cur, cur.contrato);
@@ -4238,6 +4286,16 @@ body.pv-lock { overflow: hidden; }
     if (t.id === 'ctRstTudo') { if (!confirm('Voltar TODO o texto do contrato ao padrão? Suas edições e as cláusulas novas serão perdidas.')) return; ct.ed = {}; ct.add = {}; ct.cl = []; dirty = true; ctAdvRender(); ctPreview(); }
   });
   window.addEventListener('resize', function () { if (!$('#v-contrato').hidden) ctPreview(); });
+  $('#ctEnviar').addEventListener('click', async function () {
+    const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
+    try {
+      await salvar(true);
+      const paginas = ctPaginas(QE.contratoBlocos(cur, cfg, cur.contrato, false));
+      WA.modo = 'ct'; WA.blob = await gerarPdfBlob(null, paginas + QE.proposalHTML(cur, cfg, avail));
+      WA.base = QE.contratoNomeArquivo(cur, cur.contrato); WA.nomeArq = WA.base + '.pdf'; WA.registrado = true; waAbre();
+    } catch (err) { console.error(err); toast('Não consegui gerar o contrato para enviar (' + (err && err.message || err) + ').', true); }
+    finally { btn.disabled = false; btn.textContent = txt; }
+  });
   $('#ctPdf').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
     try {
