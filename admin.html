@@ -750,6 +750,18 @@ body.pv-lock { overflow: hidden; }
 .crcrow .cpk { display: none; } .crcrow.open .cpk { display: flex; }
 .cwcur { grid-column: 2 / 4; justify-self: start; background: none; border: 0; padding: 0; font-size: .78rem; color: var(--taupe); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .cwcur i.cw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 1px var(--line); }
+
+/* Menus para mostrar ao cliente */
+.mng { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.mnc { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; padding: 0; cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.mnc img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: var(--linen); }
+.mnc span { display: block; padding: 8px 10px 10px; font-size: .9rem; line-height: 1.25; }
+.mnv { position: fixed; inset: 0; z-index: 10000; background: #111; display: grid; place-items: center; touch-action: pan-y; }
+.mnv[hidden] { display: none; }
+.mnv img { max-width: 100vw; max-height: 100vh; object-fit: contain; display: block; }
+.mnb { position: absolute; z-index: 2; border: 0; background: rgba(255, 255, 255, .85); color: #222; width: 52px; height: 52px; border-radius: 50%; font-size: 30px; line-height: 1; cursor: pointer; }
+.mnx { top: 14px; right: 14px; } .mnp { left: 10px; top: 50%; transform: translateY(-50%); } .mnn { right: 10px; top: 50%; transform: translateY(-50%); }
+.mnt { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; color: #fff; font-size: .95rem; text-shadow: 0 1px 4px #000; z-index: 2; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -778,6 +790,7 @@ body.pv-lock { overflow: hidden; }
       <button data-v="tab">Tabelas e preços</button>
       <button data-v="fin">Financeiro</button>
       <button data-v="forn">Fornecedores</button>
+      <button data-v="menus">Menus</button>
       <button data-v="fotos">Fotos</button>
     </nav>
     <a class="btn ghost" href="index.html" target="_blank" rel="noopener">Ver site</a>
@@ -847,6 +860,13 @@ body.pv-lock { overflow: hidden; }
       <div id="dispLista" class="disp"></div>
     </section>
 
+    <div id="mnViewer" class="mnv" hidden>
+      <button type="button" id="mnX" class="mnb mnx" aria-label="Fechar">×</button>
+      <button type="button" id="mnP" class="mnb mnp" aria-label="Anterior">‹</button>
+      <button type="button" id="mnN" class="mnb mnn" aria-label="Próximo">›</button>
+      <div class="mnt" id="mnT"></div>
+      <img id="mnImg" alt="">
+    </div>
     <div id="waModal" class="vmodal" hidden>
       <div class="vbox wbox" role="dialog" aria-labelledby="waTit">
         <h3 id="waTit">Enviar orçamento</h3>
@@ -1004,6 +1024,12 @@ body.pv-lock { overflow: hidden; }
     </section>
 
     <!-- Fotos -->
+    <section id="v-menus" class="view" hidden>
+      <div class="head"><h2>Menus para mostrar ao cliente</h2></div>
+      <p class="lead">Toque no cardápio para abrir em tela cheia. Deslize para o lado (ou use as setas) para passar para o próximo.</p>
+      <div id="menusGrid"></div>
+    </section>
+
     <section id="v-fotos" class="view" hidden>
       <div class="head"><h2>Fotos do site</h2></div>
       <p class="lead">Toque em “Trocar foto” e escolha uma imagem do computador ou do celular. Ela é reduzida automaticamente e passa a valer no site na hora. “Voltar ao original” restaura a foto de antes. Uma mesma foto pode aparecer em mais de um lugar do site: as fotos de bar, cardápios, banda, estadia e complementares aparecem nas páginas de Casamento, Aniversário e Chá, e trocar uma muda nas três (o nome do grupo avisa). Se quiser a foto sem cortes, deixe a proporção em “Foto inteira”. Para os cardápios em anexo, use uma imagem em pé, no formato de uma folha A4, para preencher a página inteira.</p>
@@ -2622,17 +2648,19 @@ body.pv-lock { overflow: hidden; }
       QE.FOTOS = m || {};
       if (cur && !$('#v-edit').hidden) refresh();
       if (!$('#v-fotos').hidden) renderFotos();
+      if (!$('#v-menus').hidden) renderMenus();
     }).catch(function (e) { console.error('fotos', e); });
     if (erros.length) throw new Error(erros.join('; '));
   }
 
   /* ---------- Navegação ---------- */
   function view(v) {
-    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
+    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras', 'menus'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
     $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === (v === 'edit' ? 'lista' : v)); });
     if (v === 'disp') renderDisp();
     if (v === 'tab') renderTab();
     if (v === 'fotos') renderFotos();
+    if (v === 'menus') renderMenus();
     if (v === 'kanban') renderKanban();
     if (v !== 'edit' && $('#edPv') && $('#edPv').classList.contains('pv-full')) telaCheia(false);
     if (v === 'forn') renderForn();
@@ -3899,6 +3927,34 @@ body.pv-lock { overflow: hidden; }
     } catch (e) { console.error(e); toast('Não foi possível salvar (sem conexão com o servidor). Nada foi alterado.', true); }
   });
 
+
+  /* ---------- Menus (para mostrar ao cliente em visita) ---------- */
+  let mnLista = [], mnI = 0;
+  const mnSrc = function (k) { return QE.FOTOS[k] ? QE.FOTOS[k] : k + '.jpg'; };
+  function renderMenus() {
+    const grupos = [], por = {};
+    mnLista = QE.FOTOS_LISTA.filter(function (f) { return /(^|-)menu-/.test(f[0]); });
+    mnLista.forEach(function (f) { if (!por[f[2]]) { por[f[2]] = []; grupos.push(f[2]); } por[f[2]].push(f); });
+    $('#menusGrid').innerHTML = grupos.map(function (g) {
+      return '<h3 class="fg-h">' + esc(g) + '</h3><div class="mng">' + por[g].map(function (f) {
+        return '<button type="button" class="mnc" data-mn="' + mnLista.indexOf(f) + '"><img src="' + mnSrc(f[0]) + '" alt="" loading="lazy" onerror="this.closest(\'.mnc\').hidden=true"><span>' + esc(f[1].replace(/^Cardápio:\s*/, '')) + '</span></button>';
+      }).join('') + '</div>';
+    }).join('');
+  }
+  function mnAbre(i) {
+    if (!mnLista.length) return; mnI = (i + mnLista.length) % mnLista.length;
+    const f = mnLista[mnI]; $('#mnImg').src = mnSrc(f[0]); $('#mnT').textContent = f[1].replace(/^Cardápio:\s*/, '') + '  ·  ' + (mnI + 1) + '/' + mnLista.length;
+    $('#mnViewer').hidden = false; document.body.classList.add('pv-lock');
+  }
+  function mnFecha() { $('#mnViewer').hidden = true; document.body.classList.remove('pv-lock'); }
+  $('#menusGrid').addEventListener('click', function (e) { const b = e.target.closest('[data-mn]'); if (b) mnAbre(+b.dataset.mn); });
+  $('#mnX').addEventListener('click', mnFecha);
+  $('#mnP').addEventListener('click', function () { mnAbre(mnI - 1); });
+  $('#mnN').addEventListener('click', function () { mnAbre(mnI + 1); });
+  document.addEventListener('keydown', function (e) { if ($('#mnViewer').hidden) return; if (e.key === 'Escape') mnFecha(); if (e.key === 'ArrowLeft') mnAbre(mnI - 1); if (e.key === 'ArrowRight') mnAbre(mnI + 1); });
+  (function () { let x0 = null; const v = $('#mnViewer');
+    v.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    v.addEventListener('touchend', function (e) { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) mnAbre(mnI + (dx < 0 ? 1 : -1)); }, { passive: true }); })();
 
   /* ---------- Fotos ---------- */
   let fotoAlvo = null;
