@@ -354,9 +354,17 @@ details.box > .in { padding: 4px 14px 14px; display: grid; gap: 10px; }
 .glista { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .glista li { display: grid; grid-template-columns: 48px 1fr auto; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 8px; background: #fbf8f0; font-size: .9rem; }
 .glista li.atras { background: #fdecea; } .glista li small { color: var(--taupe); }
-.cpick { background: #fff; border: 1.5px solid #e1d6bd; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; }
-.cpick > summary { cursor: pointer; padding: 4px 0; }
-.cpick-l { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 14px; margin: 8px 0 10px; }
+.cpick { position: relative; margin-bottom: 14px; max-width: 460px; }
+.cpick > summary { list-style: none; cursor: pointer; background: #fff; border: 1.5px solid #e1d6bd; border-radius: 12px; padding: 11px 38px 11px 14px; position: relative; display: flex; gap: 8px; align-items: center; }
+.cpick > summary::-webkit-details-marker { display: none; }
+.cpick > summary::after { content: '▾'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #6b4b3a; }
+.cpick[open] > summary { border-color: #6b4b3a; }
+.cpick-t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cpick-p { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 4px); background: #fff; border: 1.5px solid #e1d6bd; border-radius: 12px; box-shadow: 0 8px 24px rgba(60,40,20,.18); padding: 10px 12px; }
+.cpick-b { margin-bottom: 6px; }
+.cpick-l { display: grid; grid-template-columns: 1fr; gap: 2px; max-height: 320px; overflow-y: auto; }
+.cpick-l .chk { padding: 6px 4px; border-radius: 8px; }
+.cpick-l .chk:hover { background: #f7f1e4; }
 .ccli { background: #fff; border: 2px solid #d8cdb4; border-radius: 14px; margin-bottom: 18px; overflow: hidden; }
 .ccli > header { background: #efe6d3; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 6px 22px; justify-content: space-between; align-items: center; border-bottom: 2px solid #d8cdb4; }
 .cinfo { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .88rem; color: var(--taupe); }
@@ -1190,7 +1198,6 @@ body.pv-lock { overflow: hidden; }
     <section id="v-tab" class="view" hidden>
       <div class="head"><h2>Tabelas e preços</h2><div class="head-r"><button id="tabSalvar" class="btn pri">Salvar tudo</button></div></div>
       <p id="tabAviso" class="demo" hidden></p>
-      <div id="tabResgate" class="tbox"></div>
       <div id="tabBody"></div>
     </section>
   </main>
@@ -2798,6 +2805,10 @@ body.pv-lock { overflow: hidden; }
   function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* sem espaço: ignora */ } }
   function limite(p, ms) { return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('tempo esgotado')); }, ms || 15000); })]); }
   function guardaLista() { if (!QE.db.demo) lsSet('qe_cache_lista', lista); }
+  function mesmoNome(x) {
+    const n = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim(); };
+    return !x.contato || n(x.empresa) === n(x.contato);
+  }
   async function carregar() {
     cfg = QE.defaultConfig(); cfgOk = false; dispOk = false;
     const cd = lsGet('qe_cache_disp'); avail = cd || []; dispBase = clone(avail);
@@ -2856,7 +2867,7 @@ body.pv-lock { overflow: hidden; }
       return bq.every(function (w) { return t.indexOf(w) >= 0; });
     }).sort(function (a, b) { return bq.length ? nz(a.empresa).localeCompare(nz(b.empresa), 'pt-BR') : 0; });
     $('#lista').innerHTML = itens.length ? itens.map(function (x) {
-      return '<div class="sol" role="button" tabindex="0" data-id="' + x.id + '"><b>' + esc(x.empresa) + ' <small>— ' + esc(x.contato) + '</small> ' + tagEvento(x) + '</b><span class="badge ' + stOf(x) + '">' + STATUS[stOf(x)] + '</span>' +
+      return '<div class="sol" role="button" tabindex="0" data-id="' + x.id + '"><b>' + esc(x.empresa) + (mesmoNome(x) ? '' : ' <small>— ' + esc(x.contato) + '</small>') + ' ' + tagEvento(x) + '</b><span class="badge ' + stOf(x) + '">' + STATUS[stOf(x)] + '</span>' +
         '<small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas · ' + (x.escopo === 'standard' ? 'Standard' : 'Premium') + ' · ' + esc(cardNome(x)) + '</small>' +
         '<small>' + (x.criadoEm ? 'Recebido em ' + new Date(x.criadoEm).toLocaleDateString('pt-BR') + ' ' + new Date(x.criadoEm).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '') + '</small>' +
         '<div class="acts"><select class="stsel" data-st="' + x.id + '" aria-label="Alterar status">' + stOpts(stOf(x)) + '</select><button class="del" type="button" data-del="' + x.id + '">Excluir</button></div></div>';
@@ -2876,7 +2887,7 @@ body.pv-lock { overflow: hidden; }
       const itens = lista.filter(function (x) { return stOf(x) === st; });
       return '<div class="kcol" data-col="' + st + '"><h3>' + STATUS[st] + ' <span>' + itens.length + '</span></h3><div class="kbody">' + (itens.map(function (x) {
         let tot = '—'; try { if (x.orc) tot = QE.brl(QE.calc(x, cfg).total); } catch (e) { /* sem orçamento ainda */ }
-        return '<div class="kcard" draggable="true" data-id="' + x.id + '">' + tagEvento(x) + '<b>' + esc(x.empresa) + '</b><small>' + esc(x.contato) + '</small><small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas</small><span class="kt">' + tot + '</span>' +
+        return '<div class="kcard" draggable="true" data-id="' + x.id + '">' + tagEvento(x) + '<b>' + esc(x.empresa) + '</b>' + (mesmoNome(x) ? '' : '<small>' + esc(x.contato) + '</small>') + '<small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas</small><span class="kt">' + tot + '</span>' +
           '<select class="stsel" data-st="' + x.id + '" aria-label="Mover para">' + stOpts(st) + '</select></div>';
       }).join('') || '<p class="kv">Nada por aqui</p>') + '</div></div>';
     }).join('');
@@ -3695,8 +3706,10 @@ body.pv-lock { overflow: hidden; }
   function finClientes() {
     const evs = ganhas(), hoje = QE.hoje(), selIds = evs.filter(function (x) { return FIN.cli[x.id]; });
     $('#finCtl').hidden = true;
-    const picker = '<details class="cpick"' + (FIN.cpickAberto !== false ? ' open' : '') + '><summary><b>Escolher clientes</b> <small>(' + selIds.length + ' selecionado' + (selIds.length === 1 ? '' : 's') + ')</small></summary>' +
-      (evs.length ? '<div class="cpick-l">' + evs.map(function (x) { return '<label class="chk"><input type="checkbox" data-fc="' + esc(x.id) + '"' + (FIN.cli[x.id] ? ' checked' : '') + '> <b>' + esc(x.empresa) + '</b> ' + tagEvento(x) + ' <small>' + esc(QE.fmtData(x.dataEvento) || 'sem data') + '</small></label>'; }).join('') + '</div><button class="btn sm ghost" type="button" data-fcall="1">Selecionar todos</button> <button class="btn sm ghost" type="button" data-fcall="0">Limpar</button>' : '<p class="hint">Ainda não há propostas com status Ganho.</p>') + '</details>';
+    const nomes = selIds.map(function (x) { return x.empresa; });
+    const resumo = !selIds.length ? 'Selecione um ou mais clientes…' : (selIds.length <= 2 ? nomes.join(', ') : nomes.slice(0, 2).join(', ') + ' +' + (selIds.length - 2));
+    const picker = '<details class="cpick"' + (FIN.cpickAberto === true ? ' open' : '') + '><summary><span class="cpick-t">' + esc(resumo) + '</span> <small>(' + selIds.length + ')</small></summary>' +
+      '<div class="cpick-p">' + (evs.length ? '<div class="cpick-b"><button class="btn sm ghost" type="button" data-fcall="1">Selecionar todos</button> <button class="btn sm ghost" type="button" data-fcall="0">Limpar</button></div><div class="cpick-l">' + evs.map(function (x) { return '<label class="chk"><input type="checkbox" data-fc="' + esc(x.id) + '"' + (FIN.cli[x.id] ? ' checked' : '') + '> <b>' + esc(x.empresa) + '</b> ' + tagEvento(x) + ' <small>' + esc(QE.fmtData(x.dataEvento) || 'sem data') + '</small></label>'; }).join('') + '</div>' : '<p class="hint">Ainda não há propostas com status Ganho.</p>') + '</div></details>';
     let tot = { ev: 0, pg: 0, pd: 0 }, blocos = '';
     selIds.forEach(function (x) {
       const r = QE.lancamentos(x, cfg), recs = r.itens.filter(function (l) { return l.tipo === 'rec'; });
@@ -3734,6 +3747,7 @@ body.pv-lock { overflow: hidden; }
     }).join('') : '<p class="hint">' + (evs.length ? 'Nenhuma nota ' + (FIN.filtro === 'pago' ? 'emitida' : FIN.filtro === 'pend' ? 'a emitir' : '') + (FIN.todosMeses ? '' : ' neste mês') + '.' : 'Nenhum evento ganho com nota fiscal ainda. Marque “Com nota fiscal” no orçamento.') + '</p>';
   }
 
+  document.addEventListener('click', function (e) { const d = document.querySelector('#finCorpo .cpick[open]'); if (d && !d.contains(e.target)) { d.open = false; FIN.cpickAberto = false; } });
   $('#finCorpo').addEventListener('toggle', function (e) { if (e.target.classList && e.target.classList.contains('cpick')) FIN.cpickAberto = e.target.open; }, true);
   $('#v-fin').addEventListener('click', function (e) {
     const fk = e.target.closest('[data-fk]'); if (fk) { const p = fk.dataset.fk.split('|'); finMarcar(p[0], p[1]); return; }
@@ -4555,14 +4569,8 @@ body.pv-lock { overflow: hidden; }
   const tabDe = function (k) { return k.indexOf('ev:') === 0 ? td.tabelasEvento[k.slice(3)] : td[k]; };
   let tabOk = false;
   function avisoTab(m) { const el = $('#tabAviso'); el.textContent = m || ''; el.hidden = !m; }
-  function resgateTab() {
-    const ops = lista.filter(function (x) { return x.orc && x.orc.cfgSnap && x.orc.cfgSnap.tabelasEvento; }).sort(function (a, b) { return String(b.orc.cfgEm || '') < String(a.orc.cfgEm || '') ? -1 : 1; });
-    $('#tabResgate').innerHTML = '<h3>Recuperar tabelas</h3><p class="hint" style="margin:0">Cada proposta guarda uma cópia das tabelas do dia em que foi criada. Escolha uma proposta feita depois da sua última atualização de tabelas: ela é carregada na tela abaixo (nada é gravado até você clicar em “Salvar tudo”).</p>' +
-      '<div class="g2"><div class="f"><label>Tabelas guardadas em uma proposta</label><select id="tabResSel">' + (ops.length ? ops.map(function (x) { return '<option value="' + x.id + '">' + esc((x.empresa || 'sem nome') + ' — ' + (QE.fmtData(x.orc.cfgEm) || 'sem data')) + '</option>'; }).join('') : '<option value="">Nenhuma proposta com cópia</option>') + '</select></div>' +
-      '<div class="f" style="align-self:end"><button type="button" class="btn" id="tabResGo"' + (ops.length ? '' : ' disabled') + '>Carregar essas tabelas</button> <button type="button" class="btn ghost" id="tabResBk">Voltar à versão anterior ao último salvamento</button></div></div>';
-  }
   function renderTab() {
-    td = clone(cfg); tabOk = cfgOk; drawTab(); resgateTab();
+    td = clone(cfg); tabOk = cfgOk; drawTab();
     avisoTab(cfgOk ? '' : 'Atualizando as tabelas direto do servidor…');
     const antes = JSON.stringify(td);
     limite(QE.db.config(), 12000).then(function (v) {
@@ -4571,19 +4579,6 @@ body.pv-lock { overflow: hidden; }
       avisoTab('');
     }).catch(function () { avisoTab('Não consegui ler as tabelas do servidor agora, então o botão Salvar está bloqueado para não gravar por cima do que está lá. Toque em “Tabelas e preços” de novo para tentar outra vez.'); });
   }
-  document.addEventListener('click', function (e) {
-    if (e.target.id === 'tabResGo') {
-      const x = lista.find(function (y) { return y.id === $('#tabResSel').value; }); if (!x) return;
-      td = QE.mergeConfig(Object.assign({}, clone(td), clone(x.orc.cfgSnap))); drawTab();
-      toast('Tabelas da proposta carregadas. Confira e clique em “Salvar tudo”.');
-    }
-    if (e.target.id === 'tabResBk') {
-      QE.db.backupTabelas().then(function (b) {
-        if (!b || !b.data) return toast('Ainda não há versão anterior guardada.', true);
-        td = QE.mergeConfig(clone(b.data)); drawTab(); toast('Versão anterior carregada. Confira e clique em “Salvar tudo”.');
-      }).catch(function () { toast('Não consegui ler a cópia de segurança.', true); });
-    }
-  });
   const numIn = function (attrs, v, ph) { return '<input type="number" step="any" ' + attrs + ' value="' + (v === null || v === undefined ? '' : v) + '"' + (ph !== undefined ? ' placeholder="' + ph + '"' : '') + '>'; };
   function drawTab() {
     let h = '<div class="tbox"><h3>Regras gerais</h3><div class="g3">' +
