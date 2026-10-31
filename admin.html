@@ -867,6 +867,16 @@ body.pv-lock { overflow: hidden; }
 .dc-lib { width: 100%; aspect-ratio: 3 / 4; border-radius: 10px; border: 2px solid transparent; background: #ece6de center / cover no-repeat; cursor: pointer; padding: 0; position: relative; }
 .dc-lib.on { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
 .dc-lib span { position: absolute; left: 0; right: 0; bottom: 0; font-size: 10px; line-height: 1.2; color: #fff; padding: 12px 4px 4px; background: linear-gradient(transparent, rgba(0, 0, 0, .65)); border-radius: 0 0 8px 8px; }
+
+.dc-logo .img { inset: 0; border-radius: 16px; }
+.dc-logo .img.cv { background-size: cover; }
+.dc-logo { overflow: hidden; }
+.dc-blk .tx { display: flex; flex-direction: column; justify-content: center; }
+.dcp p.dc-ap { margin: 16px 0 22px; line-height: 1.4; }
+.dcp h2.dc-t { margin-bottom: 4px; }
+.dcp .dc-blk p.dc-ap { margin: 10px 0 14px; }
+.dc-body { gap: 30px; }
+.dc-libtop { position: sticky; top: 0; z-index: 3; background: #fff; padding: 8px 0; margin: 0 0 6px; border-bottom: 1px solid var(--line); }
 </style>
 </head>
 <body>
@@ -1142,13 +1152,14 @@ body.pv-lock { overflow: hidden; }
       </div>
       <div id="dcEdit" hidden>
         <div class="head sticky"><button id="dcVoltar" class="btn ghost">Voltar aos projetos</button><h2 id="dcTitulo">Projeto</h2>
-          <div class="head-r"><button id="dcSalvar" class="btn">Salvar</button><button id="dcPdf" class="btn pri">Baixar PDF</button></div></div>
+          <div class="head-r"><button id="dcSalvar" class="btn">Salvar</button><button id="dcEnviar" class="btn">Enviar</button><button id="dcPdf" class="btn pri">Baixar PDF</button></div></div>
         <div class="ed"><div class="ed-ctl" id="dcForm"></div><div class="ed-pv"><div id="dcPv" class="pv"><div id="dcPvIn" class="dc-pvin"></div></div></div></div>
       </div>
       <div id="dcLibModal" class="vmodal" hidden><div class="vbox wbox" role="dialog" aria-label="Banco de imagens">
-        <h3>Banco de imagens do site</h3><p class="hint">Toque nas fotos para escolher (pode marcar várias).</p>
+        <h3>Banco de imagens do site</h3>
+        <div class="vacoes dc-libtop"><button type="button" class="btn pri" id="dcLibOk">Adicionar selecionadas</button><button type="button" class="btn ghost" id="dcLibX">Cancelar</button></div>
+        <p class="hint">Toque nas fotos para escolher (pode marcar várias).</p>
         <div class="f"><label for="dcLibF">Mostrar</label><select id="dcLibF"></select></div><div id="dcLibG" class="dc-libg"></div>
-        <div class="vacoes"><button type="button" class="btn pri" id="dcLibOk">Adicionar selecionadas</button><button type="button" class="btn ghost" id="dcLibX">Cancelar</button></div>
       </div></div>
       <input type="file" id="dcFile" accept="image/*" multiple hidden>
     </section>
@@ -3971,15 +3982,19 @@ body.pv-lock { overflow: hidden; }
   /* ---------- Enviar orçamento pelo WhatsApp ---------- */
   const WA = { blob: null, nomeArq: '', base: '', modo: 'orc', registrado: false };
   const waNumero = function (t) { let d = String(t || '').replace(/\D/g, ''); if (d.length >= 10 && d.length <= 11) d = '55' + d; return d; };
+  const waDeco = function () { return WA.modo === 'deco' && typeof DC !== 'undefined' && DC.p; };
+  const waSol = function () { return waDeco() ? (lista.find(function (y) { return y.id === DC.p.solId; }) || {}) : cur; };
   const waMsg = function () {
+    if (waDeco()) { const nome = String((waSol().contato || DC.p.cliente || '')).trim().split(/\s+/)[0] || '', d = QE.fmtData(DC.p.data); return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o projeto de decoração do seu evento' + (d ? ' do dia ' + d : '') + '. Dê uma olhada com calma e me diga o que achou ou se quer ajustar algo. Qualquer dúvida, é só chamar!'; }
     const ev = QE.evento(cur), nome = String(cur.contato || cur.empresa || '').trim().split(/\s+/)[0] || '', data = QE.fmtData(cur.dataEvento);
     if (WA.modo === 'ct') return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o contrato do seu evento (' + ev.titulo + ')' + (data ? ' para o dia ' + data : '') + '. Por favor, confira os dados e, estando tudo certo, nos devolva assinado. Qualquer dúvida, é só chamar!';
     return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o orçamento do seu evento (' + ev.titulo + ')' + (data ? ' para o dia ' + data : '') + '. Qualquer dúvida, é só chamar!';
   };
   const waArquivo = function () { return new File([WA.blob], WA.nomeArq, { type: 'application/pdf' }); };
   const emOk = function (t) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(t || '').trim()); };
-  const emAssunto = function () { const ev = QE.evento(cur); return (WA.modo === 'ct' ? 'Contrato' : 'Orçamento') + ' Quinta dos Esquilos - ' + ev.titulo + (cur.empresa ? ' - ' + cur.empresa : ''); };
+  const emAssunto = function () { if (waDeco()) return 'Projeto de Decoração Quinta dos Esquilos - ' + DC.p.cliente; const ev = QE.evento(cur); return (WA.modo === 'ct' ? 'Contrato' : 'Orçamento') + ' Quinta dos Esquilos - ' + ev.titulo + (cur.empresa ? ' - ' + cur.empresa : ''); };
   const emMsg = function () {
+    if (waDeco()) { const nome = String((waSol().contato || DC.p.cliente || '')).trim().split(/\s+/)[0] || '', d = QE.fmtData(DC.p.data), ct0 = QE.CONTATOS; return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem?\n\nSegue em anexo o projeto de decoração da Quinta dos Esquilos para o seu evento' + (d ? ' do dia ' + d : '') + '.\n\nDê uma olhada com calma e me diga o que achou ou se quer ajustar algo.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct0.telefone + ' · ' + ct0.site; }
     const ev = QE.evento(cur), nome = String(cur.contato || cur.empresa || '').trim().split(/\s+/)[0] || '', data = QE.fmtData(cur.dataEvento), ct = QE.CONTATOS;
     return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem?\n\nSegue em anexo o ' + (WA.modo === 'ct' ? 'contrato' : 'orçamento') + ' da Quinta dos Esquilos para o seu evento (' + ev.titulo + ')' + (data ? ' no dia ' + data : '') + '.' + (WA.modo === 'ct' ? '\n\nPor favor, confira os dados e, estando tudo certo, nos devolva assinado.' : '') + '\n\nQualquer dúvida, estou à disposição.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct.telefone + ' · ' + ct.site;
   };
@@ -3987,10 +4002,11 @@ body.pv-lock { overflow: hidden; }
   function waFecha() { $('#waModal').hidden = true; document.body.classList.remove('pv-lock'); }
   function waAbre() {
     const podeShare = !!(navigator.canShare && window.File && navigator.canShare({ files: [waArquivo()] }));
-    $('#waFone').value = cur.telefone || ''; $('#waTexto').value = waMsg(); $('#waReg').checked = true;
-    const ctm = (cur.contrato && (cur.contrato.emails || []).filter(Boolean)[0]) || cur.email || '';
-    $('#waTit').textContent = WA.modo === 'ct' ? 'Enviar contrato' : 'Enviar orçamento'; $('#waReg').parentNode.hidden = WA.modo === 'ct';
-    $('#emDest').value = WA.modo === 'ct' ? ctm : (cur.email || ''); $('#emAssunto').value = emAssunto(); $('#emTexto').value = emMsg();
+    const bs = waSol() || {};
+    $('#waFone').value = bs.telefone || ''; $('#waTexto').value = waMsg(); $('#waReg').checked = true;
+    const ctm = (cur && cur.contrato && (cur.contrato.emails || []).filter(Boolean)[0]) || (cur && cur.email) || '';
+    $('#waTit').textContent = WA.modo === 'ct' ? 'Enviar contrato' : WA.modo === 'deco' ? 'Enviar projeto de decoração' : 'Enviar orçamento'; $('#waReg').parentNode.hidden = WA.modo !== 'orc';
+    $('#emDest').value = WA.modo === 'ct' ? ctm : (bs.email || ''); $('#emAssunto').value = emAssunto(); $('#emTexto').value = emMsg();
     $('#waArq').textContent = 'PDF pronto: ' + WA.nomeArq + ' (' + Math.round(WA.blob.size / 1024) + ' KB)';
     $('#waShare').hidden = !podeShare;
     $('#waAjuda').textContent = podeShare
@@ -4017,7 +4033,7 @@ body.pv-lock { overflow: hidden; }
     if (fone.length < 12 || fone.length > 13) { toast('Confira o WhatsApp do cliente (DDD + número).', true); $('#waFone').focus(); return; }
     window.open('https://wa.me/' + fone + '?text=' + encodeURIComponent($('#waTexto').value), '_blank', 'noopener');
     baixarBlob(WA.blob, WA.base);
-    if (!cur.telefone) { cur.telefone = $('#waFone').value.trim(); dirty = true; }
+    if (WA.modo !== 'deco' && !cur.telefone) { cur.telefone = $('#waFone').value.trim(); dirty = true; }
     await waRegistra(); toast('WhatsApp aberto e PDF baixado: anexe o arquivo pelo clipe.');
   });
   /* e-mail: Gmail (web) ou o app de e-mail do aparelho; o PDF é baixado para anexar */
@@ -4031,7 +4047,7 @@ body.pv-lock { overflow: hidden; }
       const a = document.createElement('a'); a.href = 'mailto:' + para + '?subject=' + encodeURIComponent(su) + '&body=' + encodeURIComponent(corpo).replace(/%0A/g, '%0D%0A'); document.body.appendChild(a); a.click(); a.remove();
     }
     baixarBlob(WA.blob, WA.base);
-    if (!cur.email) { cur.email = para; dirty = true; }
+    if (WA.modo !== 'deco' && !cur.email) { cur.email = para; dirty = true; }
     await waRegistra(); toast('E-mail aberto e PDF baixado: anexe o arquivo na mensagem.');
   }
   $('#emGmail').addEventListener('click', function () { emEnvia('gmail'); });
@@ -4192,7 +4208,7 @@ body.pv-lock { overflow: hidden; }
       '<h4 class="sh first">Cliente e dados</h4>' + dcI('cliente', 'Cliente / empresa') + dcI('titulo', 'Título do projeto') +
       '<div class="g2">' + dcI('evento', 'Tipo de evento') + dcI('qtd', 'Convidados', 'number', ' min="0"') + '</div><div class="g2">' + dcI('data', 'Data do evento', 'date') + dcI('atualizacao', 'Atualização', 'date') + '</div>' +
       '<div class="vacoes"><button type="button" class="btn sm ghost" id="dcPuxa">Atualizar dados a partir da proposta</button></div>' +
-      '<h4 class="sh">Logo e paleta de cores</h4><div class="dc-lg"><div class="pv-l" id="dcLogoPv" style="background-image:url(\'' + esc(dcSrc(p.logo)) + '\')">' + (p.logo ? '' : 'Logo do cliente') + '</div><div><button type="button" class="btn sm" data-dcup="logo">Enviar logo</button> ' + (p.logo ? '<button type="button" class="btn sm ghost" data-dclogodel="1">Remover</button>' : '') + '</div></div>' +
+      '<h4 class="sh">Logo e paleta de cores</h4><div class="dc-lg"><div class="pv-l" id="dcLogoPv" style="background-image:url(\'' + esc(dcSrc(p.logo)) + '\')">' + (p.logo ? '' : 'Logo do cliente') + '</div><div><button type="button" class="btn sm" data-dcup="logo">Enviar logo</button> ' + (p.logo ? '<button type="button" class="btn sm ghost" data-dclogodel="1">Remover</button>' : '') + '</div></div>' + (p.logo ? '<label class="chk"><input type="checkbox" data-dccheck="logoCover"' + (p.logoCover ? ' checked' : '') + '> Preencher toda a moldura (pode cortar as bordas do logo)</label>' : '') +
       '<div id="dcPal">' + p.paleta.map(function (c, i) { return '<div class="dc-pal"><input type="color" data-dc="paleta.' + i + '.c" value="' + esc(c.c) + '"><input type="text" data-dc="paleta.' + i + '.n" value="' + esc(c.n) + '" placeholder="Nome da cor (opcional)"><button class="btn sm ghost" data-dcrmcor="' + i + '">×</button></div>'; }).join('') + '</div>' +
       '<div class="vacoes"><button type="button" class="btn sm" id="dcAddCor">+ Adicionar cor</button></div>' +
       '<h4 class="sh">Imagens da página de identidade</h4>' + dcThumbs('abertura.imgs', p.abertura.imgs) +
@@ -4202,9 +4218,11 @@ body.pv-lock { overflow: hidden; }
     window.scrollTo(0, sc);
   }
   function dcMarca() { DC.sujo = true; clearTimeout(DC.timer); DC.timer = setTimeout(dcPreview, 250); }
+  $('#dcForm').addEventListener('change', function (e) { if (e.target.dataset.dccheck !== undefined) { DC.p[e.target.dataset.dccheck] = e.target.checked; dcMarca(); } });
   $('#dcForm').addEventListener('input', function (e) {
     const t = e.target;
     if (t.dataset.dc !== undefined) { setP(DC.p, t.dataset.dc, t.type === 'number' ? (t.value === '' ? '' : +t.value) : t.value); if (t.dataset.dc === 'cliente') $('#dcTitulo').textContent = 'Decoração — ' + (t.value || 'novo projeto'); dcMarca(); }
+    if (t.dataset.dccheck !== undefined) { DC.p[t.dataset.dccheck] = t.checked; dcMarca(); return; }
     if (t.dataset.dcitens !== undefined) { setP(DC.p, t.dataset.dcitens + '.itens', t.value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean)); dcMarca(); }
   });
   function dcAdd(path, ref) { const arr = getP(DC.p, path); if (arr) arr.push(ref); }
@@ -4233,7 +4251,7 @@ body.pv-lock { overflow: hidden; }
     DC.sel = [];
     const gr = []; QE.FOTOS_LISTA.forEach(function (f) { if (gr.indexOf(f[2]) < 0) gr.push(f[2]); });
     $('#dcLibF').innerHTML = '<option value="">Todas as fotos</option>' + gr.map(function (g) { return '<option>' + esc(g) + '</option>'; }).join('');
-    dcLibDesenha(); $('#dcLibModal').hidden = false; document.body.classList.add('pv-lock');
+    $('#dcLibOk').textContent = 'Adicionar selecionadas'; dcLibDesenha(); $('#dcLibModal').hidden = false; document.body.classList.add('pv-lock');
   }
   function dcLibDesenha() {
     const f = $('#dcLibF').value;
@@ -4242,7 +4260,7 @@ body.pv-lock { overflow: hidden; }
     }).join('');
   }
   $('#dcLibF').addEventListener('change', dcLibDesenha);
-  $('#dcLibG').addEventListener('click', function (e) { const b = e.target.closest('[data-k]'); if (!b) return; const i = DC.sel.indexOf(b.dataset.k); if (i >= 0) DC.sel.splice(i, 1); else DC.sel.push(b.dataset.k); b.classList.toggle('on'); });
+  $('#dcLibG').addEventListener('click', function (e) { const b = e.target.closest('[data-k]'); if (!b) return; const i = DC.sel.indexOf(b.dataset.k); if (i >= 0) DC.sel.splice(i, 1); else DC.sel.push(b.dataset.k); b.classList.toggle('on'); $('#dcLibOk').textContent = DC.sel.length ? 'Adicionar selecionadas (' + DC.sel.length + ')' : 'Adicionar selecionadas'; });
   function dcLibFecha() { $('#dcLibModal').hidden = true; document.body.classList.remove('pv-lock'); }
   $('#dcLibX').addEventListener('click', dcLibFecha);
   $('#dcLibOk').addEventListener('click', function () {
@@ -4298,7 +4316,7 @@ body.pv-lock { overflow: hidden; }
     let h = '<section class="pg dcp dc-cover" style="background-image:url(' + QE.foto('capa') + ')"><div class="dc-cv"><p class="e">PROJETO DE DECORAÇÃO · ' + esc(ano) + '</p><h1>' + esc(p.titulo) + '</h1><p class="c">' + esc(p.cliente) + (p.qtd ? ' — ' + esc(p.qtd) + ' convidados' : '') + (p.data ? ' · ' + dcData(p.data) : '') + '</p></div></section>';
     const lg = dcSrc(p.logo);
     h += '<section class="pg dcp">' + head('Identidade do evento') + '<div class="dc-body"><div><div class="dc-eb">Evento</div><div class="dc-rule"></div><h2 class="dc-t">Identidade<br>do evento</h2></div>' +
-      '<div class="dc-id"><div class="dc-logo"><small>LOGO DO CLIENTE</small>' + (lg ? '<div class="img" style="background-image:url(\'' + lg + '\')"></div>' : '<div class="wm">' + esc(p.cliente || 'Cliente') + '</div>') + '</div>' +
+      '<div class="dc-id"><div class="dc-logo">' + (lg ? '<div class="img' + (p.logoCover ? ' cv' : '') + '" style="background-image:url(\'' + lg + '\')"></div>' : '<div class="wm">' + esc(p.cliente || 'Cliente') + '</div>') + '</div>' +
       '<div class="dc-dados"><div><span>Cliente</span><b>' + esc(p.cliente) + '</b></div><div><span>Evento</span><b>' + esc(p.evento) + '</b></div><div><span>Data</span><b>' + (dcData(p.data) || '—') + '</b></div><div><span>Convidados</span><b>' + (p.qtd ? esc(p.qtd) + ' pessoas' : '—') + '</b></div></div></div>' +
       '<div><div class="dc-eb">Paleta de cores</div><div class="dc-rule"></div><div class="dc-sw">' + p.paleta.map(function (c) { return '<div><i style="background:' + esc(c.c) + '"></i>' + (c.n ? '<b>' + esc(c.n) + '</b>' : '') + '<span>' + esc(String(c.c).toUpperCase()) + '</span></div>'; }).join('') + '</div></div>' +
       '<div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end">' + (function () { const f = dcFotosHTML(p.abertura.imgs, true); return f ? f.replace('class="dc-fotos', 'style="height:210px;flex:none" class="dc-fotos') : ''; })() + '</div></div>' + foot() + '</section>';
@@ -4335,6 +4353,14 @@ body.pv-lock { overflow: hidden; }
     } catch (e) { console.error(e); toast('Não foi possível salvar.', true); return false; }
   }
   $('#dcSalvar').addEventListener('click', function () { dcSalva(); });
+  $('#dcEnviar').addEventListener('click', async function () {
+    const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
+    try {
+      await dcSalva(true); WA.modo = 'deco'; WA.blob = await gerarPdfBlob(null, dcHTML(DC.p));
+      WA.base = 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente'); WA.nomeArq = WA.base + '.pdf'; WA.registrado = true; waAbre();
+    } catch (e) { console.error(e); toast('Não consegui gerar o projeto para enviar (' + (e && e.message || e) + ').', true); }
+    finally { btn.disabled = false; btn.textContent = txt; }
+  });
   $('#dcPdf').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
     try { await dcSalva(true); const blob = await gerarPdfBlob(null, dcHTML(DC.p)); baixarBlob(blob, 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente')); toast('PDF baixado'); }
