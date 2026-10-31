@@ -762,6 +762,111 @@ body.pv-lock { overflow: hidden; }
 .mnb { position: absolute; z-index: 2; border: 0; background: rgba(255, 255, 255, .85); color: #222; width: 52px; height: 52px; border-radius: 50%; font-size: 30px; line-height: 1; cursor: pointer; }
 .mnx { top: 14px; right: 14px; } .mnp { left: 10px; top: 50%; transform: translateY(-50%); } .mnn { right: 10px; top: 50%; transform: translateY(-50%); }
 .mnt { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; color: #fff; font-size: .95rem; text-shadow: 0 1px 4px #000; z-index: 2; pointer-events: none; }
+
+@media (min-width: 700px) {
+  .bar { flex-wrap: nowrap; gap: 6px; padding: 8px 10px; }
+  .bar-logo { flex: none; height: 34px; }
+  #tabs { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; gap: 0; margin-right: 0; overflow-x: auto; scrollbar-width: none; }
+  #tabs::-webkit-scrollbar { display: none; }
+  #tabs button { padding: 8px 7px; font-size: .88rem; white-space: nowrap; flex: none; }
+  .bar > .btn { flex: none; padding: 6px 10px; font-size: .88rem; white-space: nowrap; }
+}
+
+/* barra do topo sempre em uma linha (os botões do menu rolam de lado se não couberem) */
+.bar { flex-wrap: nowrap; gap: 8px; }
+.bar-logo { flex: none; }
+#tabs { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; margin-right: 0; overflow-x: auto; scrollbar-width: none; }
+#tabs::-webkit-scrollbar { display: none; }
+#tabs button { white-space: nowrap; flex: none; padding: 8px 10px; font-size: .94rem; }
+.bar > .btn { flex: none; white-space: nowrap; padding: 7px 12px; }
+.tbx-res { display: grid; gap: 8px; margin-bottom: 14px; }
+
+/* ===== Projeto de Decoração ===== */
+.dc-pvin { transform-origin: top left; width: 794px; }
+.dc-pvin .pg { margin-bottom: 14px; box-shadow: 0 1px 8px rgba(0, 0, 0, .25); }
+.dcp { --dcgold: #c2a068; --dcbark: #563d27; --dctaupe: #7c6d5c; --dcline: #d8cdbf; --dcpaper: #f7f3ec; background: var(--dcpaper); color: #3a2a1d; font-family: 'Poppins', Arial, sans-serif; font-size: 13.5px; font-weight: 300; line-height: 1.6; }
+.dcp.dc-cover { background: #000 center / cover no-repeat; color: #fff; text-align: center; }
+.dc-cv { position: absolute; top: 150px; left: 0; right: 0; }
+.dc-cv .e { font-size: 8.5px; letter-spacing: .42em; color: #e9dcc0; margin: 0 0 14px; font-weight: 300; text-transform: uppercase; }
+.dc-cv h1 { font-family: 'Marcellus', 'Cormorant Garamond', Georgia, serif; font-size: 33px; letter-spacing: .06em; color: #fff; margin: 0 0 12px; font-weight: 400; }
+.dc-cv .c { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 15px; color: #e5cf9f; }
+.dc-hd { position: absolute; top: 34px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: center; }
+.dc-hd img { height: 46px; }
+.dc-hd span { font-size: 9px; letter-spacing: .32em; color: var(--dctaupe); text-transform: uppercase; }
+.dc-ft { position: absolute; bottom: 26px; left: 56px; right: 56px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; letter-spacing: .3em; color: var(--dctaupe); border-top: 1px solid var(--dcline); padding-top: 12px; }
+.dc-ft b { font-weight: 400; letter-spacing: .1em; font-size: 11px; }
+.dc-dots { display: flex; gap: 5px; min-width: 40px; }
+.dc-dots i { width: 9px; height: 9px; border-radius: 50%; display: block; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08); }
+.dc-body { position: absolute; top: 112px; bottom: 96px; left: 56px; right: 56px; display: flex; flex-direction: column; gap: 22px; }
+.dc-eb { font-size: 9.5px; letter-spacing: .34em; color: var(--dcgold); text-transform: uppercase; font-weight: 500; }
+.dc-rule { width: 54px; height: 1.5px; background: var(--dcgold); margin: 12px 0; }
+.dcp h2.dc-t { font-family: 'Cormorant Garamond', 'Marcellus', Georgia, serif; font-weight: 500; font-size: 38px; line-height: 1.05; letter-spacing: .03em; text-transform: uppercase; color: var(--dcbark); margin: 0; }
+.dcp h3.dc-t2 { font-family: 'Cormorant Garamond', 'Marcellus', Georgia, serif; font-weight: 500; font-size: 27px; line-height: 1.1; letter-spacing: .03em; text-transform: uppercase; color: var(--dcbark); margin: 0; }
+.dc-ap { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 17px; color: var(--dctaupe); margin: 8px 0 14px; }
+.dc-bl { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.dc-bl li { padding: 6px 0 6px 20px; position: relative; border-bottom: 1px dotted var(--dcline); break-inside: avoid; }
+.dc-bl li:before { content: ''; position: absolute; left: 3px; top: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--dcgold); }
+.dc-bl.c2 { columns: 2; column-gap: 28px; }
+.dc-fotos { flex: 1; min-height: 0; display: grid; gap: 20px; }
+.dc-fotos.n1 { grid-template: 1fr / 1fr; }
+.dc-fotos.n2 { grid-template: 1fr / 1fr 1fr; }
+.dc-fotos.n3 { grid-template: 1fr 1fr / 1fr 1fr; }
+.dc-fotos.n3 > :first-child { grid-row: 1 / 3; }
+.dc-fotos.n4 { grid-template: 1fr 1fr / 1fr 1fr; }
+.dc-fotos.n5, .dc-fotos.n6 { grid-template: 1fr 1fr / 1fr 1fr 1fr; }
+.dc-fotos.n7, .dc-fotos.n8, .dc-fotos.n9 { grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr; }
+.dc-fotos.b { gap: 12px; }
+.dc-fotos.b.n3 { grid-template: 1fr / 1fr 1fr 1fr; } .dc-fotos.b.n3 > :first-child { grid-row: auto; }
+.dc-fotos.b.n5, .dc-fotos.b.n6 { grid-template: 1fr 1fr / 1fr 1fr 1fr; }
+.dc-ph { background: var(--dcpaper) center / cover no-repeat; border-radius: 16px; min-height: 0; background-color: #ece6de; }
+.dc-ph.arch { border-radius: 999px 999px 0 0; }
+.dc-blk { flex: 1; min-height: 0; display: grid; grid-template-columns: 250px 1fr; gap: 26px; }
+.dc-blk .tx { min-width: 0; overflow: hidden; }
+.dc-blk .dc-fotos { height: 100%; }
+.dc-id { display: grid; grid-template-columns: 330px 1fr; gap: 44px; align-items: center; }
+.dc-logo { height: 190px; border-radius: 16px; background: #fff; border: 1px solid var(--dcline); display: grid; place-items: center; position: relative; background-size: contain; background-repeat: no-repeat; background-position: center; }
+.dc-logo > small { position: absolute; top: 10px; left: 14px; font-size: 8px; letter-spacing: .26em; color: var(--dctaupe); }
+.dc-logo .wm { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; text-align: center; color: var(--dcbark); font-size: 24px; line-height: 1.2; padding: 0 20px; }
+.dc-logo .img { position: absolute; inset: 22px; background: center / contain no-repeat; }
+.dc-dados { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 14px; }
+.dc-dados span { display: block; font-size: 8px; letter-spacing: .26em; color: var(--dctaupe); text-transform: uppercase; }
+.dc-dados b { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 19px; color: var(--dcbark); line-height: 1.2; }
+.dc-sw { display: flex; gap: 18px; margin-top: 6px; }
+.dc-sw div { flex: 1; text-align: center; min-width: 0; }
+.dc-sw i { display: block; width: 100%; aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .12); max-width: 110px; margin: 0 auto; }
+.dc-sw b { display: block; font-weight: 500; font-size: 11px; margin-top: 10px; color: var(--dcbark); }
+.dc-sw span { font-size: 9.5px; letter-spacing: .16em; color: var(--dctaupe); }
+.dc-fim { background: linear-gradient(135deg, #563d27, #25130b); color: #eadfce; text-align: center; }
+.dc-fim .c { position: absolute; left: 0; right: 0; top: 250px; }
+.dc-fim img { height: 130px; }
+.dc-fim h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 36px; letter-spacing: .14em; color: #fff; text-transform: uppercase; margin: 46px 40px 10px; line-height: 1.3; }
+.dc-fim .l { width: 54px; height: 1.5px; background: var(--dcgold); margin: 14px auto 0; }
+.dc-fim .ct { margin-top: 46px; font-size: 12px; letter-spacing: .14em; line-height: 2.2; color: #eadfce; }
+.dc-fim .ct b { color: var(--dcgold); font-weight: 500; }
+/* tela de edição */
+.dc-card { display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+.dc-card > div { flex: 1; min-width: 0; } .dc-card small { color: var(--taupe); display: block; }
+.dc-sec { border: 1px solid var(--line); border-radius: 10px; background: #fbf9f5; margin-bottom: 8px; }
+.dc-sec.op { background: #fff; border-color: var(--gold); }
+.dc-sh { display: flex; align-items: center; gap: 8px; padding: 9px 12px; flex-wrap: wrap; }
+.dc-sh b { flex: 1; min-width: 120px; font-weight: 500; cursor: pointer; }
+.dc-sh .ac { display: flex; gap: 6px; flex-wrap: wrap; }
+.dc-sb { padding: 2px 14px 14px; border-top: 1px solid var(--linen); display: grid; gap: 8px; }
+.dc-sub { border: 1px dashed var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 8px; }
+.dc-ths { display: flex; gap: 8px; flex-wrap: wrap; }
+.dc-th { position: relative; width: 74px; height: 92px; border-radius: 10px; background: #ece6de center / cover no-repeat; }
+.dc-th .x { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .65); color: #fff; line-height: 1; cursor: pointer; padding: 0; }
+.dc-th .mv { position: absolute; bottom: 3px; left: 3px; right: 3px; display: flex; justify-content: space-between; }
+.dc-th .mv button { width: 22px; height: 20px; border: 0; border-radius: 6px; background: rgba(255, 255, 255, .85); cursor: pointer; padding: 0; }
+.dc-pal { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.dc-pal input[type=color] { width: 40px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.dc-pal input[type=text] { flex: 1; min-width: 0; }
+.dc-lg { display: flex; align-items: center; gap: 12px; }
+.dc-lg .pv-l { width: 120px; height: 70px; border: 1px dashed var(--taupe); border-radius: 10px; background: #fff center / contain no-repeat; display: grid; place-items: center; font-size: 11px; color: var(--taupe); text-align: center; }
+.dc-libg { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; margin: 8px 0; }
+.dc-lib { width: 100%; aspect-ratio: 3 / 4; border-radius: 10px; border: 2px solid transparent; background: #ece6de center / cover no-repeat; cursor: pointer; padding: 0; position: relative; }
+.dc-lib.on { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.dc-lib span { position: absolute; left: 0; right: 0; bottom: 0; font-size: 10px; line-height: 1.2; color: #fff; padding: 12px 4px 4px; background: linear-gradient(transparent, rgba(0, 0, 0, .65)); border-radius: 0 0 8px 8px; }
 </style>
 </head>
 <body>
@@ -790,6 +895,7 @@ body.pv-lock { overflow: hidden; }
       <button data-v="tab">Tabelas e preços</button>
       <button data-v="fin">Financeiro</button>
       <button data-v="forn">Fornecedores</button>
+      <button data-v="deco">Decoração</button>
       <button data-v="menus">Menus</button>
       <button data-v="fotos">Fotos</button>
     </nav>
@@ -1024,6 +1130,29 @@ body.pv-lock { overflow: hidden; }
     </section>
 
     <!-- Fotos -->
+    <section id="v-deco" class="view" hidden>
+      <div id="dcHome">
+        <div class="head"><h2>Projeto de Decoração</h2><div class="head-r"><button id="dcNovo" class="btn pri">Novo projeto</button></div></div>
+        <div id="dcNovoBox" class="tbox" hidden>
+          <div class="g2"><div class="f"><label for="dcSol">Cliente (propostas em “Ganho”)</label><select id="dcSol"></select></div>
+          <div class="f" style="align-self:end"><button type="button" class="btn pri" id="dcCriar">Criar projeto</button> <button type="button" class="btn ghost" id="dcCancela">Cancelar</button></div></div>
+        </div>
+        <p id="dcMsg" class="hint"></p>
+        <div id="dcLista"></div>
+      </div>
+      <div id="dcEdit" hidden>
+        <div class="head sticky"><button id="dcVoltar" class="btn ghost">Voltar aos projetos</button><h2 id="dcTitulo">Projeto</h2>
+          <div class="head-r"><button id="dcSalvar" class="btn">Salvar</button><button id="dcPdf" class="btn pri">Baixar PDF</button></div></div>
+        <div class="ed"><div class="ed-ctl" id="dcForm"></div><div class="ed-pv"><div id="dcPv" class="pv"><div id="dcPvIn" class="dc-pvin"></div></div></div></div>
+      </div>
+      <div id="dcLibModal" class="vmodal" hidden><div class="vbox wbox" role="dialog" aria-label="Banco de imagens">
+        <h3>Banco de imagens do site</h3><p class="hint">Toque nas fotos para escolher (pode marcar várias).</p>
+        <div class="f"><label for="dcLibF">Mostrar</label><select id="dcLibF"></select></div><div id="dcLibG" class="dc-libg"></div>
+        <div class="vacoes"><button type="button" class="btn pri" id="dcLibOk">Adicionar selecionadas</button><button type="button" class="btn ghost" id="dcLibX">Cancelar</button></div>
+      </div></div>
+      <input type="file" id="dcFile" accept="image/*" multiple hidden>
+    </section>
+
     <section id="v-menus" class="view" hidden>
       <div class="head"><h2>Menus para mostrar ao cliente</h2></div>
       <p class="lead">Toque no cardápio para abrir em tela cheia. Deslize para o lado (ou use as setas) para passar para o próximo.</p>
@@ -1049,6 +1178,8 @@ body.pv-lock { overflow: hidden; }
     <!-- Tabelas -->
     <section id="v-tab" class="view" hidden>
       <div class="head"><h2>Tabelas e preços</h2><div class="head-r"><button id="tabSalvar" class="btn pri">Salvar tudo</button></div></div>
+      <p id="tabAviso" class="demo" hidden></p>
+      <div id="tabResgate" class="tbox"></div>
       <div id="tabBody"></div>
     </section>
   </main>
@@ -1305,7 +1436,7 @@ body.pv-lock { overflow: hidden; }
     ['apresentacao', 'Apresentação corporativa', 'Serviços complementares'], ['inflaveis', 'Brinquedos infláveis', 'Serviços complementares'], ['bar-frente', 'Chopp / bar', 'Serviços complementares'],
     ['capa', 'Capa do orçamento (a imagem já inclui o logo)', 'Orçamento em PDF'],
     ['menu-churrasco-premium', 'Cardápio: Churrasco Premium', 'Cardápios em anexo no PDF'], ['menu-churrasco-standard', 'Cardápio: Churrasco Standard', 'Cardápios em anexo no PDF'],
-    ['menu-carnes', 'Cardápio: Carnes e massas (Premium)', 'Cardápios em anexo no PDF'], ['menu-carnes-standard', 'Cardápio: Carnes e massas Standard (envie a foto; sem ela, usa o Premium)', 'Cardápios em anexo no PDF'], ['menu-feijoada', 'Cardápio: Feijoada', 'Cardápios em anexo no PDF'],
+    ['menu-carnes', 'Cardápio: Carnes e massas (Premium)', 'Cardápios em anexo no PDF'], ['menu-carnes-standard', 'Cardápio: Carnes e massas Standard', 'Cardápios em anexo no PDF'], ['menu-feijoada', 'Cardápio: Feijoada', 'Cardápios em anexo no PDF'],
     ['menu-crepe', 'Cardápio: Crepe', 'Cardápios em anexo no PDF'], ['menu-finger', 'Cardápio: Finger food', 'Cardápios em anexo no PDF'],
     ['menu-pizza', 'Cardápio: Pizza', 'Cardápios em anexo no PDF'],
     ['menu-cafe', 'Cardápio: Café da manhã', 'Cardápios em anexo no PDF'], ['menu-doces', 'Cardápio: Mesa de doces', 'Cardápios em anexo no PDF'],
@@ -1972,6 +2103,29 @@ body.pv-lock { overflow: hidden; }
       async salvarObras(o) {
         if (demo) { const x = ld(); x.obras = clean(o); sv(x); return; }
         await fs.collection('config').doc('obras').set(clean(o));
+      },
+      async docGet(nome) {
+        if (demo) return (ld().docs || {})[nome] || null;
+        const d = await fs.collection('config').doc(nome).get(); return d.exists ? d.data() : null;
+      },
+      async docSet(nome, obj) {
+        if (demo) { const o = ld(); o.docs = o.docs || {}; o.docs[nome] = clean(obj); sv(o); return; }
+        await fs.collection('config').doc(nome).set(clean(obj));
+      },
+      async docDel(nome) {
+        if (demo) { const o = ld(); if (o.docs) delete o.docs[nome]; sv(o); return; }
+        await fs.collection('config').doc(nome).delete();
+      },
+      async configRaw() {
+        if (demo) return ld().cfg || null;
+        const d = await fs.collection('config').doc('geral').get();
+        return d.exists ? d.data() : null;
+      },
+      async backupTabelas(set) {
+        if (demo) { const o = ld(); if (set) { o.cfgBkp = clean(set); sv(o); return null; } return o.cfgBkp || null; }
+        const r = fs.collection('config').doc('backup_tabelas');
+        if (set) { await r.set(clean(set)); return null; }
+        const d = await r.get(); return d.exists ? d.data() : null;
       },
       async salvarConfig(cfg) {
         if (demo) { const o = ld(); o.cfg = clean(cfg); sv(o); return; }
@@ -2655,12 +2809,13 @@ body.pv-lock { overflow: hidden; }
 
   /* ---------- Navegação ---------- */
   function view(v) {
-    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras', 'menus'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
+    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras', 'menus', 'deco'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
     $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === (v === 'edit' ? 'lista' : v)); });
     if (v === 'disp') renderDisp();
     if (v === 'tab') renderTab();
     if (v === 'fotos') renderFotos();
     if (v === 'menus') renderMenus();
+    if (v === 'deco') dcHome();
     if (v === 'kanban') renderKanban();
     if (v !== 'edit' && $('#edPv') && $('#edPv').classList.contains('pv-full')) telaCheia(false);
     if (v === 'forn') renderForn();
@@ -2672,6 +2827,8 @@ body.pv-lock { overflow: hidden; }
   $('#tabs').addEventListener('click', function (e) {
     const b = e.target.closest('button'); if (!b) return;
     if (dirty && !confirm('Há alterações não salvas neste orçamento. Sair mesmo assim?')) return;
+    if (typeof DC !== 'undefined' && DC.sujo && !$('#dcEdit').hidden && !confirm('Há alterações não salvas no projeto de decoração. Sair mesmo assim?')) return;
+    if (typeof DC !== 'undefined') DC.sujo = false;
     dirty = false; view(b.dataset.v); if ((b.dataset.v === 'lista' || b.dataset.v === 'kanban') && Date.now() - ultimaLista > 60000) { recarregar(); }
   });
 
@@ -3928,12 +4085,269 @@ body.pv-lock { overflow: hidden; }
   });
 
 
+  /* ======================================================================
+     Projeto de Decoração
+     ====================================================================== */
+  const DC = { lista: [], p: null, imgs: {}, aberto: {}, sujo: false, timer: null, alvo: null, sel: [] };
+  const dcId = function () { return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); };
+  const dcModelo = function (x) {
+    const sec = function (t, ap, it, im, subs) { return { id: dcId(), titulo: t, apoio: ap, itens: it, imgs: im, subs: subs || [] }; };
+    const sub = function (r, t, it, im) { return { id: dcId(), rotulo: r, titulo: t, itens: it, imgs: im }; };
+    const ev = x ? QE.evento(x) : null;
+    return {
+      id: dcId(), modelo: 'corporativo', solId: x ? x.id : '', cliente: x ? (x.empresa || '') : '', titulo: 'Projeto de Decoração',
+      evento: ev ? ev.tag : 'Evento corporativo', data: x ? (x.dataEvento || '') : '', qtd: x ? (+x.qtd || '') : '', atualizacao: QE.hoje(), logo: '',
+      paleta: [{ c: '#563D27', n: 'Marrom' }, { c: '#C2A068', n: 'Dourado' }, { c: '#4F5F3A', n: 'Verde' }, { c: '#ECE6DE', n: 'Linho' }],
+      abertura: { imgs: ['mesa', 'deco5', 'deco4'] },
+      secoes: [
+        sec('Salão Principal', 'Mesas postas com a paleta da sua marca.', ['Mesas redondas e retangulares', 'Toalhas no tom palha', 'Sousplat em palha natural', 'Guardanapos e porta guardanapo', 'Taças', 'Arranjos em flores naturais', 'Buffet de café da manhã (conforme cronograma)', 'Mesa de doces (conforme cronograma)'], ['deco1', 'mesa', 'mesadoces1']),
+        sec('Área da Piscina', 'Drinks, lounge e convivência.', ['Bar de drinks', 'Lounges', 'Mesas bistrô', 'Chopp'], ['piscina'], [
+          sub('Pergolado', 'Frontal', ['Banda', 'DJ'], ['banda', 'dj']),
+          sub('Pergolado', 'Lateral', ['Backdrop (arte fornecida pelo cliente)'], ['backdrop', 'arvore'])]),
+        sec('Área da Churrasqueira', 'Sabor e flores naturais no centro da mesa.', ['Buffet de churrasco', 'Vaso alto com flores naturais'], ['churrasco-premium', 'deco4', 'churrasco-standard'])
+      ],
+      fim: { titulo: 'Vamos criar juntos' }
+    };
+  };
+  const dcRefs = function (p) {
+    const r = [];
+    if (p.logo) r.push(p.logo);
+    ((p.abertura && p.abertura.imgs) || []).forEach(function (k) { r.push(k); });
+    (p.secoes || []).forEach(function (s) { (s.imgs || []).forEach(function (k) { r.push(k); }); (s.subs || []).forEach(function (u) { (u.imgs || []).forEach(function (k) { r.push(k); }); }); });
+    return r.filter(function (k) { return k.indexOf('u:') === 0; });
+  };
+  const dcSrc = function (k) { if (!k) return ''; if (k.indexOf('u:') === 0) return DC.imgs[k.slice(2)] || ''; return QE.foto(k); };
+  const dcData = function (d) { return d ? QE.fmtData(d) : ''; };
+  async function dcCarregaLista() {
+    try { const d = await limite(QE.db.docGet('deco_lista'), 15000); DC.lista = (d && d.projetos) || []; $('#dcMsg').textContent = ''; }
+    catch (e) { DC.lista = []; $('#dcMsg').textContent = 'Não consegui ler os projetos agora (' + (e.code || e.message) + '). Toque em “Decoração” de novo para tentar outra vez.'; }
+    dcRenderLista();
+  }
+  function dcRenderLista() {
+    $('#dcLista').innerHTML = DC.lista.length ? DC.lista.slice().sort(function (a, b) { return (b.em || 0) - (a.em || 0); }).map(function (x) {
+      return '<div class="dc-card"><div><b>' + esc(x.cliente || 'Sem cliente') + '</b><small>' + esc(x.titulo || 'Projeto de Decoração') + ' · ' + (dcData(x.data) || 'sem data') + (x.em ? ' · salvo em ' + new Date(x.em).toLocaleDateString('pt-BR') : '') + '</small></div>' +
+        '<button class="btn sm" data-dcabrir="' + x.id + '">Abrir</button><button class="btn sm ghost" data-dcdel="' + x.id + '">Excluir</button></div>';
+    }).join('') : '<div class="vazio">Nenhum projeto ainda. Toque em “Novo projeto” e escolha um cliente em “Ganho”.</div>';
+  }
+  function dcHome() { $('#dcHome').hidden = false; $('#dcEdit').hidden = true; dcCarregaLista(); }
+  $('#dcNovo').addEventListener('click', function () {
+    const g = lista.filter(function (x) { return stOf(x) === 'ganho'; }).sort(function (a, b) { return String(a.empresa || '').localeCompare(String(b.empresa || ''), 'pt-BR'); });
+    $('#dcSol').innerHTML = g.map(function (x) { return '<option value="' + x.id + '">' + esc((x.empresa || 'sem nome') + ' — ' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + (x.qtd || '?') + ' pessoas') + '</option>'; }).join('') + '<option value="">Sem proposta (preencher manualmente)</option>';
+    $('#dcNovoBox').hidden = false;
+  });
+  $('#dcCancela').addEventListener('click', function () { $('#dcNovoBox').hidden = true; });
+  $('#dcCriar').addEventListener('click', function () {
+    const x = lista.find(function (y) { return y.id === $('#dcSol').value; });
+    DC.p = dcModelo(x); DC.imgs = {}; DC.aberto = {}; DC.sujo = true; $('#dcNovoBox').hidden = true; dcAbreEd();
+  });
+  $('#dcLista').addEventListener('click', async function (e) {
+    const a = e.target.closest('[data-dcabrir]'), d = e.target.closest('[data-dcdel]');
+    if (a) {
+      try { DC.p = await limite(QE.db.docGet('deco_' + a.dataset.dcabrir), 15000); } catch (er) { return toast('Não consegui abrir o projeto agora.', true); }
+      if (!DC.p) return toast('Projeto não encontrado.', true);
+      DC.imgs = {}; DC.aberto = {}; DC.sujo = false;
+      await Promise.all(dcRefs(DC.p).map(function (k) { return limite(QE.db.docGet('decoimg_' + k.slice(2)), 20000).then(function (r) { if (r) DC.imgs[k.slice(2)] = r.data; }).catch(function () { /* imagem não carregou */ }); }));
+      dcAbreEd();
+    }
+    if (d) {
+      if (!confirm('Excluir este projeto de decoração?')) return;
+      try {
+        const p = await QE.db.docGet('deco_' + d.dataset.dcdel);
+        if (p) await Promise.all(dcRefs(p).map(function (k) { return QE.db.docDel('decoimg_' + k.slice(2)); }));
+        await QE.db.docDel('deco_' + d.dataset.dcdel);
+        const l = await QE.db.docGet('deco_lista'); const pj = ((l && l.projetos) || []).filter(function (x) { return x.id !== d.dataset.dcdel; });
+        await QE.db.docSet('deco_lista', { projetos: pj }); DC.lista = pj; dcRenderLista(); toast('Projeto excluído');
+      } catch (er) { toast('Não foi possível excluir.', true); }
+    }
+  });
+  function dcAbreEd() {
+    $('#dcHome').hidden = true; $('#dcEdit').hidden = false;
+    $('#dcTitulo').textContent = 'Decoração — ' + (DC.p.cliente || 'novo projeto');
+    dcRenderForm(); dcPreview(); window.scrollTo(0, 0);
+  }
+  $('#dcVoltar').addEventListener('click', function () { if (DC.sujo && !confirm('Há alterações não salvas. Sair mesmo assim?')) return; DC.sujo = false; dcHome(); });
+  /* ---- formulário ---- */
+  const dcI = function (k, lab, tipo, extra) { const v = getP(DC.p, k); return '<div class="f"><label>' + lab + '</label><input type="' + (tipo || 'text') + '" data-dc="' + k + '" value="' + esc(v === null || v === undefined ? '' : v) + '"' + (extra || '') + '></div>'; };
+  const dcThumbs = function (path, imgs) {
+    return '<div class="dc-ths">' + (imgs || []).map(function (k, i) {
+      return '<div class="dc-th" style="background-image:url(\'' + esc(dcSrc(k)) + '\')"><button type="button" class="x" data-dcimgdel="' + path + ':' + i + '" title="Remover">×</button><div class="mv"><button type="button" data-dcimgmv="' + path + ':' + i + ':-1">‹</button><button type="button" data-dcimgmv="' + path + ':' + i + ':1">›</button></div></div>';
+    }).join('') + '</div><div class="vacoes"><button type="button" class="btn sm" data-dclib="' + path + '">+ Do banco de imagens</button><button type="button" class="btn sm" data-dcup="' + path + '">+ Do celular / computador</button></div>';
+  };
+  const dcBloco = function (path, o, ehSub) {
+    return (ehSub ? dcI(path + '.rotulo', 'Rótulo (pequeno, acima do título)') : '') + dcI(path + '.titulo', 'Título') + (ehSub ? '' : dcI(path + '.apoio', 'Frase de apoio')) +
+      '<div class="f"><label>Itens (um por linha)</label><textarea rows="' + Math.min(10, Math.max(3, (o.itens || []).length + 1)) + '" data-dcitens="' + path + '">' + esc((o.itens || []).join('\n')) + '</textarea></div>' +
+      '<div class="f"><label>Imagens (' + (o.imgs || []).length + ')</label>' + dcThumbs(path + '.imgs', o.imgs) + '</div>';
+  };
+  function dcRenderForm() {
+    const p = DC.p, sc = window.scrollY;
+    const secs = p.secoes.map(function (s, i) {
+      const op = !!DC.aberto[s.id], path = 'secoes.' + i;
+      return '<div class="dc-sec' + (op ? ' op' : '') + '"><div class="dc-sh"><b data-dcop="' + s.id + '">' + esc(s.titulo || 'Seção') + '</b><div class="ac"><button class="btn sm ghost" data-dcmvs="' + i + ':-1">↑</button><button class="btn sm ghost" data-dcmvs="' + i + ':1">↓</button><button class="btn sm" data-dcop="' + s.id + '">' + (op ? 'Fechar' : 'Editar') + '</button><button class="btn sm ghost" data-dcrms="' + i + '">Remover</button></div></div>' +
+        (op ? '<div class="dc-sb">' + dcBloco(path, s, false) + (s.subs || []).map(function (u, j) {
+          return '<div class="dc-sub"><div class="vacoes" style="justify-content:space-between"><b>Subseção ' + (j + 1) + '</b><button class="btn sm ghost" data-dcrmsub="' + i + ':' + j + '">Remover subseção</button></div>' + dcBloco(path + '.subs.' + j, u, true) + '</div>';
+        }).join('') + '<button class="btn sm" data-dcaddsub="' + i + '">+ Adicionar subseção</button>' +
+          ((s.subs || []).length + 1 > 4 || (!(s.subs || []).length && (s.imgs || []).length > 9) ? '<p class="hint" style="color:var(--warn)">Muitos blocos ou fotos para uma página: confira a prévia.</p>' : '') + '</div>' : '') + '</div>';
+    }).join('');
+    $('#dcForm').innerHTML = '<div class="box open"><div class="in">' +
+      '<h4 class="sh first">Cliente e dados</h4>' + dcI('cliente', 'Cliente / empresa') + dcI('titulo', 'Título do projeto') +
+      '<div class="g2">' + dcI('evento', 'Tipo de evento') + dcI('qtd', 'Convidados', 'number', ' min="0"') + '</div><div class="g2">' + dcI('data', 'Data do evento', 'date') + dcI('atualizacao', 'Atualização', 'date') + '</div>' +
+      '<div class="vacoes"><button type="button" class="btn sm ghost" id="dcPuxa">Atualizar dados a partir da proposta</button></div>' +
+      '<h4 class="sh">Logo e paleta de cores</h4><div class="dc-lg"><div class="pv-l" id="dcLogoPv" style="background-image:url(\'' + esc(dcSrc(p.logo)) + '\')">' + (p.logo ? '' : 'Logo do cliente') + '</div><div><button type="button" class="btn sm" data-dcup="logo">Enviar logo</button> ' + (p.logo ? '<button type="button" class="btn sm ghost" data-dclogodel="1">Remover</button>' : '') + '</div></div>' +
+      '<div id="dcPal">' + p.paleta.map(function (c, i) { return '<div class="dc-pal"><input type="color" data-dc="paleta.' + i + '.c" value="' + esc(c.c) + '"><input type="text" data-dc="paleta.' + i + '.n" value="' + esc(c.n) + '" placeholder="Nome da cor (opcional)"><button class="btn sm ghost" data-dcrmcor="' + i + '">×</button></div>'; }).join('') + '</div>' +
+      '<div class="vacoes"><button type="button" class="btn sm" id="dcAddCor">+ Adicionar cor</button></div>' +
+      '<h4 class="sh">Imagens da página de identidade</h4>' + dcThumbs('abertura.imgs', p.abertura.imgs) +
+      '<h4 class="sh">Seções</h4><div id="dcSecs">' + secs + '</div><button type="button" class="btn" id="dcAddSec">+ Adicionar seção</button>' +
+      '<h4 class="sh">Encerramento</h4>' + dcI('fim.titulo', 'Frase final') + '<p class="hint">Telefone, e-mail, site e Instagram da Quinta entram automaticamente.</p>' +
+      '</div></div>';
+    window.scrollTo(0, sc);
+  }
+  function dcMarca() { DC.sujo = true; clearTimeout(DC.timer); DC.timer = setTimeout(dcPreview, 250); }
+  $('#dcForm').addEventListener('input', function (e) {
+    const t = e.target;
+    if (t.dataset.dc !== undefined) { setP(DC.p, t.dataset.dc, t.type === 'number' ? (t.value === '' ? '' : +t.value) : t.value); if (t.dataset.dc === 'cliente') $('#dcTitulo').textContent = 'Decoração — ' + (t.value || 'novo projeto'); dcMarca(); }
+    if (t.dataset.dcitens !== undefined) { setP(DC.p, t.dataset.dcitens + '.itens', t.value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean)); dcMarca(); }
+  });
+  function dcAdd(path, ref) { const arr = getP(DC.p, path); if (arr) arr.push(ref); }
+  $('#dcForm').addEventListener('click', function (e) {
+    const t = e.target.closest('button, b'); if (!t) return; const p = DC.p, ds = t.dataset;
+    if (ds.dcop) { DC.aberto[ds.dcop] = !DC.aberto[ds.dcop]; dcRenderForm(); return; }
+    if (ds.dcmvs) { const q = ds.dcmvs.split(':').map(Number), j = q[0] + q[1]; if (j < 0 || j >= p.secoes.length) return; const o = p.secoes.splice(q[0], 1)[0]; p.secoes.splice(j, 0, o); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcrms) { if (!confirm('Remover esta seção?')) return; p.secoes.splice(+ds.dcrms, 1); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcrmsub) { const q = ds.dcrmsub.split(':').map(Number); if (!confirm('Remover esta subseção?')) return; p.secoes[q[0]].subs.splice(q[1], 1); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcaddsub) { const s = p.secoes[+ds.dcaddsub]; s.subs = s.subs || []; s.subs.push({ id: dcId(), rotulo: 'Ambiente', titulo: 'Novo bloco', itens: [], imgs: [] }); dcRenderForm(); dcMarca(); return; }
+    if (t.id === 'dcAddSec') { const s = { id: dcId(), titulo: 'Nova seção', apoio: '', itens: [], imgs: [], subs: [] }; p.secoes.push(s); DC.aberto[s.id] = true; dcRenderForm(); dcMarca(); return; }
+    if (t.id === 'dcAddCor') { if (p.paleta.length >= 8) return toast('No máximo 8 cores.', true); p.paleta.push({ c: '#C2A068', n: '' }); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcrmcor) { p.paleta.splice(+ds.dcrmcor, 1); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcimgdel) { const q = ds.dcimgdel.split(':'), arr = getP(p, q[0]); arr.splice(+q[1], 1); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcimgmv) { const q = ds.dcimgmv.split(':'), arr = getP(p, q[0]), i = +q[1], j = i + +q[2]; if (j < 0 || j >= arr.length) return; const o = arr.splice(i, 1)[0]; arr.splice(j, 0, o); dcRenderForm(); dcMarca(); return; }
+    if (ds.dclogodel) { p.logo = ''; dcRenderForm(); dcMarca(); return; }
+    if (ds.dclib) { DC.alvo = ds.dclib; dcLibAbre(); return; }
+    if (ds.dcup) { DC.alvo = ds.dcup; $('#dcFile').multiple = ds.dcup !== 'logo'; $('#dcFile').click(); return; }
+    if (t.id === 'dcPuxa') {
+      const x = lista.find(function (y) { return y.id === p.solId; }); if (!x) return toast('Este projeto não está ligado a uma proposta.', true);
+      p.cliente = x.empresa || p.cliente; p.data = x.dataEvento || p.data; p.qtd = +x.qtd || p.qtd; p.evento = QE.evento(x).tag; dcRenderForm(); dcMarca(); toast('Dados atualizados a partir da proposta.');
+    }
+  });
+  /* ---- banco de imagens e envio do celular ---- */
+  function dcLibAbre() {
+    DC.sel = [];
+    const gr = []; QE.FOTOS_LISTA.forEach(function (f) { if (gr.indexOf(f[2]) < 0) gr.push(f[2]); });
+    $('#dcLibF').innerHTML = '<option value="">Todas as fotos</option>' + gr.map(function (g) { return '<option>' + esc(g) + '</option>'; }).join('');
+    dcLibDesenha(); $('#dcLibModal').hidden = false; document.body.classList.add('pv-lock');
+  }
+  function dcLibDesenha() {
+    const f = $('#dcLibF').value;
+    $('#dcLibG').innerHTML = QE.FOTOS_LISTA.filter(function (x) { return !f || x[2] === f; }).map(function (x) {
+      return '<button type="button" class="dc-lib' + (DC.sel.indexOf(x[0]) >= 0 ? ' on' : '') + '" data-k="' + x[0] + '" style="background-image:url(\'' + esc(QE.foto(x[0])) + '\')"><span>' + esc(x[1].replace(/^Cardápio:\s*/, '')) + '</span></button>';
+    }).join('');
+  }
+  $('#dcLibF').addEventListener('change', dcLibDesenha);
+  $('#dcLibG').addEventListener('click', function (e) { const b = e.target.closest('[data-k]'); if (!b) return; const i = DC.sel.indexOf(b.dataset.k); if (i >= 0) DC.sel.splice(i, 1); else DC.sel.push(b.dataset.k); b.classList.toggle('on'); });
+  function dcLibFecha() { $('#dcLibModal').hidden = true; document.body.classList.remove('pv-lock'); }
+  $('#dcLibX').addEventListener('click', dcLibFecha);
+  $('#dcLibOk').addEventListener('click', function () {
+    if (DC.alvo === 'logo') { if (DC.sel[0]) { DC.p.logo = DC.sel[0]; } } else DC.sel.forEach(function (k) { dcAdd(DC.alvo, k); });
+    dcLibFecha(); dcRenderForm(); dcMarca();
+  });
+  function dcReduz(file, maxW, logo) {
+    return new Promise(function (res, rej) {
+      const url = URL.createObjectURL(file), im = new Image();
+      im.onerror = function () { URL.revokeObjectURL(url); rej(new Error('imagem inválida')); };
+      im.onload = function () {
+        URL.revokeObjectURL(url);
+        let w = maxW, out = '';
+        for (let t = 0; t < 6; t++) {
+          const k = Math.min(1, w / Math.max(im.width, im.height)), cv = document.createElement('canvas'); cv.width = Math.round(im.width * k); cv.height = Math.round(im.height * k);
+          const cx = cv.getContext('2d');
+          if (logo && file.type === 'image/png') { cx.drawImage(im, 0, 0, cv.width, cv.height); out = cv.toDataURL('image/png'); if (out.length < 480000) return res(out); }
+          cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0, cv.width, cv.height);
+          out = cv.toDataURL('image/jpeg', 0.8); if (out.length < 480000) return res(out);
+          w = Math.round(w * 0.8);
+        }
+        rej(new Error('imagem muito grande'));
+      };
+      im.src = url;
+    });
+  }
+  $('#dcFile').addEventListener('change', async function () {
+    const fs = Array.prototype.slice.call(this.files || []); this.value = ''; if (!fs.length) return;
+    toast('Enviando imagem…');
+    try {
+      for (let i = 0; i < fs.length; i++) {
+        const logo = DC.alvo === 'logo', data = await dcReduz(fs[i], logo ? 700 : 1400, logo), id = dcId();
+        await QE.db.docSet('decoimg_' + id, { data: data }); DC.imgs[id] = data;
+        if (logo) DC.p.logo = 'u:' + id; else dcAdd(DC.alvo, 'u:' + id);
+      }
+      dcRenderForm(); dcMarca(); toast('Imagem adicionada');
+    } catch (e) { console.error(e); toast('Não consegui enviar a imagem (' + (e.message || e) + ').', true); }
+  });
+  /* ---- páginas ---- */
+  function dcFotosHTML(imgs, bloco) {
+    const L = (imgs || []).filter(function (k) { return dcSrc(k); }).slice(0, 9); if (!L.length) return '';
+    return '<div class="dc-fotos n' + L.length + (bloco ? ' b' : '') + '">' + L.map(function (k, i) {
+      return '<div class="dc-ph' + (!bloco && i === 0 && L.length <= 3 ? ' arch' : '') + '" style="background-image:url(\'' + dcSrc(k) + '\')"></div>';
+    }).join('') + '</div>';
+  }
+  const dcLista = function (it, c2) { return it && it.length ? '<ul class="dc-bl' + (c2 ? ' c2' : '') + '">' + it.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : ''; };
+  function dcHTML(p) {
+    const ct = QE.CONTATOS, dots = '<span class="dc-dots">' + p.paleta.map(function (c) { return '<i style="background:' + esc(c.c) + '"></i>'; }).join('') + '</span>';
+    let n = 1;
+    const foot = function () { n++; return '<div class="dc-ft">' + dots + '<span>QUINTA DOS ESQUILOS · ESPAÇO DE EVENTOS</span><b>' + String(n).padStart(2, '0') + '</b></div>'; };
+    const head = function (t) { return '<div class="dc-hd"><img src="logo-marrom.png" alt=""><span>' + esc(t) + '</span></div>'; };
+    const ano = (p.data || p.atualizacao || QE.hoje()).slice(0, 4);
+    let h = '<section class="pg dcp dc-cover" style="background-image:url(' + QE.foto('capa') + ')"><div class="dc-cv"><p class="e">PROJETO DE DECORAÇÃO · ' + esc(ano) + '</p><h1>' + esc(p.titulo) + '</h1><p class="c">' + esc(p.cliente) + (p.qtd ? ' — ' + esc(p.qtd) + ' convidados' : '') + (p.data ? ' · ' + dcData(p.data) : '') + '</p></div></section>';
+    const lg = dcSrc(p.logo);
+    h += '<section class="pg dcp">' + head('Identidade do evento') + '<div class="dc-body"><div><div class="dc-eb">Evento</div><div class="dc-rule"></div><h2 class="dc-t">Identidade<br>do evento</h2></div>' +
+      '<div class="dc-id"><div class="dc-logo"><small>LOGO DO CLIENTE</small>' + (lg ? '<div class="img" style="background-image:url(\'' + lg + '\')"></div>' : '<div class="wm">' + esc(p.cliente || 'Cliente') + '</div>') + '</div>' +
+      '<div class="dc-dados"><div><span>Cliente</span><b>' + esc(p.cliente) + '</b></div><div><span>Evento</span><b>' + esc(p.evento) + '</b></div><div><span>Data</span><b>' + (dcData(p.data) || '—') + '</b></div><div><span>Convidados</span><b>' + (p.qtd ? esc(p.qtd) + ' pessoas' : '—') + '</b></div></div></div>' +
+      '<div><div class="dc-eb">Paleta de cores</div><div class="dc-rule"></div><div class="dc-sw">' + p.paleta.map(function (c) { return '<div><i style="background:' + esc(c.c) + '"></i>' + (c.n ? '<b>' + esc(c.n) + '</b>' : '') + '<span>' + esc(String(c.c).toUpperCase()) + '</span></div>'; }).join('') + '</div></div>' +
+      '<div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end">' + (function () { const f = dcFotosHTML(p.abertura.imgs, true); return f ? f.replace('class="dc-fotos', 'style="height:210px;flex:none" class="dc-fotos') : ''; })() + '</div></div>' + foot() + '</section>';
+    p.secoes.forEach(function (s, i) {
+      const subs = s.subs || [];
+      let corpo;
+      if (!subs.length) {
+        corpo = '<div><div class="dc-eb">Ambiente</div><div class="dc-rule"></div><h2 class="dc-t">' + esc(s.titulo) + '</h2>' + (s.apoio ? '<p class="dc-ap">' + esc(s.apoio) + '</p>' : '') + dcLista(s.itens, true) + '</div>' + dcFotosHTML(s.imgs, false);
+      } else {
+        const blk = function (eb, tit, ap, it, im, main) {
+          return '<div class="dc-blk"><div class="tx"><div class="dc-eb">' + esc(eb) + '</div><div class="dc-rule" style="margin:10px 0"></div>' + (main ? '<h2 class="dc-t">' + esc(tit) + '</h2>' : '<h3 class="dc-t2">' + esc(tit) + '</h3>') + (ap ? '<p class="dc-ap" style="font-size:15px;margin:6px 0 10px">' + esc(ap) + '</p>' : '') + dcLista(it) + '</div>' + (dcFotosHTML(im, true) || '<div></div>') + '</div>';
+        };
+        corpo = blk('Ambiente', s.titulo, s.apoio, s.itens, s.imgs, true) + subs.map(function (u) { return blk(u.rotulo || 'Ambiente', u.titulo, '', u.itens, u.imgs, false); }).join('');
+      }
+      h += '<section class="pg dcp">' + head('Ambiente ' + String(i + 1).padStart(2, '0')) + '<div class="dc-body">' + corpo + '</div>' + foot() + '</section>';
+    });
+    h += '<section class="pg dcp dc-fim"><div class="c"><img src="logo-dourado.png" alt=""><h2>' + esc((p.fim && p.fim.titulo) || '') + '</h2><div class="l"></div><div class="ct"><b>WHATSAPP</b>  ' + esc(ct.telefone) + '<br><b>E-MAIL</b>  ' + esc(ct.email) + '<br><b>SITE</b>  ' + esc(ct.site) + '<br><b>INSTAGRAM</b>  ' + esc(ct.insta) + '</div></div></section>';
+    return h;
+  }
+  function dcPreview() {
+    const pv = $('#dcPvIn'); if (!pv || !DC.p) return;
+    pv.style.transform = 'none'; pv.style.marginBottom = '0'; pv.innerHTML = dcHTML(DC.p);
+    const w = $('#dcPv').clientWidth - 20, k = w > 0 ? Math.min(1, w / 794) : 1;
+    pv.style.transform = k < 1 ? 'scale(' + k + ')' : 'none'; pv.style.marginBottom = k < 1 ? (-(pv.offsetHeight * (1 - k))) + 'px' : '0';
+  }
+  window.addEventListener('resize', function () { if (!$('#v-deco').hidden && !$('#dcEdit').hidden) dcPreview(); });
+  async function dcSalva(silencioso) {
+    const p = DC.p; p.em = Date.now();
+    try {
+      await QE.db.docSet('deco_' + p.id, p);
+      const l = await QE.db.docGet('deco_lista'), pj = ((l && l.projetos) || []).filter(function (x) { return x.id !== p.id; });
+      pj.push({ id: p.id, cliente: p.cliente, titulo: p.titulo, data: p.data, em: p.em }); await QE.db.docSet('deco_lista', { projetos: pj });
+      DC.sujo = false; if (!silencioso) toast('Projeto salvo'); return true;
+    } catch (e) { console.error(e); toast('Não foi possível salvar.', true); return false; }
+  }
+  $('#dcSalvar').addEventListener('click', function () { dcSalva(); });
+  $('#dcPdf').addEventListener('click', async function () {
+    const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
+    try { await dcSalva(true); const blob = await gerarPdfBlob(null, dcHTML(DC.p)); baixarBlob(blob, 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente')); toast('PDF baixado'); }
+    catch (e) { console.error(e); toast('Não consegui gerar o PDF (' + (e && e.message || e) + ').', true); }
+    finally { btn.disabled = false; btn.textContent = txt; }
+  });
+
   /* ---------- Menus (para mostrar ao cliente em visita) ---------- */
   let mnLista = [], mnI = 0;
   const mnSrc = function (k) { return QE.FOTOS[k] ? QE.FOTOS[k] : k + '.jpg'; };
   function renderMenus() {
     const grupos = [], por = {};
-    mnLista = QE.FOTOS_LISTA.filter(function (f) { return /(^|-)menu-/.test(f[0]); });
+    mnLista = QE.FOTOS_LISTA.filter(function (f) { return /^menu-/.test(f[0]); });
     mnLista.forEach(function (f) { if (!por[f[2]]) { por[f[2]] = []; grupos.push(f[2]); } por[f[2]].push(f); });
     $('#menusGrid').innerHTML = grupos.map(function (g) {
       return '<h3 class="fg-h">' + esc(g) + '</h3><div class="mng">' + por[g].map(function (f) {
@@ -4113,7 +4527,37 @@ body.pv-lock { overflow: hidden; }
   /* ---------- Tabelas e preços ---------- */
   let td = null;
   const tabDe = function (k) { return k.indexOf('ev:') === 0 ? td.tabelasEvento[k.slice(3)] : td[k]; };
-  function renderTab() { td = clone(cfg); drawTab(); }
+  let tabOk = false;
+  function avisoTab(m) { const el = $('#tabAviso'); el.textContent = m || ''; el.hidden = !m; }
+  function resgateTab() {
+    const ops = lista.filter(function (x) { return x.orc && x.orc.cfgSnap && x.orc.cfgSnap.tabelasEvento; }).sort(function (a, b) { return String(b.orc.cfgEm || '') < String(a.orc.cfgEm || '') ? -1 : 1; });
+    $('#tabResgate').innerHTML = '<h3>Recuperar tabelas</h3><p class="hint" style="margin:0">Cada proposta guarda uma cópia das tabelas do dia em que foi criada. Escolha uma proposta feita depois da sua última atualização de tabelas: ela é carregada na tela abaixo (nada é gravado até você clicar em “Salvar tudo”).</p>' +
+      '<div class="g2"><div class="f"><label>Tabelas guardadas em uma proposta</label><select id="tabResSel">' + (ops.length ? ops.map(function (x) { return '<option value="' + x.id + '">' + esc((x.empresa || 'sem nome') + ' — ' + (QE.fmtData(x.orc.cfgEm) || 'sem data')) + '</option>'; }).join('') : '<option value="">Nenhuma proposta com cópia</option>') + '</select></div>' +
+      '<div class="f" style="align-self:end"><button type="button" class="btn" id="tabResGo"' + (ops.length ? '' : ' disabled') + '>Carregar essas tabelas</button> <button type="button" class="btn ghost" id="tabResBk">Voltar à versão anterior ao último salvamento</button></div></div>';
+  }
+  function renderTab() {
+    td = clone(cfg); tabOk = cfgOk; drawTab(); resgateTab();
+    avisoTab(cfgOk ? '' : 'Atualizando as tabelas direto do servidor…');
+    const antes = JSON.stringify(td);
+    limite(QE.db.config(), 12000).then(function (v) {
+      cfg = v; cfgOk = true; tabOk = true;
+      if (JSON.stringify(td) === antes && !$('#v-tab').hidden) { td = clone(cfg); drawTab(); }
+      avisoTab('');
+    }).catch(function () { avisoTab('Não consegui ler as tabelas do servidor agora, então o botão Salvar está bloqueado para não gravar por cima do que está lá. Toque em “Tabelas e preços” de novo para tentar outra vez.'); });
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.id === 'tabResGo') {
+      const x = lista.find(function (y) { return y.id === $('#tabResSel').value; }); if (!x) return;
+      td = QE.mergeConfig(Object.assign({}, clone(td), clone(x.orc.cfgSnap))); drawTab();
+      toast('Tabelas da proposta carregadas. Confira e clique em “Salvar tudo”.');
+    }
+    if (e.target.id === 'tabResBk') {
+      QE.db.backupTabelas().then(function (b) {
+        if (!b || !b.data) return toast('Ainda não há versão anterior guardada.', true);
+        td = QE.mergeConfig(clone(b.data)); drawTab(); toast('Versão anterior carregada. Confira e clique em “Salvar tudo”.');
+      }).catch(function () { toast('Não consegui ler a cópia de segurança.', true); });
+    }
+  });
   const numIn = function (attrs, v, ph) { return '<input type="number" step="any" ' + attrs + ' value="' + (v === null || v === undefined ? '' : v) + '"' + (ph !== undefined ? ' placeholder="' + ph + '"' : '') + '>'; };
   function drawTab() {
     let h = '<div class="tbox"><h3>Regras gerais</h3><div class="g3">' +
@@ -4177,7 +4621,12 @@ body.pv-lock { overflow: hidden; }
     delete td.tabelaSocial;
     td.chopp = td.chopp.filter(ok).sort(function (a, b) { return a.q - b.q; });
     if (!td.tabela.length || !td.chopp.length || Object.keys(td.tabelasEvento).some(function (k) { return !td.tabelasEvento[k].length; })) return toast('As tabelas precisam ter pelo menos uma faixa.', true);
-    try { await QE.db.salvarConfig(td); cfg = QE.mergeConfig(td); toast('Tabelas salvas. Valem para os próximos cálculos.'); drawTab(); } catch (e) { toast('Não foi possível salvar.', true); }
+    if (!tabOk) return toast('Ainda não li as tabelas do servidor; salvar agora poderia apagar o que está lá. Aguarde um instante.', true);
+    try {
+      /* cópia de segurança do que está no servidor antes de gravar por cima */
+      const atual = await limite(QE.db.configRaw(), 15000);
+      if (atual) await QE.db.backupTabelas({ em: Date.now(), data: atual });
+      await QE.db.salvarConfig(td); cfg = QE.mergeConfig(td); toast('Tabelas salvas. Valem para os próximos cálculos.'); drawTab(); } catch (e) { toast('Não foi possível salvar.', true); }
   });
 
   /* ======================================================================
