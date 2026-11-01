@@ -401,6 +401,18 @@ body:not(.v-geral) .n-geral, body:not(.v-corp) .n-corp, body:not(.v-cas) .n-cas,
 img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
 
 </style>
+<!-- Google Ads: tag de conversão (conta Quinta dos Esquilos). Para desativar, troque o id por AW-XXXXXXXXX. -->
+<script>
+  window.QE_ADS = { id: 'AW-670034740', label: '6NK9CNOrhbAdELTWv78C' };
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  if (QE_ADS.id.indexOf('XXXX') === -1) {
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + QE_ADS.id;
+    document.head.appendChild(s);
+    gtag('js', new Date()); gtag('config', QE_ADS.id);
+  }
+</script>
 </head>
 <body class="v-geral">
 
@@ -1027,7 +1039,7 @@ img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
   <section id="w-estadia" class="sec sec-dark">
     <div class="wrap">
       <h2>Estadia</h2>
-      <p class="intro">Conforto e praticidade para você e seus convidados desfrutarem cada momento com mais tranquilidade. Acomoda até 15 pessoas.</p>
+      <p class="intro">Conforto e praticidade para você e seus convidados desfrutarem cada momento com mais tranquilidade. Acomoda até 16 pessoas.</p>
       <div class="feat">
         <div><h3>Acomodações confortáveis</h3><p>Quartos equipados para receber você e seus convidados.</p></div>
         <div><h3>Ideal para grupos</h3><p>Estrutura que atende padrinhos, familiares e convidados.</p></div>
@@ -1267,7 +1279,7 @@ img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
   <section id="an-estadia" class="sec sec-dark">
     <div class="wrap">
       <h2>Estadia</h2>
-      <p class="intro">Conforto e praticidade para você e seus convidados desfrutarem cada momento com mais tranquilidade. Acomoda até 15 pessoas.</p>
+      <p class="intro">Conforto e praticidade para você e seus convidados desfrutarem cada momento com mais tranquilidade. Acomoda até 16 pessoas.</p>
       <div class="feat">
         <div><h3>Acomodações confortáveis</h3><p>Quartos equipados para receber você e seus convidados.</p></div>
         <div><h3>Ideal para grupos</h3><p>Estrutura que atende padrinhos, familiares e convidados.</p></div>
@@ -1508,7 +1520,7 @@ img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
   <section id="ch-estadia" class="sec sec-dark">
     <div class="wrap">
       <h2>Estadia</h2>
-      <p class="intro">Conforto e praticidade para você e seus convidados desfrutarem cada momento com mais tranquilidade. Acomoda até 15 pessoas.</p>
+      <p class="intro">Conforto e praticidade para você e seus convidados desfrutarem cada momento com mais tranquilidade. Acomoda até 16 pessoas.</p>
       <div class="feat">
         <div><h3>Acomodações confortáveis</h3><p>Quartos equipados para receber você e seus convidados.</p></div>
         <div><h3>Ideal para grupos</h3><p>Estrutura que atende padrinhos, familiares e convidados.</p></div>
@@ -1660,7 +1672,7 @@ img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
 
       <fieldset id="fsEstadia" hidden>
         <legend>Estadia</legend>
-        <p class="opc" style="margin:-6px 0 10px">Hospedagem pós evento até 15 pessoas.</p>
+        <p class="opc" style="margin:-6px 0 10px">Hospedagem pós evento até 16 pessoas.</p>
         <div class="opt-grid">
           <label class="opt"><input type="radio" name="estadia" value="sim"><span>Sim, quero incluir</span></label>
           <label class="opt"><input type="radio" name="estadia" value="nao"><span>Não preciso</span></label>
@@ -1866,7 +1878,7 @@ img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
       { id: 'm3', nome: 'Bolha de fumaça', preco: 0, un: 'fixo' },
       { id: 'm4', nome: 'TV totem', preco: 0, un: 'fixo', so: 'corp' },
       { id: 'm5', nome: 'Boias decorativas de piscina', preco: 0, un: 'fixo' } ] },
-    { g: 'EST', titulo: 'Estadia', so: 'social', info: ['Período: sábado (dia do evento) até domingo pós evento', 'Check-in: a partir das 8h00 · Check-out: até 17h00 do dia seguinte', 'Quantidade de pessoas: até 15 pessoas', 'Observação: se necessário, é possível estender a estadia para dias posteriores'], linhas: [
+    { g: 'EST', titulo: 'Estadia', so: 'social', info: ['Período: sábado (dia do evento) até domingo pós evento', 'Check-in: a partir das 8h00 · Check-out: até 17h00 do dia seguinte', 'Quantidade de pessoas: até 16 pessoas', 'Observação: se necessário, é possível estender a estadia para dias posteriores'], linhas: [
       { id: 'est1', nome: 'Estadia', preco: 3100, un: 'fixo' } ] },
     { g: 'BUQ', titulo: 'Buquê', so: 'casamento', cols: true, linhas: [
       { id: 'buq1', nome: 'Buquê personalizado', preco: 495, un: 'fixo' },
@@ -2805,6 +2817,7 @@ img[src="cha-premium-convidados.jpg"] { object-position: center 78%; }
     btn.disabled = true; btn.textContent = 'Enviando…'; er.hidden = true;
     try {
       await QE.db.enviar(pedido);
+      try { if (window.QE_ADS && QE_ADS.id.indexOf('XXXX') === -1) gtag('event', 'conversion', { send_to: QE_ADS.id + '/' + QE_ADS.label }); } catch (e) {} /* conversão Google Ads: pedido enviado */
       $('#okTxt').textContent = 'Recebemos o pedido da ' + pedido.empresa + ' para ' + QE.fmtData(pedido.dataEvento) + ' (' + pedido.qtd + ' pessoas).';
       const msg = 'Olá! Acabei de enviar um pedido de orçamento pelo site. ' + (function () { const e = QE.evento(pedido); return e.id === 'casamento' ? 'Noivos' : e.social ? 'Nome' : 'Empresa'; })() + ': ' + pedido.empresa + ', data: ' + QE.fmtData(pedido.dataEvento) + ', ' + pedido.qtd + ' pessoas.';
       $('#okWa').href = 'https://wa.me/' + QE.CONTATOS.rodrigoWa + '?text=' + encodeURIComponent(msg);
