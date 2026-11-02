@@ -843,7 +843,7 @@ body.pv-lock { overflow: hidden; }
 .dc-sw div { flex: 1; text-align: center; min-width: 0; }
 .dc-sw i { display: block; width: 100%; aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .12); max-width: 110px; margin: 0 auto; }
 .dc-sw b { display: block; font-weight: 500; font-size: 11px; margin-top: 10px; color: var(--dcbark); }
-.dc-sw span { font-size: 9.5px; letter-spacing: .16em; color: var(--dctaupe); }
+.dc-sw span { display: block; margin-top: 10px; font-size: 9.5px; letter-spacing: .16em; color: var(--dctaupe); }
 .dc-fim { background: linear-gradient(135deg, #563d27, #25130b); color: #eadfce; text-align: center; }
 .dc-fim .c { position: absolute; left: 0; right: 0; top: 250px; }
 .dc-fim img { height: 130px; }
@@ -885,6 +885,12 @@ body.pv-lock { overflow: hidden; }
 .dcp .dc-blk p.dc-ap { margin: 10px 0 14px; }
 .dc-body { gap: 30px; }
 .dc-libtop { position: sticky; top: 0; z-index: 3; background: #fff; padding: 8px 0; margin: 0 0 6px; border-bottom: 1px solid var(--line); }
+
+/* menus: botão de enviar */
+.mnw { display: flex; flex-direction: column; gap: 6px; }
+.mnw[hidden] { display: none; }
+.mns { width: 100%; font-size: .85rem; padding: 6px 8px; }
+.mns2 { position: absolute; z-index: 2; top: 20px; right: 78px; opacity: .92; }
 </style>
 </head>
 <body>
@@ -986,6 +992,7 @@ body.pv-lock { overflow: hidden; }
 
     <div id="mnViewer" class="mnv" hidden>
       <button type="button" id="mnX" class="mnb mnx" aria-label="Fechar">×</button>
+      <button type="button" id="mnS" class="btn pri mns2">Enviar ao cliente</button>
       <button type="button" id="mnP" class="mnb mnp" aria-label="Anterior">‹</button>
       <button type="button" id="mnN" class="mnb mnn" aria-label="Próximo">›</button>
       <div class="mnt" id="mnT"></div>
@@ -995,6 +1002,7 @@ body.pv-lock { overflow: hidden; }
       <div class="vbox wbox" role="dialog" aria-labelledby="waTit">
         <h3 id="waTit">Enviar orçamento</h3>
         <p class="hint" id="waArq"></p>
+        <div class="f" id="waCliWrap" hidden><label for="waCli">Cliente (opcional: preenche WhatsApp e e-mail)</label><select id="waCli"></select></div>
 
         <section class="wsec">
           <h4>WhatsApp</h4>
@@ -1399,7 +1407,10 @@ body.pv-lock { overflow: hidden; }
     return ordem.map(function (id, i) {
       const g = QE.CATALOGO.find(function (x) { return x.g === id; });
       if (g.so === 'casamento' && !ev.casamento) return null;
-      return Object.assign({}, g, { letra: String.fromCharCode(65 + i), linhas: g.linhas.filter(function (l) { return !(l.so === 'corp' && ev.social); }).map(function (l) { return (ev.casamento && l.id === 'm5') ? Object.assign({}, l, { nome: 'Arranjos florais flutuantes na piscina' }) : l; }) });
+      const gerLeg = !!(req && req.orc && req.orc.gerV === 1);   // orçamento já avançado quando o texto/valor do gerador mudou: mantém o antigo
+      const gg = Object.assign({}, g, { letra: String.fromCharCode(65 + i), linhas: g.linhas.filter(function (l) { return !(l.so === 'corp' && ev.social); }).map(function (l) { return (ev.casamento && l.id === 'm5') ? Object.assign({}, l, { nome: 'Arranjos florais flutuantes na piscina' }) : (gerLeg && l.id === 'k1') ? Object.assign({}, l, { nome: 'Gerador externo stand by', preco: 3000 }) : l; }) });
+      if (gerLeg && g.g === 'K') delete gg.info;
+      return gg;
     }).filter(Boolean).map(function (g, i) { g.letra = String.fromCharCode(65 + i); return g; });
   };
 
@@ -1652,7 +1663,7 @@ body.pv-lock { overflow: hidden; }
     return {
       data: QE.hoje(), validade: cfg.validade, bar: 'prata', limite7: true,
       pacote: null, cafe: null, doces: null, b50: null, b30: null, parcelas: null,
-      sel: sel, preco: {}, cron: {},
+      sel: sel, preco: {}, cron: {}, gerV: 2,
       cfgSnap: QE.snapCfg(cfg), cfgEm: QE.hoje()
     };
   };
@@ -2765,10 +2776,15 @@ body.pv-lock { overflow: hidden; }
     /* mostra na hora o que ficou guardado neste aparelho enquanto o servidor responde */
     const cl = !QE.db.demo && lsGet('qe_cache_lista');
     if (cl && cl.length) { lista = cl; view('lista'); renderLista(); const bn0 = $('#demo'); bn0.textContent = 'Mostrando a última lista salva neste aparelho. Atualizando…'; bn0.hidden = false; }
-    try { await carregar(); if (!QE.db.demo) $('#demo').hidden = true; } catch (e) {
+    let listaOk = false;
+    try { await carregar(); listaOk = true; if (!QE.db.demo) $('#demo').hidden = true; } catch (e) {
       console.error(e);
       const bn = $('#demo'); bn.textContent = 'Entrou, mas não consegui ler o Firestore (' + e.message + '). Confira se o banco foi criado em Firestore Database e se as regras do firestore.rules foram publicadas.'; bn.hidden = false;
     }
+    /* gerador: só propostas ainda Pendentes (e as novas) usam o texto/valor novo; as demais mantêm o antigo */
+    if (listaOk) lista.forEach(function (x) {
+      if (x.orc && x.orc.gerV === undefined) { x.orc.gerV = stOf(x) === 'novo' ? 2 : 1; QE.db.salvar(x.id, { orc: x.orc }).catch(function () { /* tenta de novo na próxima abertura */ }); }
+    });
     /* orçamentos salvos antes desta regra: congela agora, com as tabelas de hoje */
     if (cfgOk) lista.forEach(function (x) {
       if (x.orc && !x.orc.cfgSnap) { x.orc.cfgSnap = QE.snapCfg(cfg); x.orc.cfgEm = QE.hoje(); QE.db.salvar(x.id, { orc: x.orc }).catch(function () { /* tenta de novo na próxima abertura */ }); }
@@ -3960,7 +3976,7 @@ body.pv-lock { overflow: hidden; }
     } finally { host.remove(); ov.remove(); }
   }
   function baixarBlob(blob, nome) {
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome + '.pdf'; document.body.appendChild(a); a.click();
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome + '.' + ((blob.type || '').indexOf('image/') === 0 ? blob.type.split('/')[1].replace('jpeg', 'jpg') : 'pdf'); document.body.appendChild(a); a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
   }
   async function registrarVersao() {
@@ -3994,20 +4010,23 @@ body.pv-lock { overflow: hidden; }
   $('#imprimir').addEventListener('click', function () { imprimir(true); });
 
   /* ---------- Enviar orçamento pelo WhatsApp ---------- */
-  const WA = { blob: null, nomeArq: '', base: '', modo: 'orc', registrado: false };
+  const WA = { menuNome: '', blob: null, nomeArq: '', base: '', modo: 'orc', registrado: false };
   const waNumero = function (t) { let d = String(t || '').replace(/\D/g, ''); if (d.length >= 10 && d.length <= 11) d = '55' + d; return d; };
   const waDeco = function () { return WA.modo === 'deco' && typeof DC !== 'undefined' && DC.p; };
-  const waSol = function () { return waDeco() ? (lista.find(function (y) { return y.id === DC.p.solId; }) || {}) : cur; };
+  const waMenu = function () { return WA.modo === 'menu'; };
+  const waSol = function () { if (waMenu()) { const cs = $('#waCli'); return (cs && cs.value && lista.find(function (y) { return y.id === cs.value; })) || {}; } return waDeco() ? (lista.find(function (y) { return y.id === DC.p.solId; }) || {}) : cur; };
   const waMsg = function () {
+    if (waMenu()) { const nome = String(waSol().contato || waSol().empresa || '').trim().split(/\s+/)[0] || ''; return 'Olá' + (nome ? ', ' + nome : '') + '! Segue nosso menu ' + WA.menuNome + '. Qualquer dúvida, é só chamar!'; }
     if (waDeco()) { const nome = String((waSol().contato || DC.p.cliente || '')).trim().split(/\s+/)[0] || '', d = QE.fmtData(DC.p.data); return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o projeto de decoração do seu evento' + (d ? ' do dia ' + d : '') + '. Dê uma olhada com calma e me diga o que achou ou se quer ajustar algo. Qualquer dúvida, é só chamar!'; }
     const ev = QE.evento(cur), nome = String(cur.contato || cur.empresa || '').trim().split(/\s+/)[0] || '', data = QE.fmtData(cur.dataEvento);
     if (WA.modo === 'ct') return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o contrato do seu evento (' + ev.titulo + ')' + (data ? ' para o dia ' + data : '') + '. Por favor, confira os dados e, estando tudo certo, nos devolva assinado. Qualquer dúvida, é só chamar!';
     return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue o orçamento do seu evento (' + ev.titulo + ')' + (data ? ' para o dia ' + data : '') + '. Qualquer dúvida, é só chamar!';
   };
-  const waArquivo = function () { return new File([WA.blob], WA.nomeArq, { type: 'application/pdf' }); };
+  const waArquivo = function () { return new File([WA.blob], WA.nomeArq, { type: WA.blob.type || 'application/pdf' }); };
   const emOk = function (t) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(t || '').trim()); };
-  const emAssunto = function () { if (waDeco()) return 'Projeto de Decoração Quinta dos Esquilos - ' + DC.p.cliente; const ev = QE.evento(cur); return (WA.modo === 'ct' ? 'Contrato' : 'Orçamento') + ' Quinta dos Esquilos - ' + ev.titulo + (cur.empresa ? ' - ' + cur.empresa : ''); };
+  const emAssunto = function () { if (waMenu()) return 'Menu Quinta dos Esquilos - ' + WA.menuNome; if (waDeco()) return 'Projeto de Decoração Quinta dos Esquilos - ' + DC.p.cliente; const ev = QE.evento(cur); return (WA.modo === 'ct' ? 'Contrato' : 'Orçamento') + ' Quinta dos Esquilos - ' + ev.titulo + (cur.empresa ? ' - ' + cur.empresa : ''); };
   const emMsg = function () {
+    if (waMenu()) { const nome = String(waSol().contato || waSol().empresa || '').trim().split(/\s+/)[0] || '', ct1 = QE.CONTATOS; return 'Olá' + (nome ? ', ' + nome : '') + '!\n\nSegue em anexo nosso menu ' + WA.menuNome + '.\n\nQualquer dúvida, estou à disposição.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct1.telefone + ' · ' + ct1.site; }
     if (waDeco()) { const nome = String((waSol().contato || DC.p.cliente || '')).trim().split(/\s+/)[0] || '', d = QE.fmtData(DC.p.data), ct0 = QE.CONTATOS; return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem?\n\nSegue em anexo o projeto de decoração da Quinta dos Esquilos para o seu evento' + (d ? ' do dia ' + d : '') + '.\n\nDê uma olhada com calma e me diga o que achou ou se quer ajustar algo.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct0.telefone + ' · ' + ct0.site; }
     const ev = QE.evento(cur), nome = String(cur.contato || cur.empresa || '').trim().split(/\s+/)[0] || '', data = QE.fmtData(cur.dataEvento), ct = QE.CONTATOS;
     return 'Olá' + (nome ? ', ' + nome : '') + '! Tudo bem?\n\nSegue em anexo o ' + (WA.modo === 'ct' ? 'contrato' : 'orçamento') + ' da Quinta dos Esquilos para o seu evento (' + ev.titulo + ')' + (data ? ' no dia ' + data : '') + '.' + (WA.modo === 'ct' ? '\n\nPor favor, confira os dados e, estando tudo certo, nos devolva assinado.' : '') + '\n\nQualquer dúvida, estou à disposição.\n\nUm abraço,\nQuinta dos Esquilos\n' + ct.telefone + ' · ' + ct.site;
@@ -4018,16 +4037,25 @@ body.pv-lock { overflow: hidden; }
     const podeShare = !!(navigator.canShare && window.File && navigator.canShare({ files: [waArquivo()] }));
     const bs = waSol() || {};
     $('#waFone').value = bs.telefone || ''; $('#waTexto').value = waMsg(); $('#waReg').checked = true;
-    const ctm = (cur && cur.contrato && (cur.contrato.emails || []).filter(Boolean)[0]) || (cur && cur.email) || '';
-    $('#waTit').textContent = WA.modo === 'ct' ? 'Enviar contrato' : WA.modo === 'deco' ? 'Enviar projeto de decoração' : 'Enviar orçamento'; $('#waReg').parentNode.hidden = WA.modo !== 'orc';
+    const ctm = WA.modo === 'ct' && (cur && cur.contrato && (cur.contrato.emails || []).filter(Boolean)[0]) || (cur && cur.email) || '';
+    $('#waTit').textContent = WA.modo === 'menu' ? 'Enviar menu' : WA.modo === 'ct' ? 'Enviar contrato' : WA.modo === 'deco' ? 'Enviar projeto de decoração' : 'Enviar orçamento'; $('#waReg').parentNode.hidden = WA.modo !== 'orc';
     $('#emDest').value = WA.modo === 'ct' ? ctm : (bs.email || ''); $('#emAssunto').value = emAssunto(); $('#emTexto').value = emMsg();
-    $('#waArq').textContent = 'PDF pronto: ' + WA.nomeArq + ' (' + Math.round(WA.blob.size / 1024) + ' KB)';
+    const arqT = waMenu() ? 'imagem' : 'PDF';
+    $('#waCliWrap').hidden = !waMenu(); if (waMenu()) waCliMonta();
+    $('#waShare').textContent = 'Compartilhar ' + (waMenu() ? 'a imagem' : 'o PDF') + ' (celular)'; $('#waBaixar').textContent = 'Só baixar ' + (waMenu() ? 'a imagem' : 'o PDF');
+    $('#waArq').textContent = (waMenu() ? 'Imagem pronta: ' : 'PDF pronto: ') + WA.nomeArq + ' (' + Math.round(WA.blob.size / 1024) + ' KB)';
     $('#waShare').hidden = !podeShare;
     $('#waAjuda').textContent = podeShare
       ? 'No celular, “Compartilhar o PDF (celular)” abre a lista de apps (WhatsApp, e-mail…): escolha o app e o contato, e o arquivo já vai anexado. Os botões de WhatsApp e e-mail abrem a conversa ou a mensagem com tudo preenchido e baixam o PDF para você anexar.'
       : 'Nenhum site consegue anexar o arquivo sozinho no WhatsApp ou no e-mail. Os botões abrem a conversa ou a mensagem com destinatário, assunto e texto prontos e baixam o PDF: é só anexar (clipe do WhatsApp, ou o clipe do e-mail, ou arrastar o arquivo para dentro da mensagem).';
+    if (waMenu()) $('#waAjuda').textContent = $('#waAjuda').textContent.replace(/o PDF/g, 'a imagem').replace(/PDF/g, 'imagem');
     $('#waModal').hidden = false; document.body.classList.add('pv-lock');
   }
+  function waCliMonta() {
+    const cs = $('#waCli'); if (cs.dataset.pronto) return; cs.dataset.pronto = '1';
+    cs.innerHTML = '<option value="">Nenhum (digitar o contato abaixo)</option>' + lista.slice().sort(function (a, b) { return String(a.empresa).localeCompare(String(b.empresa), 'pt-BR'); }).map(function (x) { return '<option value="' + esc(x.id) + '">' + esc(x.empresa) + (x.contato && x.contato !== x.empresa ? ' — ' + esc(x.contato) : '') + '</option>'; }).join('');
+  }
+  $('#waCli').addEventListener('change', function () { const bs = waSol(); $('#waFone').value = bs.telefone || ''; $('#emDest').value = bs.email || ''; $('#waTexto').value = waMsg(); $('#emTexto').value = emMsg(); });
   $('#enviarWa').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
     try { WA.modo = 'orc'; WA.blob = await gerarPdfBlob(cur); WA.base = QE.nomeArquivo(cur); WA.nomeArq = WA.base + '.pdf'; WA.registrado = false; waAbre(); }
@@ -4037,7 +4065,7 @@ body.pv-lock { overflow: hidden; }
   $('#waFechar').addEventListener('click', waFecha);
   $('#waModal').addEventListener('click', function (e) { if (e.target.id === 'waModal') waFecha(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#waModal').hidden) waFecha(); });
-  $('#waBaixar').addEventListener('click', async function () { baixarBlob(WA.blob, WA.base); await waRegistra(); toast('PDF baixado.'); });
+  $('#waBaixar').addEventListener('click', async function () { baixarBlob(WA.blob, WA.base); await waRegistra(); toast(waMenu() ? 'Imagem baixada.' : 'PDF baixado.'); });
   $('#waShare').addEventListener('click', async function () {
     try { await navigator.share({ files: [waArquivo()], text: $('#waTexto').value, title: WA.nomeArq }); await waRegistra(); waFecha(); toast('Compartilhado.'); }
     catch (e) { if (!e || e.name !== 'AbortError') toast('Não consegui abrir o compartilhamento. Use “Abrir WhatsApp do cliente”.', true); }
@@ -4047,8 +4075,8 @@ body.pv-lock { overflow: hidden; }
     if (fone.length < 12 || fone.length > 13) { toast('Confira o WhatsApp do cliente (DDD + número).', true); $('#waFone').focus(); return; }
     window.open('https://wa.me/' + fone + '?text=' + encodeURIComponent($('#waTexto').value), '_blank', 'noopener');
     baixarBlob(WA.blob, WA.base);
-    if (WA.modo !== 'deco' && !cur.telefone) { cur.telefone = $('#waFone').value.trim(); dirty = true; }
-    await waRegistra(); toast('WhatsApp aberto e PDF baixado: anexe o arquivo pelo clipe.');
+    if ((WA.modo === 'orc' || WA.modo === 'ct') && !cur.telefone) { cur.telefone = $('#waFone').value.trim(); dirty = true; }
+    await waRegistra(); toast(waMenu() ? 'WhatsApp aberto e imagem baixada: anexe o arquivo pelo clipe.' : 'WhatsApp aberto e PDF baixado: anexe o arquivo pelo clipe.');
   });
   /* e-mail: Gmail (web) ou o app de e-mail do aparelho; o PDF é baixado para anexar */
   async function emEnvia(modo) {
@@ -4061,8 +4089,8 @@ body.pv-lock { overflow: hidden; }
       const a = document.createElement('a'); a.href = 'mailto:' + para + '?subject=' + encodeURIComponent(su) + '&body=' + encodeURIComponent(corpo).replace(/%0A/g, '%0D%0A'); document.body.appendChild(a); a.click(); a.remove();
     }
     baixarBlob(WA.blob, WA.base);
-    if (WA.modo !== 'deco' && !cur.email) { cur.email = para; dirty = true; }
-    await waRegistra(); toast('E-mail aberto e PDF baixado: anexe o arquivo na mensagem.');
+    if ((WA.modo === 'orc' || WA.modo === 'ct') && !cur.email) { cur.email = para; dirty = true; }
+    await waRegistra(); toast(waMenu() ? 'E-mail aberto e imagem baixada: anexe o arquivo na mensagem.' : 'E-mail aberto e PDF baixado: anexe o arquivo na mensagem.');
   }
   $('#emGmail').addEventListener('click', function () { emEnvia('gmail'); });
   $('#emApp').addEventListener('click', function () { emEnvia('app'); });
@@ -4223,7 +4251,7 @@ body.pv-lock { overflow: hidden; }
       '<div class="g2">' + dcI('evento', 'Tipo de evento') + dcI('qtd', 'Convidados', 'number', ' min="0"') + '</div><div class="g2">' + dcI('data', 'Data do evento', 'date') + dcI('atualizacao', 'Atualização', 'date') + '</div>' +
       '<div class="vacoes"><button type="button" class="btn sm ghost" id="dcPuxa">Atualizar dados a partir da proposta</button></div>' +
       '<h4 class="sh">Logo e paleta de cores</h4><div class="dc-lg"><div class="pv-l" id="dcLogoPv" style="background-image:url(\'' + esc(dcSrc(p.logo)) + '\')">' + (p.logo ? '' : 'Logo do cliente') + '</div><div><button type="button" class="btn sm" data-dcup="logo">Enviar logo</button> ' + (p.logo ? '<button type="button" class="btn sm ghost" data-dclogodel="1">Remover</button>' : '') + '</div></div>' + (p.logo ? '<label class="chk"><input type="checkbox" data-dccheck="logoCover"' + (p.logoCover ? ' checked' : '') + '> Preencher toda a moldura (pode cortar as bordas do logo)</label>' : '') +
-      '<div id="dcPal">' + p.paleta.map(function (c, i) { return '<div class="dc-pal"><input type="color" data-dc="paleta.' + i + '.c" value="' + esc(c.c) + '"><input type="text" data-dc="paleta.' + i + '.n" value="' + esc(c.n) + '" placeholder="Nome da cor (opcional)"><button class="btn sm ghost" data-dcrmcor="' + i + '">×</button></div>'; }).join('') + '</div>' +
+      '<div id="dcPal">' + p.paleta.map(function (c, i) { return '<div class="dc-pal"><input type="color" data-dc="paleta.' + i + '.c" value="' + esc(c.c) + '"><button class="btn sm ghost" data-dcrmcor="' + i + '">×</button></div>'; }).join('') + '</div>' +
       '<div class="vacoes"><button type="button" class="btn sm" id="dcAddCor">+ Adicionar cor</button></div>' +
       '<h4 class="sh">Imagens da página de identidade</h4>' + dcThumbs('abertura.imgs', p.abertura.imgs) +
       '<h4 class="sh">Seções</h4><div id="dcSecs">' + secs + '</div><button type="button" class="btn" id="dcAddSec">+ Adicionar seção</button>' +
@@ -4332,7 +4360,7 @@ body.pv-lock { overflow: hidden; }
     h += '<section class="pg dcp">' + head('Identidade do evento') + '<div class="dc-body"><div><div class="dc-eb">Evento</div><div class="dc-rule"></div><h2 class="dc-t">Identidade<br>do evento</h2></div>' +
       '<div class="dc-id"><div class="dc-logo">' + (lg ? '<div class="img' + (p.logoCover ? ' cv' : '') + '" style="background-image:url(\'' + lg + '\')"></div>' : '<div class="wm">' + esc(p.cliente || 'Cliente') + '</div>') + '</div>' +
       '<div class="dc-dados"><div><span>Cliente</span><b>' + esc(p.cliente) + '</b></div><div><span>Evento</span><b>' + esc(p.evento) + '</b></div><div><span>Data</span><b>' + (dcData(p.data) || '—') + '</b></div><div><span>Convidados</span><b>' + (p.qtd ? esc(p.qtd) + ' pessoas' : '—') + '</b></div></div></div>' +
-      '<div><div class="dc-eb">Paleta de cores</div><div class="dc-rule"></div><div class="dc-sw">' + p.paleta.map(function (c) { return '<div><i style="background:' + esc(c.c) + '"></i>' + (c.n ? '<b>' + esc(c.n) + '</b>' : '') + '<span>' + esc(String(c.c).toUpperCase()) + '</span></div>'; }).join('') + '</div></div>' +
+      '<div><div class="dc-eb">Paleta de cores</div><div class="dc-rule"></div><div class="dc-sw">' + p.paleta.map(function (c) { return '<div><i style="background:' + esc(c.c) + '"></i>' + '<span>' + esc(String(c.c).toUpperCase()) + '</span></div>'; }).join('') + '</div></div>' +
       '<div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end">' + (function () { const f = dcFotosHTML(p.abertura.imgs, true); return f ? f.replace('class="dc-fotos', 'style="height:210px;flex:none" class="dc-fotos') : ''; })() + '</div></div>' + foot() + '</section>';
     p.secoes.forEach(function (s, i) {
       const subs = s.subs || [];
@@ -4391,7 +4419,7 @@ body.pv-lock { overflow: hidden; }
     mnLista.forEach(function (f) { if (!por[f[2]]) { por[f[2]] = []; grupos.push(f[2]); } por[f[2]].push(f); });
     $('#menusGrid').innerHTML = grupos.map(function (g) {
       return '<h3 class="fg-h">' + esc(g) + '</h3><div class="mng">' + por[g].map(function (f) {
-        return '<button type="button" class="mnc" data-mn="' + mnLista.indexOf(f) + '"><img src="' + mnSrc(f[0]) + '" alt="" loading="lazy" onerror="this.closest(\'.mnc\').hidden=true"><span>' + esc(f[1].replace(/^Cardápio:\s*/, '')) + '</span></button>';
+        return '<div class="mnw"><button type="button" class="mnc" data-mn="' + mnLista.indexOf(f) + '"><img src="' + mnSrc(f[0]) + '" alt="" loading="lazy" onerror="this.closest(\'.mnw\').hidden=true"><span>' + esc(f[1].replace(/^Cardápio:\s*/, '')) + '</span></button><button type="button" class="btn sm mns" data-mns="' + mnLista.indexOf(f) + '">Enviar ao cliente</button></div>';
       }).join('') + '</div>';
     }).join('');
   }
@@ -4401,7 +4429,19 @@ body.pv-lock { overflow: hidden; }
     $('#mnViewer').hidden = false; document.body.classList.add('pv-lock');
   }
   function mnFecha() { $('#mnViewer').hidden = true; document.body.classList.remove('pv-lock'); }
-  $('#menusGrid').addEventListener('click', function (e) { const b = e.target.closest('[data-mn]'); if (b) mnAbre(+b.dataset.mn); });
+  async function mnEnvia(i) {
+    const f = mnLista[i]; if (!f) return;
+    const nome = f[1].replace(/^Cardápio:\s*/, '');
+    try {
+      const r = await fetch(mnSrc(f[0])); if (!r.ok) throw new Error('imagem não encontrada');
+      const bl = await r.blob(), ext = (bl.type || 'image/jpeg').split('/')[1].replace('jpeg', 'jpg');
+      WA.modo = 'menu'; WA.menuNome = nome; WA.blob = bl; WA.base = 'Menu ' + nome; WA.nomeArq = WA.base + '.' + ext; WA.registrado = true;
+      const cs = $('#waCli'); if (cs) cs.value = '';
+      mnFecha(); waAbre();
+    } catch (e) { console.error(e); toast('Não consegui preparar a imagem do menu para enviar (' + (e && e.message || e) + ').', true); }
+  }
+  $('#menusGrid').addEventListener('click', function (e) { const s = e.target.closest('[data-mns]'); if (s) { mnEnvia(+s.dataset.mns); return; } const b = e.target.closest('[data-mn]'); if (b) mnAbre(+b.dataset.mn); });
+  $('#mnS').addEventListener('click', function () { mnEnvia(mnI); });
   $('#mnX').addEventListener('click', mnFecha);
   $('#mnP').addEventListener('click', function () { mnAbre(mnI - 1); });
   $('#mnN').addEventListener('click', function () { mnAbre(mnI + 1); });
