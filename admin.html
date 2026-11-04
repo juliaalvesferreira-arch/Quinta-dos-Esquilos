@@ -1258,7 +1258,7 @@ body.pv-lock { overflow: hidden; }
     site: 'www.quintadosesquilos.com.br',
     insta: '@quintadosesquilos',
     cnpj: '47.131.561/0001-93',
-    endereco: 'Travessa Yoshinaga, 07 - Bairro Aguassaí - CEP 06720-000 - Cotia - SP',
+    endereco: 'Travessa Yoshinaga, 07 - Bairro Aguassaí - CEP 06728-000 - Cotia - SP',
     mapsNome: 'Chácara Quinta dos Esquilos',
     mapsLink: 'https://maps.app.goo.gl/QAAUgdxak5EZWuup7?g_st=iw'
   };
@@ -1341,7 +1341,7 @@ body.pv-lock { overflow: hidden; }
   QE.cardNome = function (id) { return (QE.CARDAPIOS_ALL.find(function (c) { return c[0] === id; }) || [0, ''])[1]; };
 
   /* ---------- Serviços complementares A–L (preços do orçamento atual) ---------- */
-  const OBS5 = 'até 5% da quantidade total avisado com antecedência';
+  const OBS5 = 'até 10% do total de pessoas com aviso prévio';
   QE.CATALOGO = [
     { g: 'A', titulo: 'Buffet e serviços (pessoas complementares)', linhas: [
       { id: 'a1', nome: 'Pessoas complementares', obs: OBS5, preco: 310, un: 'pessoa' },
@@ -1407,7 +1407,7 @@ body.pv-lock { overflow: hidden; }
     return ordem.map(function (id, i) {
       const g = QE.CATALOGO.find(function (x) { return x.g === id; });
       if (g.so === 'casamento' && !ev.casamento) return null;
-      const gerLeg = !!(req && req.orc && req.orc.gerV === 1);   // orçamento já avançado quando o texto/valor do gerador mudou: mantém o antigo
+      const gerLeg = !!(req && /v[\s.\-]*tech/i.test(String(req.empresa || '')));   // exceção: VTECH mantém o gerador antigo (R$ 3.000, sem a frase do R$ 1.000)
       const gg = Object.assign({}, g, { letra: String.fromCharCode(65 + i), linhas: g.linhas.filter(function (l) { return !(l.so === 'corp' && ev.social); }).map(function (l) { return (ev.casamento && l.id === 'm5') ? Object.assign({}, l, { nome: 'Arranjos florais flutuantes na piscina' }) : (gerLeg && l.id === 'k1') ? Object.assign({}, l, { nome: 'Gerador externo stand by', preco: 3000 }) : l; }) });
       if (gerLeg && g.g === 'K') delete gg.info;
       return gg;
@@ -1663,7 +1663,7 @@ body.pv-lock { overflow: hidden; }
     return {
       data: QE.hoje(), validade: cfg.validade, bar: 'prata', limite7: true,
       pacote: null, cafe: null, doces: null, b50: null, b30: null, parcelas: null,
-      sel: sel, preco: {}, cron: {}, gerV: 2,
+      sel: sel, preco: {}, cron: {},
       cfgSnap: QE.snapCfg(cfg), cfgEm: QE.hoje()
     };
   };
@@ -2196,7 +2196,7 @@ body.pv-lock { overflow: hidden; }
   const hh = function (t) { const p = String(t).split(':'); return p[0] + 'h' + (p[1] || '00'); };
   const TIT = { A: 'Pessoas complementares', B: 'Chopp — barril extra', C: 'Café da manhã', D: 'Mesa de café e doces', E: 'Banda ao vivo', F: 'Mini arvorismo', G: 'Recreação', H: 'Atrações complementares', I: 'Estrutura para apresentação', J: 'Fotografia e vídeo', K: 'Gerador', L: 'Backdrop', M: 'Personalizações', EST: 'Estadia', BUQ: 'Buquê' };
   const CURTO = { A: 'pessoas complementares', B: 'chopp extra', C: 'café da manhã', D: 'mesa de doces', E: 'banda', F: 'mini arvorismo', G: 'recreação', H: 'atrações', I: 'estrutura de apresentação', J: 'foto e vídeo', K: 'gerador', L: 'backdrop', M: 'personalizações', EST: 'estadia', BUQ: 'buquê' };
-  const OBS = { a1: 'até 5% do total, com aviso prévio', a2: 'até 5%', a3: '' };
+  const OBS = { a1: 'até 10% do total de pessoas com aviso prévio', a2: 'até 10% do total de pessoas com aviso prévio', a3: '' };
   const plural = function (n, a, b) { return n === 1 ? a : b; };
 
   QE.proposalHTML = function (req, cfg, avail) {
@@ -2776,15 +2776,10 @@ body.pv-lock { overflow: hidden; }
     /* mostra na hora o que ficou guardado neste aparelho enquanto o servidor responde */
     const cl = !QE.db.demo && lsGet('qe_cache_lista');
     if (cl && cl.length) { lista = cl; view('lista'); renderLista(); const bn0 = $('#demo'); bn0.textContent = 'Mostrando a última lista salva neste aparelho. Atualizando…'; bn0.hidden = false; }
-    let listaOk = false;
-    try { await carregar(); listaOk = true; if (!QE.db.demo) $('#demo').hidden = true; } catch (e) {
+    try { await carregar(); if (!QE.db.demo) $('#demo').hidden = true; } catch (e) {
       console.error(e);
       const bn = $('#demo'); bn.textContent = 'Entrou, mas não consegui ler o Firestore (' + e.message + '). Confira se o banco foi criado em Firestore Database e se as regras do firestore.rules foram publicadas.'; bn.hidden = false;
     }
-    /* gerador: só propostas ainda Pendentes (e as novas) usam o texto/valor novo; as demais mantêm o antigo */
-    if (listaOk) lista.forEach(function (x) {
-      if (x.orc && x.orc.gerV === undefined) { x.orc.gerV = stOf(x) === 'novo' ? 2 : 1; QE.db.salvar(x.id, { orc: x.orc }).catch(function () { /* tenta de novo na próxima abertura */ }); }
-    });
     /* orçamentos salvos antes desta regra: congela agora, com as tabelas de hoje */
     if (cfgOk) lista.forEach(function (x) {
       if (x.orc && !x.orc.cfgSnap) { x.orc.cfgSnap = QE.snapCfg(cfg); x.orc.cfgEm = QE.hoje(); QE.db.salvar(x.id, { orc: x.orc }).catch(function () { /* tenta de novo na próxima abertura */ }); }
