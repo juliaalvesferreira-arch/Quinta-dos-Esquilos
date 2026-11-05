@@ -891,6 +891,24 @@ body.pv-lock { overflow: hidden; }
 .mnw[hidden] { display: none; }
 .mns { width: 100%; font-size: .85rem; padding: 6px 8px; }
 .mns2 { position: absolute; z-index: 2; top: 20px; right: 78px; opacity: .92; }
+
+/* painel de vendas */
+.vd-top { display: flex; gap: 10px 14px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.vd-top select { padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; font: inherit; }
+.vd-g { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.vd-k { background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.vd-k small { color: #7a6a5a; font-size: .8rem; } .vd-k b { font-size: 1.55rem; color: var(--bark); line-height: 1.15; } .vd-k em { font-style: normal; color: #8a7a6a; font-size: .78rem; }
+.vd-b { background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; }
+.vd-b h3 { margin: 0 0 10px; font-size: 1rem; } .vd-b h3 small { font-weight: 400; color: #8a7a6a; }
+.vd-f { display: grid; grid-template-columns: 110px 1fr 36px; gap: 10px; align-items: center; margin: 6px 0; font-size: .9rem; }
+.vd-f i { display: block; height: 18px; border-radius: 9px; background: #c9b89a; min-width: 0; } .vd-f i.st-enviado { background: #b08a5a; } .vd-f i.st-contrato { background: #8a5a3a; } .vd-f i.st-ganho { background: #4f6b3a; } .vd-f b { text-align: right; }
+.vd-m { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; align-items: end; height: 190px; }
+.vd-c { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; font-size: .72rem; }
+.vd-c .bar { width: 100%; flex: 1; display: flex; align-items: flex-end; } .vd-c .bar i { display: block; width: 100%; background: #e3d5b8; border-radius: 6px 6px 0 0; position: relative; min-height: 2px; } .vd-c .bar u { position: absolute; left: 0; right: 0; bottom: 0; background: var(--bark); border-radius: 0 0 0 0; }
+.vd-c em { font-style: normal; color: #7a6a5a; white-space: nowrap; font-size: .68rem; } .vd-c .n { color: var(--bark); font-weight: 600; min-height: 1em; }
+.vd-t { width: 100%; border-collapse: collapse; font-size: .9rem; } .vd-t th, .vd-t td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); } .vd-t th { color: #7a6a5a; font-weight: 600; font-size: .8rem; }
+.vd-l { margin: 0; padding-left: 18px; } .vd-l li { margin: 4px 0; } .vd-n { background: var(--bark); color: #fff; border-radius: 10px; padding: 1px 8px; font-size: .8rem; margin-left: 6px; }
+@media (max-width: 640px) { .vd-m { gap: 3px; } .vd-c em { font-size: .6rem; } .vd-f { grid-template-columns: 84px 1fr 30px; } }
 </style>
 </head>
 <body>
@@ -947,7 +965,14 @@ body.pv-lock { overflow: hidden; }
     <section id="v-kanban" class="view" hidden>
       <div class="head"><h2>Kanban de propostas</h2><div class="head-r"><button id="atualizarK" class="btn">Atualizar</button></div></div>
       <p class="lead">Arraste os cartões entre as colunas (ou use o seletor em cada cartão, no celular) para mudar o status. “Enviado” é marcado sozinho quando você baixa o PDF.</p>
+      <div class="seg" id="kbSeg" style="margin-bottom:12px"><button type="button" class="on" data-kv="quadro">Quadro</button><button type="button" data-kv="painel">Painel de vendas</button></div>
       <div id="kanban" class="kb"></div>
+      <div id="vendas" hidden>
+        <div class="vd-top"><label for="vdPer">Período</label>
+          <select id="vdPer"><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="180">Últimos 6 meses</option><option value="365" selected>Últimos 12 meses</option><option value="ano">Este ano</option><option value="0">Tudo</option></select>
+          <label for="vdTipo">Tipo de evento</label><select id="vdTipo"><option value="">Todos</option></select></div>
+        <div id="vdCorpo"></div>
+      </div>
     </section>
 
     <!-- Editor -->
@@ -2912,6 +2937,7 @@ body.pv-lock { overflow: hidden; }
   /* ---------- Kanban ---------- */
   function renderKanban() {
     const ordem = Object.keys(STATUS);
+    if (VD && VD.vista === 'painel') { vdTipos(); vdRender(); }
     $('#kanban').innerHTML = ordem.map(function (st) {
       const itens = lista.filter(function (x) { return stOf(x) === st; });
       return '<div class="kcol" data-col="' + st + '"><h3>' + STATUS[st] + ' <span>' + itens.length + '</span></h3><div class="kbody">' + (itens.map(function (x) {
@@ -2921,6 +2947,70 @@ body.pv-lock { overflow: hidden; }
       }).join('') || '<p class="kv">Nada por aqui</p>') + '</div></div>';
     }).join('');
   }
+
+  /* ---------- Painel de vendas (dentro do Kanban) ---------- */
+  var VD = { vista: 'quadro' };
+  function vdTotal(x) { try { return x.orc ? QE.calc(x, cfg).total : 0; } catch (e) { return 0; } }
+  function vdPct(a, b) { return b > 0 ? Math.round(a / b * 100) + '%' : '—'; }
+  function vdRender() {
+    const per = $('#vdPer').value, tipoF = $('#vdTipo').value, agora = new Date(), ini = per === 'ano' ? new Date(agora.getFullYear(), 0, 1).getTime() : (+per ? Date.now() - (+per) * 86400000 : 0);
+    const todos = lista.filter(function (x) { return !tipoF || QE.evento(x).tag === tipoF; });
+    const rs = todos.filter(function (x) { return (x.criadoEm || 0) >= ini; });
+    const n = { novo: 0, enviado: 0, contrato: 0, ganho: 0 }; rs.forEach(function (x) { n[stOf(x)]++; });
+    const fech = rs.filter(function (x) { return stOf(x) === 'ganho' || stOf(x) === 'contrato'; }), ganhos = rs.filter(function (x) { return stOf(x) === 'ganho'; });
+    const vFech = fech.reduce(function (t, x) { return t + vdTotal(x); }, 0), vGan = ganhos.reduce(function (t, x) { return t + vdTotal(x); }, 0);
+    const vAberto = rs.filter(function (x) { return stOf(x) === 'enviado'; }).reduce(function (t, x) { return t + vdTotal(x); }, 0);
+    const orcados = n.enviado + n.contrato + n.ganho, fechN = n.contrato + n.ganho;
+    const convidados = rs.length ? Math.round(rs.reduce(function (t, x) { return t + (+x.qtd || 0); }, 0) / rs.length) : 0;
+    const card = function (t, v, s) { return '<div class="vd-k"><small>' + t + '</small><b>' + v + '</b>' + (s ? '<em>' + s + '</em>' : '') + '</div>'; };
+    let h = '<div class="vd-g">' +
+      card('Solicitações recebidas', rs.length, per === '0' ? 'desde o início' : 'no período') +
+      card('Orçamentos enviados', orcados, vdPct(orcados, rs.length) + ' das recebidas') +
+      card('Taxa de conversão', vdPct(fechN, rs.length), fechN + ' fechadas (contrato + ganho)') +
+      card('Conversão dos orçados', vdPct(fechN, orcados), 'enviados que fecharam') +
+      card('Valor fechado', QE.brl(vFech), 'ganho: ' + QE.brl(vGan)) +
+      card('Ticket médio', fechN ? QE.brl(vFech / fechN) : '—', 'por evento fechado') +
+      card('Em negociação', QE.brl(vAberto), n.enviado + ' orçamento(s) enviado(s)') +
+      card('Convidados (média)', convidados || '—', 'por solicitação') + '</div>';
+    /* funil */
+    const mx = Math.max(1, rs.length);
+    h += '<div class="vd-b"><h3>Funil (status atual das solicitações do período)</h3>' + [['novo', 'Pendente'], ['enviado', 'Enviado'], ['contrato', 'Em contrato'], ['ganho', 'Ganho']].map(function (p) {
+      return '<div class="vd-f"><span>' + p[1] + '</span><i style="width:' + Math.max(n[p[0]] ? 3 : 0, Math.round(n[p[0]] / mx * 100)) + '%" class="st-' + p[0] + '"></i><b>' + n[p[0]] + '</b></div>';
+    }).join('') + '</div>';
+    /* por mês (últimos 12 meses, ou o período) */
+    const meses = [], base = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    for (let i = 11; i >= 0; i--) { const d = new Date(base.getFullYear(), base.getMonth() - i, 1); meses.push({ k: d.getFullYear() + '-' + (d.getMonth() + 1), r: 0, f: 0, l: d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '') + '/' + String(d.getFullYear()).slice(2) }); }
+    todos.forEach(function (x) { if (!x.criadoEm) return; const d = new Date(x.criadoEm), m = meses.find(function (z) { return z.k === d.getFullYear() + '-' + (d.getMonth() + 1); }); if (m) { m.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') m.f++; } });
+    const mm = Math.max(1, Math.max.apply(null, meses.map(function (m) { return m.r; })));
+    h += '<div class="vd-b"><h3>Solicitações por mês de recebimento <small>(barra clara: recebidas · escura: fechadas)</small></h3><div class="vd-m">' + meses.map(function (m) {
+      return '<div class="vd-c" title="' + m.l + ': ' + m.r + ' recebida(s), ' + m.f + ' fechada(s)"><span class="n">' + (m.r || '') + '</span><div class="bar"><i style="height:' + Math.round(m.r / mm * 100) + '%"><u style="height:' + (m.r ? Math.round(m.f / m.r * 100) : 0) + '%"></u></i></div><em>' + m.l + '</em></div>';
+    }).join('') + '</div></div>';
+    /* por tipo */
+    const tp = {}; rs.forEach(function (x) { const t = QE.evento(x).tag; const o = tp[t] = tp[t] || { r: 0, f: 0, v: 0 }; o.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') { o.f++; o.v += vdTotal(x); } });
+    const tl = Object.keys(tp).sort(function (a, b) { return tp[b].r - tp[a].r; });
+    h += '<div class="vd-b"><h3>Por tipo de evento</h3>' + (tl.length ? '<table class="vd-t"><thead><tr><th>Tipo</th><th>Recebidas</th><th>Fechadas</th><th>Conversão</th><th>Valor fechado</th></tr></thead><tbody>' + tl.map(function (t) { const o = tp[t]; return '<tr><td>' + esc(t) + '</td><td>' + o.r + '</td><td>' + o.f + '</td><td>' + vdPct(o.f, o.r) + '</td><td>' + QE.brl(o.v) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="hint">Sem solicitações no período.</p>') + '</div>';
+    /* receita dos eventos fechados por mês do evento (daqui pra frente) */
+    const hojeS = QE.hoje().slice(0, 7), rv = {};
+    lista.filter(function (x) { return (stOf(x) === 'ganho' || stOf(x) === 'contrato') && x.dataEvento && String(x.dataEvento).slice(0, 7) >= hojeS && (!tipoF || QE.evento(x).tag === tipoF); }).forEach(function (x) { const k = String(x.dataEvento).slice(0, 7), o = rv[k] = rv[k] || { n: 0, v: 0 }; o.n++; o.v += vdTotal(x); });
+    const rk = Object.keys(rv).sort();
+    h += '<div class="vd-b"><h3>Eventos fechados daqui para frente <small>(por mês do evento)</small></h3>' + (rk.length ? '<table class="vd-t"><thead><tr><th>Mês</th><th>Eventos</th><th>Valor</th></tr></thead><tbody>' + rk.map(function (k) { const d = new Date(+k.slice(0, 4), +k.slice(5, 7) - 1, 1); return '<tr><td>' + d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) + '</td><td>' + rv[k].n + '</td><td>' + QE.brl(rv[k].v) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="hint">Nenhum evento fechado com data futura.</p>') + '</div>';
+    /* atenção: pendentes parados */
+    const par = lista.filter(function (x) { return stOf(x) === 'novo' && x.criadoEm && Date.now() - x.criadoEm > 3 * 86400000 && (!tipoF || QE.evento(x).tag === tipoF); }).sort(function (a, b) { return a.criadoEm - b.criadoEm; });
+    h += '<div class="vd-b"><h3>Atenção: pendentes há mais de 3 dias <span class="vd-n">' + par.length + '</span></h3>' + (par.length ? '<ul class="vd-l">' + par.slice(0, 15).map(function (x) { return '<li><a href="#" data-vdab="' + esc(x.id) + '">' + esc(x.empresa) + '</a> <small>' + esc(QE.evento(x).tag) + ' · recebido há ' + Math.floor((Date.now() - x.criadoEm) / 86400000) + ' dias</small></li>'; }).join('') + '</ul>' : '<p class="hint">Nenhuma solicitação parada. 👏</p>') + '</div>';
+    h += '<p class="hint">A conversão usa o status atual de cada solicitação (o painel ainda não guarda a data em que mudou de status). “Fechadas” = Em contrato + Ganho.</p>';
+    $('#vdCorpo').innerHTML = h;
+  }
+  function vdTipos() {
+    const sel = $('#vdTipo'), atual = sel.value, tags = []; lista.forEach(function (x) { const t = QE.evento(x).tag; if (tags.indexOf(t) < 0) tags.push(t); });
+    sel.innerHTML = '<option value="">Todos</option>' + tags.sort().map(function (t) { return '<option' + (t === atual ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('');
+  }
+  function kbVista(v) {
+    VD.vista = v; $$('#kbSeg button').forEach(function (b) { b.classList.toggle('on', b.dataset.kv === v); });
+    $('#kanban').hidden = v !== 'quadro'; $('#vendas').hidden = v !== 'painel'; if (v === 'painel') { vdTipos(); vdRender(); }
+  }
+  $('#kbSeg').addEventListener('click', function (e) { const b = e.target.closest('[data-kv]'); if (b) kbVista(b.dataset.kv); });
+  $('#vdPer').addEventListener('change', vdRender); $('#vdTipo').addEventListener('change', vdRender);
+  $('#vdCorpo').addEventListener('click', function (e) { const a = e.target.closest('[data-vdab]'); if (a) { e.preventDefault(); abrir(a.dataset.vdab); } });
   let arrasto = null;
   $('#kanban').addEventListener('dragstart', function (e) { const c = e.target.closest('.kcard'); if (!c) return; arrasto = c.dataset.id; c.classList.add('drag'); try { e.dataTransfer.setData('text/plain', arrasto); e.dataTransfer.effectAllowed = 'move'; } catch (x) { /* ok */ } });
   $('#kanban').addEventListener('dragend', function (e) { const c = e.target.closest('.kcard'); if (c) c.classList.remove('drag'); $$('.kcol').forEach(function (k) { k.classList.remove('over'); }); });
