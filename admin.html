@@ -2558,12 +2558,12 @@ body.pv-lock { overflow: hidden; }
       dataAss: QE.hoje(),
       t1: { nome: 'Júlia Alves Ferreira', cpf: '470.079.728-29', email: 'juliaalvesferreira241203@gmail.com' },
       t2on: false, t2: { nome: '', cpf: '', email: '' },
-      pctAcr: 10, staffAdic: null, ed: {}, add: {}, cl: []
+      pctAcr: 10, staffAdic: null, ed: {}, add: {}, pos: {}, cl: []
     }, ct || {});
     d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {});
     d.t2 = Object.assign({ nome: '', cpf: '', email: '' }, d.t2 || {});
     if (!Array.isArray(d.emails) || !d.emails.length) d.emails = [d.email || ''];
-    d.ed = d.ed || {}; d.add = d.add || {}; d.cl = Array.isArray(d.cl) ? d.cl : [];
+    d.ed = d.ed || {}; d.add = d.add || {}; d.pos = d.pos || {}; d.cl = Array.isArray(d.cl) ? d.cl : [];
     d.social = ev.social;
     const partes = [[d.rua, d.num ? ', ' + d.num : ''], [d.bairro, ''], [d.cidade, d.uf ? ' – ' + d.uf : '']].map(function (x) { return x[0] ? x[0] + x[1] : ''; }).filter(Boolean);
     d.endTxt = partes.length ? partes.join(', ') : (d.end || '');
@@ -2663,8 +2663,26 @@ body.pv-lock { overflow: hidden; }
     customs.forEach(function (c) { if (seq.indexOf(c) < 0) { const i = seq.findIndex(function (x) { return x.id === 'ass'; }); seq.splice(i < 0 ? seq.length : i, 0, c); } });
     let n = 0;
     return seq.map(function (cl) {
-      const itens = cl.it.map(function (t, i) { const k = cl.id + '.' + i; return { k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: t, extra: false }; });
-      (d.add[cl.id] || []).forEach(function (t, j) { const k = cl.id + '+' + j; itens.push({ k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: '', extra: true, j: j }); });
+      const base = cl.it.map(function (t, i) { const k = cl.id + '.' + i; return { k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: t, extra: false }; });
+      const extras = (d.add[cl.id] || []).map(function (t, j) { const k = cl.id + '+' + j; return { k: k, t: d.ed[k] !== undefined ? d.ed[k] : t, oculto: !!d.ed[k + '.h'], padrao: '', extra: true, j: j }; });
+      /* ordem: os parágrafos novos entram onde você pediu (no início ou depois de outro parágrafo) */
+      const itens = [], usados = {};
+      const pos = function (a) { extras.forEach(function (x) { if (!usados[x.k] && d.pos[x.k] === a) { usados[x.k] = 1; itens.push(x); pos(x.k); } }); };
+      pos('ini');
+      base.forEach(function (b) { itens.push(b); pos(b.k); });
+      extras.forEach(function (x) { if (!usados[x.k]) { usados[x.k] = 1; itens.push(x); pos(x.k); } });
+      /* numeração automática dos parágrafos (§ 1º, § 2º…) quando a cláusula usa § */
+      const reMk = /^(\s*§\s*)(\d+)(\s*º?\s*[-–]?\s*)/;
+      const autoPad = base.some(function (b) { return reMk.test(b.padrao); });
+      const numerar = d.ed[cl.id + '.p'] !== undefined ? !!d.ed[cl.id + '.p'] : autoPad;
+      let np = 0;
+      if (numerar) itens.forEach(function (it) {
+        const m = reMk.exec(String(it.t));
+        if (m) { it.numerado = true; it.pre1 = m[1]; it.pre3 = m[3]; it.corpo = String(it.t).slice(m[0].length); }
+        else if (it.extra) { it.numerado = true; it.pre1 = '§ '; it.pre3 = 'º - '; it.corpo = String(it.t); }
+        if (it.numerado && !it.oculto && String(it.corpo).trim()) { it.n = ++np; it.t = it.pre1 + it.n + it.pre3 + it.corpo; }
+        else if (it.numerado) { it.n = 0; }
+      });
       const oculto = !!d.ed[cl.id + '.h'];
       let tit, suf = null, num = 0;
       if (cl.num) {
@@ -2674,7 +2692,7 @@ body.pv-lock { overflow: hidden; }
         tit = num ? 'CLÁUSULA ' + QE.ordinal(num) + (suf ? ' ' + suf : '') : 'CLÁUSULA' + (suf ? ' ' + suf : '');
       } else tit = d.ed[cl.id + '.t'] !== undefined ? d.ed[cl.id + '.t'] : cl.tit;
       const inl = d.ed[cl.id + '.i'] !== undefined ? !!d.ed[cl.id + '.i'] : !!cl.inl;
-      return { cl: cl, tit: tit, suf: suf, num: num, inl: inl, oculto: oculto, itens: itens };
+      return { cl: cl, tit: tit, suf: suf, num: num, inl: inl, oculto: oculto, itens: itens, numerar: numerar };
     });
   };
 
@@ -4747,11 +4765,15 @@ body.pv-lock { overflow: hidden; }
           '<div class="f"><label>' + (cl.semTit ? 'Nome (só para você)' : cl.num ? 'Título (o número “' + (sec.num ? 'Cláusula ' + QE.ordinal(sec.num).toLowerCase() : 'Cláusula') + '” é automático)' : 'Título') + '</label>' + (cl.semTit ? '<input value="' + esc(lab) + '" disabled>' : '<input data-cted="' + cl.id + '.t" value="' + esc(cl.num ? sec.suf : sec.tit) + '">') + '</div>' +
           (cl.num ? '<label class="chk"><input type="checkbox" data-ctedi="' + cl.id + '.i"' + (sec.inl ? ' checked' : '') + '> Primeiro parágrafo na mesma linha do título</label>' : '') +
           '<label class="chk"><input type="checkbox" data-ctedh="' + cl.id + '.h"' + (sec.oculto ? ' checked' : '') + '> Ocultar esta cláusula no contrato (as seguintes renumeram)</label>' +
+          '<label class="chk"><input type="checkbox" data-ctedp="' + cl.id + '.p"' + (sec.numerar ? ' checked' : '') + '> Numerar os parágrafos automaticamente (§ 1º, § 2º…)</label>' +
+          (cl.id === 'titulo' ? '' : '<div class="ctins"><button type="button" class="btn sm" data-ctadd="' + cl.id + ':ini">+ Inserir parágrafo no início</button></div>') +
           sec.itens.map(function (it, i) {
-            const linhas = String(it.t).split('\n').length, rows = Math.min(12, Math.max(2, linhas + Math.ceil(String(it.t).length / 85)));
-            return '<div class="ctit"><label>' + (it.extra ? 'Parágrafo adicionado' : 'Parágrafo ' + (i + 1)) + '</label><textarea data-cted="' + it.k + '" rows="' + rows + '">' + esc(it.t) + '</textarea><label class="chk"><input type="checkbox" data-ctedh="' + it.k + '.h"' + (it.oculto ? ' checked' : '') + '> Ocultar este parágrafo</label></div>';
+            const val = it.numerado ? it.corpo : it.t;
+            const linhas = String(val).split('\n').length, rows = Math.min(12, Math.max(2, linhas + Math.ceil(String(val).length / 85)));
+            const rot = it.numerado ? (it.n ? 'Parágrafo § ' + it.n + 'º <em>(número automático)</em>' : 'Parágrafo <em>(oculto: sem número)</em>') : (it.extra ? 'Parágrafo adicionado' : 'Parágrafo ' + (i + 1));
+            return '<div class="ctit"><label>' + rot + '</label><textarea data-cted="' + it.k + '"' + (it.numerado && !it.extra ? ' data-ctpre="' + esc(it.pre1 + '1' + it.pre3) + '"' : '') + ' rows="' + rows + '">' + esc(val) + '</textarea><label class="chk"><input type="checkbox" data-ctedh="' + it.k + '.h"' + (it.oculto ? ' checked' : '') + '> Ocultar este parágrafo</label>' + (cl.id === 'titulo' ? '' : ' <button type="button" class="btn sm ghost" data-ctadd="' + cl.id + ':' + it.k + '">+ Inserir parágrafo depois deste</button>') + '</div>';
           }).join('') +
-          (cl.id === 'titulo' ? '' : '<button type="button" class="btn sm" data-ctadd="' + cl.id + '">+ Adicionar parágrafo</button> ') +
+          (cl.id === 'titulo' ? '' : '<button type="button" class="btn sm" data-ctadd="' + cl.id + '">+ Adicionar parágrafo no fim</button> ') +
           (cl.custom ? '<button type="button" class="btn sm ghost" data-ctdelcl="' + cl.id + '">Excluir esta cláusula</button>' : '<button type="button" class="btn sm ghost" data-ctrst="' + cl.id + '">Restaurar texto padrão desta cláusula</button>') + '</div></details>';
       }).join('') + '<button type="button" class="btn sm ghost" id="ctRstTudo">Restaurar todo o texto padrão</button>';
   }
@@ -4792,12 +4814,13 @@ body.pv-lock { overflow: hidden; }
     const t = e.target; if (!t.dataset) return;
     const ct = cur.contrato;
     if (t.dataset.ctmail !== undefined) { ct.emails = ct.emails || ['']; ct.emails[+t.dataset.ctmail] = t.value.trim(); ct.email = ct.emails[0] || ''; dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250); return; }
+    if (t.dataset.ctedp !== undefined) { ct.ed = ct.ed || {}; ct.ed[t.dataset.ctedp] = t.checked ? 1 : 0; dirty = true; ctAdvRender(); ctPreview(); return; }
     if (t.dataset.ctedi !== undefined) { ct.ed = ct.ed || {}; ct.ed[t.dataset.ctedi] = t.checked ? 1 : 0; dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 200); return; }
     if (t.dataset.cted !== undefined || t.dataset.ctedh !== undefined) {
       const k = t.dataset.cted !== undefined ? t.dataset.cted : t.dataset.ctedh;
       ct.ed = ct.ed || {};
       if (t.dataset.ctedh !== undefined) { if (t.checked) ct.ed[k] = true; else delete ct.ed[k]; if (e.type === 'change' && /^[a-z0-9]+\.h$/.test(k)) { const sm = t.closest('.ctcl').querySelector('summary'); sm.querySelector('em') && sm.querySelector('em').remove(); if (t.checked) sm.insertAdjacentHTML('beforeend', ' <em>(oculta no contrato)</em>'); } }
-      else ct.ed[k] = t.value;
+      else ct.ed[k] = (t.dataset.ctpre || '') + t.value;
       if (e.type === 'change' && /\.t$/.test(k)) ctAdvRender();
       dirty = true; clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 300); return;
     }
@@ -4835,16 +4858,24 @@ body.pv-lock { overflow: hidden; }
       const c = ct.cl.find(function (x) { return x.id === id; }); if (!c) return;
       ct.cl.forEach(function (x) { if (x.after === id) x.after = c.after; });
       ct.cl = ct.cl.filter(function (x) { return x.id !== id; });
-      Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id];
+      Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id]; Object.keys(ct.pos || {}).forEach(function (k) { if (k.split('+')[0] === id) delete ct.pos[k]; });
       dirty = true; ctAdvRender(); ctPreview(); toast('Cláusula excluída. As seguintes foram renumeradas.'); return;
     }
-    if (t.dataset.ctadd) { const id = t.dataset.ctadd; ct.add = ct.add || {}; (ct.add[id] = ct.add[id] || []).push('Novo parágrafo'); dirty = true; ctAdvRender(); ctPreview(); return; }
+    if (t.dataset.ctadd) {
+      const pr = t.dataset.ctadd.split(':'), id = pr[0], anc = pr[1] || '';
+      ct.add = ct.add || {}; ct.pos = ct.pos || {};
+      const lst = (ct.add[id] = ct.add[id] || []), j = lst.length; lst.push('Novo parágrafo');
+      if (anc) ct.pos[id + '+' + j] = anc; else { const its = QE.contratoTextos(ct).find(function (x) { return x.cl.id === id; }).itens; const pen = its.filter(function (x) { return x.k !== id + '+' + j; }); if (pen.length) ct.pos[id + '+' + j] = pen[pen.length - 1].k; }
+      dirty = true; ctAdvRender(); ctPreview(); toast('Parágrafo inserido. Os demais foram renumerados.');
+      const ta = document.querySelector('#ctAdv textarea[data-cted="' + id + '+' + j + '"]'); if (ta) { ta.scrollIntoView({ block: 'center' }); ta.focus(); ta.select(); }
+      return;
+    }
     if (t.dataset.ctrst) {
       const id = t.dataset.ctrst; if (!confirm('Voltar esta cláusula ao texto padrão?')) return;
-      Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id];
+      Object.keys(ct.ed || {}).forEach(function (k) { if (k.split(/[.+]/)[0] === id) delete ct.ed[k]; }); if (ct.add) delete ct.add[id]; Object.keys(ct.pos || {}).forEach(function (k) { if (k.split('+')[0] === id) delete ct.pos[k]; });
       dirty = true; ctAdvRender(); ctPreview(); return;
     }
-    if (t.id === 'ctRstTudo') { if (!confirm('Voltar TODO o texto do contrato ao padrão? Suas edições e as cláusulas novas serão perdidas.')) return; ct.ed = {}; ct.add = {}; ct.cl = []; dirty = true; ctAdvRender(); ctPreview(); }
+    if (t.id === 'ctRstTudo') { if (!confirm('Voltar TODO o texto do contrato ao padrão? Suas edições e as cláusulas novas serão perdidas.')) return; ct.ed = {}; ct.add = {}; ct.pos = {}; ct.cl = []; dirty = true; ctAdvRender(); ctPreview(); }
   });
   window.addEventListener('resize', function () { if (!$('#v-contrato').hidden) ctPreview(); });
   $('#ctEnviar').addEventListener('click', async function () {
