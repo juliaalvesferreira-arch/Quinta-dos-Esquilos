@@ -913,6 +913,12 @@ body.pv-lock { overflow: hidden; }
 .vd-hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; } .vd-hd h3 { margin: 0; }
 .vd-seg button { padding: 6px 14px; font-size: .85rem; }
 .vd-m.dia { gap: 2px; } .vd-m.dia .vd-c .n { font-size: .62rem; } .vd-m.dia .vd-c em { font-size: .6rem; overflow: visible; } .vd-m.dia .bar i { border-radius: 3px 3px 0 0; } .vd-c.fds .bar i { background: #efe6d2; }
+
+.vd-svg { width: 100%; height: auto; display: block; max-width: 100%; overflow: visible; }
+.vg-gr { stroke: #eadfc9; stroke-width: 1; } .vg-ty, .vg-tx { fill: #8a7a6a; font-size: 11px; } .vg-n { fill: var(--bark); font-size: 12px; font-weight: 700; }
+.vg-ar { fill: rgba(176,138,90,.16); } .vg-lr { fill: none; stroke: var(--bark); stroke-width: 2.4; stroke-linejoin: round; } .vg-lf { fill: none; stroke: #4f6b3a; stroke-width: 2; stroke-dasharray: 5 4; stroke-linejoin: round; }
+.vg-pt { fill: #fff; stroke: var(--bark); stroke-width: 2; } .vg-pt.hj { fill: var(--bark); }
+.vd-lg { display: flex; gap: 16px; flex-wrap: wrap; font-size: .82rem; color: #6b5a4a; margin: 0 0 4px; } .vd-lg i { display: inline-block; width: 18px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: var(--bark); } .vd-lg i.b { background: #4f6b3a; }
 </style>
 </head>
 <body>
@@ -973,7 +979,7 @@ body.pv-lock { overflow: hidden; }
       <div id="kanban" class="kb"></div>
       <div id="vendas" hidden>
         <div class="vd-top"><label for="vdPer">Período</label>
-          <select id="vdPer"><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="180">Últimos 6 meses</option><option value="365" selected>Últimos 12 meses</option><option value="ano">Este ano</option><option value="0">Tudo</option></select>
+          <select id="vdPer"><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="180">Últimos 6 meses</option><option value="365">Últimos 12 meses</option><option value="ano">Este ano</option><option value="0">Tudo</option></select>
           <label for="vdTipo">Tipo de evento</label><select id="vdTipo"><option value="">Todos</option></select></div>
         <div id="vdCorpo"></div>
       </div>
@@ -2953,13 +2959,14 @@ body.pv-lock { overflow: hidden; }
   }
 
   /* ---------- Painel de vendas (dentro do Kanban) ---------- */
-  var VD = { vista: 'quadro', gran: 'mes' };
+  var VD = { vista: 'quadro', gran: 'dia' };
   function vdTotal(x) { try { return x.orc ? QE.calc(x, cfg).total : 0; } catch (e) { return 0; } }
   function vdPct(a, b) { return b > 0 ? Math.round(a / b * 100) + '%' : '—'; }
+  function vdTs(x) { const c = x.criadoEm; if (!c) return 0; if (typeof c === 'number') return c; if (c.toMillis) return c.toMillis(); if (c.seconds) return c.seconds * 1000; const t = Date.parse(c); return isNaN(t) ? 0 : t; }
   function vdRender() {
     const per = $('#vdPer').value, tipoF = $('#vdTipo').value, agora = new Date(), ini = per === 'ano' ? new Date(agora.getFullYear(), 0, 1).getTime() : (+per ? Date.now() - (+per) * 86400000 : 0);
     const todos = lista.filter(function (x) { return !tipoF || QE.evento(x).tag === tipoF; });
-    const rs = todos.filter(function (x) { return (x.criadoEm || 0) >= ini; });
+    const rs = todos.filter(function (x) { return vdTs(x) >= ini; });
     const n = { novo: 0, enviado: 0, contrato: 0, ganho: 0 }; rs.forEach(function (x) { n[stOf(x)]++; });
     const fech = rs.filter(function (x) { return stOf(x) === 'ganho' || stOf(x) === 'contrato'; }), ganhos = rs.filter(function (x) { return stOf(x) === 'ganho'; });
     const vFech = fech.reduce(function (t, x) { return t + vdTotal(x); }, 0), vGan = ganhos.reduce(function (t, x) { return t + vdTotal(x); }, 0);
@@ -2990,17 +2997,34 @@ body.pv-lock { overflow: hidden; }
       if (!(+per > 0 && +per <= 90) && per !== 'ano') nota = ' (mostrando os últimos 90 dias)'; else if (per === 'ano' && Math.floor((Date.now() - ini) / 86400000) + 1 > 90) nota = ' (mostrando os últimos 90 dias)';
       for (let i = nd - 1; i >= 0; i--) { const d = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() - i); bars.push({ k: kd(d), r: 0, f: 0, l: d.getDate() + '/' + (d.getMonth() + 1), t: d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' }), dow: d.getDay() }); }
       tit = 'Solicitações recebidas por dia' + nota;
-      todos.forEach(function (x) { if (!x.criadoEm) return; const m = bars.find(function (z) { return z.k === kd(new Date(x.criadoEm)); }); if (m) { m.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') m.f++; } });
+      todos.forEach(function (x) { const ts = vdTs(x); if (!ts) return; const m = bars.find(function (z) { return z.k === kd(new Date(ts)); }); if (m) { m.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') m.f++; } });
     } else {
       for (let i = 11; i >= 0; i--) { const d = new Date(base.getFullYear(), base.getMonth() - i, 1); bars.push({ k: d.getFullYear() + '-' + (d.getMonth() + 1), r: 0, f: 0, l: d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '') + '/' + String(d.getFullYear()).slice(2) }); bars[bars.length - 1].t = bars[bars.length - 1].l; }
       tit = 'Solicitações por mês de recebimento';
-      todos.forEach(function (x) { if (!x.criadoEm) return; const d = new Date(x.criadoEm), m = bars.find(function (z) { return z.k === d.getFullYear() + '-' + (d.getMonth() + 1); }); if (m) { m.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') m.f++; } });
+      todos.forEach(function (x) { const ts = vdTs(x); if (!ts) return; const d = new Date(ts), m = bars.find(function (z) { return z.k === d.getFullYear() + '-' + (d.getMonth() + 1); }); if (m) { m.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') m.f++; } });
     }
-    const mm = Math.max(1, Math.max.apply(null, bars.map(function (m) { return m.r; })));
-    const totB = bars.reduce(function (t, m) { return t + m.r; }, 0), dia = VD.gran === 'dia', passo = bars.length > 45 ? 7 : (bars.length > 20 ? 3 : 1);
-    h += '<div class="vd-b"><div class="vd-hd"><h3>' + tit + ' <small>(barra clara: recebidas · escura: fechadas)</small></h3>' + seg + '</div><div class="vd-m' + (dia ? ' dia' : '') + '" style="grid-template-columns:repeat(' + bars.length + ',1fr)">' + bars.map(function (m, i) {
-      return '<div class="vd-c' + (dia && (m.dow === 0 || m.dow === 6) ? ' fds' : '') + '" title="' + m.t + ': ' + m.r + ' recebida(s), ' + m.f + ' fechada(s)"><span class="n">' + (m.r || '') + '</span><div class="bar"><i style="height:' + Math.round(m.r / mm * 100) + '%"><u style="height:' + (m.r ? Math.round(m.f / m.r * 100) : 0) + '%"></u></i></div><em>' + ((i % passo === (bars.length - 1) % passo) || !dia ? m.l : '') + '</em></div>';
-    }).join('') + '</div><p class="hint" style="margin:8px 0 0">' + totB + ' solicitação(ões) no gráfico' + (dia ? ' · média de ' + (totB / bars.length).toFixed(1).replace('.', ',') + ' por dia' : '') + '</p></div>';
+    const totB = bars.reduce(function (t, m) { return t + m.r; }, 0), totF = bars.reduce(function (t, m) { return t + m.f; }, 0), dia = VD.gran === 'dia';
+    const W = 860, H = 280, pl = 38, pr = 16, pt = 26, pb = 34, iw = W - pl - pr, ih = H - pt - pb;
+    const topo = Math.max(4, Math.max.apply(null, bars.map(function (m) { return m.r; }))), passoY = topo <= 8 ? 1 : (topo <= 20 ? 2 : (topo <= 50 ? 5 : 10)), maxY = Math.ceil(topo / passoY) * passoY;
+    const X = function (i) { return pl + (bars.length > 1 ? i * iw / (bars.length - 1) : iw / 2); }, Y = function (v) { return pt + ih - v / maxY * ih; };
+    const passoX = bars.length > 45 ? 7 : (bars.length > 20 ? 3 : (bars.length > 14 ? 2 : 1));
+    let g = '';
+    for (let v = 0; v <= maxY; v += passoY) g += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" class="vg-gr"/><text x="' + (pl - 8) + '" y="' + (Y(v) + 4) + '" class="vg-ty" text-anchor="end">' + v + '</text>';
+    bars.forEach(function (m, i) { if ((bars.length - 1 - i) % passoX === 0) g += '<text x="' + X(i) + '" y="' + (H - 12) + '" class="vg-tx" text-anchor="middle">' + m.l + '</text>'; });
+    const pts = function (k) { return bars.map(function (m, i) { return X(i).toFixed(1) + ',' + Y(m[k]).toFixed(1); }).join(' '); };
+    g += '<polygon points="' + X(0).toFixed(1) + ',' + Y(0) + ' ' + pts('r') + ' ' + X(bars.length - 1).toFixed(1) + ',' + Y(0) + '" class="vg-ar"/>';
+    g += '<polyline points="' + pts('f') + '" class="vg-lf"/><polyline points="' + pts('r') + '" class="vg-lr"/>';
+    const mostraN = bars.length <= 31;
+    bars.forEach(function (m, i) {
+      const hoje = i === bars.length - 1;
+      g += '<g><title>' + m.t + ': ' + m.r + ' recebida(s), ' + m.f + ' fechada(s)</title>' + (m.r || hoje ? '<circle cx="' + X(i) + '" cy="' + Y(m.r) + '" r="' + (hoje ? 5.5 : 3.5) + '" class="vg-pt' + (hoje ? ' hj' : '') + '"/>' : '') +
+        (m.r && (mostraN || hoje || m.r === topo) ? '<text x="' + X(i) + '" y="' + (Y(m.r) - 9) + '" class="vg-n" text-anchor="middle">' + m.r + '</text>' : '') + '<rect x="' + (X(i) - iw / bars.length / 2) + '" y="' + pt + '" width="' + (iw / bars.length) + '" height="' + ih + '" fill="transparent"/></g>';
+    });
+    const hojeN = bars[bars.length - 1].r;
+    h += '<div class="vd-b"><div class="vd-hd"><h3>' + tit + '</h3>' + seg + '</div>' +
+      '<div class="vd-lg"><span><i class="a"></i>Recebidas</span><span><i class="b"></i>Fechadas (contrato + ganho)</span></div>' +
+      '<svg class="vd-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + tit + '">' + g + '</svg>' +
+      '<p class="hint" style="margin:6px 0 0">' + totB + ' recebida(s) no gráfico · ' + totF + ' fechada(s)' + (dia ? ' · média de ' + (totB / bars.length).toFixed(1).replace('.', ',') + ' por dia · ' + (VD.gran === 'dia' ? 'hoje: ' + hojeN : '') : '') + '</p></div>';
     /* por tipo */
     const tp = {}; rs.forEach(function (x) { const t = QE.evento(x).tag; const o = tp[t] = tp[t] || { r: 0, f: 0, v: 0 }; o.r++; if (stOf(x) === 'ganho' || stOf(x) === 'contrato') { o.f++; o.v += vdTotal(x); } });
     const tl = Object.keys(tp).sort(function (a, b) { return tp[b].r - tp[a].r; });
@@ -3011,8 +3035,10 @@ body.pv-lock { overflow: hidden; }
     const rk = Object.keys(rv).sort();
     h += '<div class="vd-b"><h3>Eventos fechados daqui para frente <small>(por mês do evento)</small></h3>' + (rk.length ? '<table class="vd-t"><thead><tr><th>Mês</th><th>Eventos</th><th>Valor</th></tr></thead><tbody>' + rk.map(function (k) { const d = new Date(+k.slice(0, 4), +k.slice(5, 7) - 1, 1); return '<tr><td>' + d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) + '</td><td>' + rv[k].n + '</td><td>' + QE.brl(rv[k].v) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="hint">Nenhum evento fechado com data futura.</p>') + '</div>';
     /* atenção: pendentes parados */
-    const par = lista.filter(function (x) { return stOf(x) === 'novo' && x.criadoEm && Date.now() - x.criadoEm > 3 * 86400000 && (!tipoF || QE.evento(x).tag === tipoF); }).sort(function (a, b) { return a.criadoEm - b.criadoEm; });
-    h += '<div class="vd-b"><h3>Atenção: pendentes há mais de 3 dias <span class="vd-n">' + par.length + '</span></h3>' + (par.length ? '<ul class="vd-l">' + par.slice(0, 15).map(function (x) { return '<li><a href="#" data-vdab="' + esc(x.id) + '">' + esc(x.empresa) + '</a> <small>' + esc(QE.evento(x).tag) + ' · recebido há ' + Math.floor((Date.now() - x.criadoEm) / 86400000) + ' dias</small></li>'; }).join('') + '</ul>' : '<p class="hint">Nenhuma solicitação parada. 👏</p>') + '</div>';
+    const par = lista.filter(function (x) { return stOf(x) === 'novo' && vdTs(x) && Date.now() - vdTs(x) > 3 * 86400000 && (!tipoF || QE.evento(x).tag === tipoF); }).sort(function (a, b) { return vdTs(a) - vdTs(b); });
+    h += '<div class="vd-b"><h3>Atenção: pendentes há mais de 3 dias <span class="vd-n">' + par.length + '</span></h3>' + (par.length ? '<ul class="vd-l">' + par.slice(0, 15).map(function (x) { return '<li><a href="#" data-vdab="' + esc(x.id) + '">' + esc(x.empresa) + '</a> <small>' + esc(QE.evento(x).tag) + ' · recebido há ' + Math.floor((Date.now() - vdTs(x)) / 86400000) + ' dias</small></li>'; }).join('') + '</ul>' : '<p class="hint">Nenhuma solicitação parada. 👏</p>') + '</div>';
+    const semData = todos.filter(function (x) { return !vdTs(x); }).length;
+    if (semData) h += '<p class="hint"><b>' + semData + '</b> solicitação(ões) sem data de recebimento ficam de fora dos números por período.</p>';
     h += '<p class="hint">A conversão usa o status atual de cada solicitação (o painel ainda não guarda a data em que mudou de status). “Fechadas” = Em contrato + Ganho.</p>';
     $('#vdCorpo').innerHTML = h;
   }
@@ -3021,6 +3047,7 @@ body.pv-lock { overflow: hidden; }
     sel.innerHTML = '<option value="">Todos</option>' + tags.sort().map(function (t) { return '<option' + (t === atual ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('');
   }
   function kbVista(v) {
+    if (v === 'painel' && Date.now() - ultimaLista > 30000) recarregar();
     VD.vista = v; $$('#kbSeg button').forEach(function (b) { b.classList.toggle('on', b.dataset.kv === v); });
     $('#kanban').hidden = v !== 'quadro'; $('#vendas').hidden = v !== 'painel'; if (v === 'painel') { vdTipos(); vdRender(); }
   }
