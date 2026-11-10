@@ -919,6 +919,12 @@ body.pv-lock { overflow: hidden; }
 .vg-ar { fill: rgba(176,138,90,.16); } .vg-lr { fill: none; stroke: var(--bark); stroke-width: 2.4; stroke-linejoin: round; } .vg-lf { fill: none; stroke: #4f6b3a; stroke-width: 2; stroke-dasharray: 5 4; stroke-linejoin: round; }
 .vg-pt { fill: #fff; stroke: var(--bark); stroke-width: 2; } .vg-pt.hj { fill: var(--bark); }
 .vd-lg { display: flex; gap: 16px; flex-wrap: wrap; font-size: .82rem; color: #6b5a4a; margin: 0 0 4px; } .vd-lg i { display: inline-block; width: 18px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: var(--bark); } .vd-lg i.b { background: #4f6b3a; }
+
+/* decoração: ajustar imagem */
+.dc-ph.zz { position: relative; overflow: hidden; background: #ece6de; } .dc-ph.zz .zi { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.dc-th .aj { position: absolute; top: 3px; left: 3px; width: 22px; height: 20px; border: 0; border-radius: 6px; background: rgba(255, 255, 255, .9); cursor: pointer; padding: 0; line-height: 1; }
+.dc-ajbox { position: relative; overflow: hidden; width: min(100%, 320px); margin: 10px auto; border-radius: 14px; background: #ece6de; cursor: grab; touch-action: none; border: 1.5px solid var(--line); } .dc-ajbox .zi { position: absolute; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none; }
+#dcAjFmt { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -1041,7 +1047,7 @@ body.pv-lock { overflow: hidden; }
 
         <section class="wsec">
           <h4>WhatsApp</h4>
-          <div class="f"><label for="waFone">WhatsApp do cliente (com DDD)</label><input id="waFone" type="tel" inputmode="tel" placeholder="(11) 99999-9999"></div>
+          <div class="f"><label for="waFone">WhatsApp do cliente (com DDD ou +país)</label><input id="waFone" type="tel" inputmode="tel" placeholder="(11) 99999-9999 ou +61 405 823 683"></div>
           <div class="f"><label for="waTexto">Mensagem</label><textarea id="waTexto" rows="3"></textarea></div>
           <div class="vacoes"><button type="button" class="btn pri" id="waAbrir">Abrir WhatsApp do cliente</button></div>
         </section>
@@ -1211,6 +1217,16 @@ body.pv-lock { overflow: hidden; }
         <div class="vacoes dc-libtop"><button type="button" class="btn pri" id="dcLibOk">Adicionar selecionadas</button><button type="button" class="btn ghost" id="dcLibX">Cancelar</button></div>
         <p class="hint">Toque nas fotos para escolher (pode marcar várias).</p>
         <div class="f"><label for="dcLibF">Mostrar</label><select id="dcLibF"></select></div><div id="dcLibG" class="dc-libg"></div>
+      </div></div>
+      <div id="dcAjModal" class="vmodal" hidden><div class="vbox wbox" role="dialog" aria-label="Ajustar imagem">
+        <h3>Ajustar imagem</h3>
+        <div class="vacoes"><button type="button" class="btn pri" id="dcAjOk">Aplicar</button><button type="button" class="btn ghost" id="dcAjRs">Restaurar</button><button type="button" class="btn ghost" id="dcAjCancel">Cancelar</button></div>
+        <p class="hint">Arraste a imagem para mudar o enquadramento e use o zoom para aproximar. O formato abaixo é só para você visualizar: o projeto adapta a imagem ao espaço de cada página.</p>
+        <div class="seg" id="dcAjFmt"><button type="button" data-fmt="3/4" class="on">Vertical</button><button type="button" data-fmt="1/1">Quadrado</button><button type="button" data-fmt="4/3">Horizontal</button></div>
+        <div id="dcAjBox" class="dc-ajbox"><div id="dcAjImg" class="zi"></div></div>
+        <div class="f"><label for="dcAjZ">Tamanho (zoom): <b id="dcAjZv">100%</b></label><input type="range" id="dcAjZ" min="100" max="300" step="5"></div>
+        <div class="f"><label for="dcAjH">Posição horizontal</label><input type="range" id="dcAjH" min="0" max="100"></div>
+        <div class="f"><label for="dcAjV">Posição vertical</label><input type="range" id="dcAjV" min="0" max="100"></div>
       </div></div>
       <input type="file" id="dcFile" accept="image/*" multiple hidden>
     </section>
@@ -1901,8 +1917,23 @@ body.pv-lock { overflow: hidden; }
     return b.e === 'outros' ? ('Outros' + (b.t ? ': ' + b.t : '')) : (e ? e[1] : '');
   };
   QE.MARCAS_CHOPP = { germania: 'Germânia', brahma: 'Brahma', heineken: 'Heineken' };
+  /* telefone: padrão brasileiro (DDD) ou internacional (+país). Mais de 11 dígitos, "+" no começo ou 11 dígitos sem o 9 do celular = internacional */
+  QE.telIntl = function (v) {
+    const t = String(v || '').trim(), d = t.replace(/\D/g, '');
+    if (t.charAt(0) === '+') return d.slice(0, 2) !== '55';   // "+55 ..." digitado também é Brasil
+    return d.length > 11 || (d.length === 11 && d.charAt(2) !== '9');
+  };
   QE.maskTel = function (v) {
-    const d = String(v || '').replace(/\D/g, '').slice(0, 11);
+    const t = String(v || '').trim(); let d = t.replace(/\D/g, '');
+    if (t.charAt(0) === '+' && d.slice(0, 2) === '55') d = d.slice(2);
+    if (QE.telIntl(t)) {
+      d = d.slice(0, 15); if (!d) return t.charAt(0) === '+' ? '+' : '';
+      const c3 = ['21', '22', '23', '24', '25', '26', '29', '35', '37', '38', '42', '50', '59', '67', '68', '69', '85', '87', '88', '96', '97', '99'];
+      const cc = (d.charAt(0) === '1' || d.charAt(0) === '7') ? 1 : (c3.indexOf(d.slice(0, 2)) >= 0 ? 3 : 2);
+      const rs = d.slice(cc), resto = (cc === 1 && rs.length > 6) ? [rs.slice(0, 3), rs.slice(3, 6), rs.slice(6)] : (rs.match(/.{1,3}/g) || []);
+      return '+' + d.slice(0, cc) + (resto.length ? ' ' + resto.join(' ') : '');
+    }
+    d = d.slice(0, 11);
     if (d.length <= 2) return d.length ? '(' + d : '';
     if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
     if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
@@ -3137,7 +3168,7 @@ body.pv-lock { overflow: hidden; }
       '<div class="f"><label>Cardápio(s) do buffet</label><div id="cardBox">' + buildCardapios() + '</div><p class="hint">Cada cardápio escolhido gera a sua página de menu em anexo no PDF.</p></div>' +
       '<div class="g2">' + (soc ? C('Estadia', 'estadia') : C('Café da manhã', 'cafe') + C('Mesa de doces', 'doces')) + '</div><div class="g2">' + C('Com nota fiscal', 'nf') + '</div>' +
       '<div class="f"><label>Observações do cliente</label><textarea data-p="obs" rows="2">' + esc(cur.obs) + '</textarea></div>' +
-      (cur.email || cur.telefone ? '<p class="hint">' + (cur.telefone ? '<a href="https://wa.me/55' + String(cur.telefone).replace(/\D/g, '') + '" target="_blank" rel="noopener">Abrir WhatsApp</a>' : '') + (cur.email ? ' · <a href="mailto:' + esc(cur.email) + '">Enviar e-mail</a>' : '') + '</p>' : '') +
+      (cur.email || cur.telefone ? '<p class="hint">' + (cur.telefone ? '<a href="https://wa.me/' + (QE.telIntl(cur.telefone) ? '' : '55') + String(cur.telefone).replace(/\D/g, '') + '" target="_blank" rel="noopener">Abrir WhatsApp</a>' : '') + (cur.email ? ' · <a href="mailto:' + esc(cur.email) + '">Enviar e-mail</a>' : '') + '</p>' : '') +
       '</div></details>';
 
     /* 2) Dados do orçamento (valores do pacote + dados gerais, juntos) */
@@ -4158,7 +4189,7 @@ body.pv-lock { overflow: hidden; }
 
   /* ---------- Enviar orçamento pelo WhatsApp ---------- */
   const WA = { menuNome: '', blob: null, nomeArq: '', base: '', modo: 'orc', registrado: false };
-  const waNumero = function (t) { let d = String(t || '').replace(/\D/g, ''); if (d.length >= 10 && d.length <= 11) d = '55' + d; return d; };
+  const waNumero = function (t) { let d = String(t || '').replace(/\D/g, ''); if (!QE.telIntl(t) && d.length >= 10 && d.length <= 11) d = '55' + d; return d; };
   const waDeco = function () { return WA.modo === 'deco' && typeof DC !== 'undefined' && DC.p; };
   const waMenu = function () { return WA.modo === 'menu'; };
   const waSol = function () { if (waMenu()) { const cs = $('#waCli'); return (cs && cs.value && lista.find(function (y) { return y.id === cs.value; })) || {}; } return waDeco() ? (lista.find(function (y) { return y.id === DC.p.solId; }) || {}) : cur; };
@@ -4306,10 +4337,9 @@ body.pv-lock { overflow: hidden; }
       abertura: { imgs: ['mesa', 'deco5', 'deco4'] },
       secoes: [
         sec('Salão Principal', 'Mesas postas com a paleta da sua marca.', ['Mesas redondas e retangulares', 'Toalhas no tom palha', 'Sousplat em palha natural', 'Guardanapos e porta guardanapo', 'Taças', 'Arranjos em flores naturais', 'Buffet de café da manhã (conforme cronograma)', 'Mesa de doces (conforme cronograma)'], ['deco1', 'mesa', 'mesadoces1']),
-        sec('Área da Piscina', 'Drinks, lounge e convivência.', ['Bar de drinks', 'Lounges', 'Mesas bistrô', 'Chopp'], ['piscina'], [
+        sec('Área da Piscina', 'Drinks, lounge e convivência.', ['Backdrop', 'Lounges', 'Mesas bistrô'], ['piscina', 'backdrop'], [
           sub('Pergolado', 'Frontal', ['Banda', 'DJ'], ['banda', 'dj']),
-          sub('Pergolado', 'Lateral', ['Backdrop (arte fornecida pelo cliente)'], ['backdrop', 'arvore'])]),
-        sec('Área da Churrasqueira', 'Sabor e flores naturais no centro da mesa.', ['Buffet de churrasco', 'Vaso alto com flores naturais'], ['churrasco-premium', 'deco4', 'churrasco-standard'])
+          sub('Pergolado', 'Pinheiro', ['Bar de drinks'], ['bar-frente', 'drink1'])])
       ],
       fim: { titulo: 'Vamos criar juntos' }
     };
@@ -4375,7 +4405,7 @@ body.pv-lock { overflow: hidden; }
   const dcI = function (k, lab, tipo, extra) { const v = getP(DC.p, k); return '<div class="f"><label>' + lab + '</label><input type="' + (tipo || 'text') + '" data-dc="' + k + '" value="' + esc(v === null || v === undefined ? '' : v) + '"' + (extra || '') + '></div>'; };
   const dcThumbs = function (path, imgs) {
     return '<div class="dc-ths">' + (imgs || []).map(function (k, i) {
-      return '<div class="dc-th" style="background-image:url(\'' + esc(dcSrc(k)) + '\')"><button type="button" class="x" data-dcimgdel="' + path + ':' + i + '" title="Remover">×</button><div class="mv"><button type="button" data-dcimgmv="' + path + ':' + i + ':-1">‹</button><button type="button" data-dcimgmv="' + path + ':' + i + ':1">›</button></div></div>';
+      return '<div class="dc-th" style="background-image:url(\'' + esc(dcSrc(k)) + '\')"><button type="button" class="x" data-dcimgdel="' + path + ':' + i + '" title="Remover">×</button><button type="button" class="aj" data-dcimgaj="' + path + ':' + i + '" title="Ajustar / redimensionar a imagem">⤢</button><div class="mv"><button type="button" data-dcimgmv="' + path + ':' + i + ':-1">‹</button><button type="button" data-dcimgmv="' + path + ':' + i + ':1">›</button></div></div>';
     }).join('') + '</div><div class="vacoes"><button type="button" class="btn sm" data-dclib="' + path + '">+ Do banco de imagens</button><button type="button" class="btn sm" data-dcup="' + path + '">+ Do celular / computador</button></div>';
   };
   const dcBloco = function (path, o, ehSub) {
@@ -4426,6 +4456,7 @@ body.pv-lock { overflow: hidden; }
     if (t.id === 'dcAddCor') { if (p.paleta.length >= 8) return toast('No máximo 8 cores.', true); p.paleta.push({ c: '#C2A068', n: '' }); dcRenderForm(); dcMarca(); return; }
     if (ds.dcrmcor) { p.paleta.splice(+ds.dcrmcor, 1); dcRenderForm(); dcMarca(); return; }
     if (ds.dcimgdel) { const q = ds.dcimgdel.split(':'), arr = getP(p, q[0]); arr.splice(+q[1], 1); dcRenderForm(); dcMarca(); return; }
+    if (ds.dcimgaj) { const q = ds.dcimgaj.split(':'), arr = getP(p, q[0]); if (arr && arr[+q[1]]) dcAjAbre(arr[+q[1]]); return; }
     if (ds.dcimgmv) { const q = ds.dcimgmv.split(':'), arr = getP(p, q[0]), i = +q[1], j = i + +q[2]; if (j < 0 || j >= arr.length) return; const o = arr.splice(i, 1)[0]; arr.splice(j, 0, o); dcRenderForm(); dcMarca(); return; }
     if (ds.dclogodel) { p.logo = ''; dcRenderForm(); dcMarca(); return; }
     if (ds.dclib) { DC.alvo = ds.dclib; dcLibAbre(); return; }
@@ -4452,6 +4483,38 @@ body.pv-lock { overflow: hidden; }
   $('#dcLibG').addEventListener('click', function (e) { const b = e.target.closest('[data-k]'); if (!b) return; const i = DC.sel.indexOf(b.dataset.k); if (i >= 0) DC.sel.splice(i, 1); else DC.sel.push(b.dataset.k); b.classList.toggle('on'); $('#dcLibOk').textContent = DC.sel.length ? 'Adicionar selecionadas (' + DC.sel.length + ')' : 'Adicionar selecionadas'; });
   function dcLibFecha() { $('#dcLibModal').hidden = true; document.body.classList.remove('pv-lock'); }
   $('#dcLibX').addEventListener('click', dcLibFecha);
+  /* ---------- ajustar imagem (zoom e posição) ---------- */
+  var AJ = { k: '', z: 100, x: 50, y: 50, fmt: '3/4' };
+  function dcAjDesenha() {
+    const q = dcEnqStyle(AJ), im = $('#dcAjImg');
+    im.style.background = 'url(\'' + dcSrc(AJ.k) + '\') ' + q.pos + ' / cover no-repeat'; im.style.transform = q.tr; im.style.transformOrigin = q.org;
+    $('#dcAjBox').style.aspectRatio = AJ.fmt; $('#dcAjZ').value = AJ.z; $('#dcAjH').value = AJ.x; $('#dcAjV').value = AJ.y; $('#dcAjZv').textContent = AJ.z + '%';
+    $$('#dcAjFmt button').forEach(function (b) { b.classList.toggle('on', b.dataset.fmt === AJ.fmt); });
+  }
+  function dcAjAbre(k) {
+    const e = (DC.p.enq || {})[k] || {};
+    AJ = { k: k, z: +e.z || 100, x: e.x === undefined ? 50 : +e.x, y: e.y === undefined ? 50 : +e.y, fmt: AJ.fmt || '3/4' };
+    $('#dcAjModal').hidden = false; document.body.classList.add('pv-lock'); dcAjDesenha();
+  }
+  function dcAjFecha() { $('#dcAjModal').hidden = true; document.body.classList.remove('pv-lock'); }
+  $('#dcAjZ').addEventListener('input', function () { AJ.z = +this.value; dcAjDesenha(); });
+  $('#dcAjH').addEventListener('input', function () { AJ.x = +this.value; dcAjDesenha(); });
+  $('#dcAjV').addEventListener('input', function () { AJ.y = +this.value; dcAjDesenha(); });
+  $('#dcAjFmt').addEventListener('click', function (e) { const b = e.target.closest('[data-fmt]'); if (b) { AJ.fmt = b.dataset.fmt; dcAjDesenha(); } });
+  $('#dcAjRs').addEventListener('click', function () { AJ.z = 100; AJ.x = 50; AJ.y = 50; dcAjDesenha(); });
+  $('#dcAjCancel').addEventListener('click', dcAjFecha);
+  $('#dcAjOk').addEventListener('click', function () {
+    DC.p.enq = DC.p.enq || {};
+    if (dcEnqPadrao(AJ)) delete DC.p.enq[AJ.k]; else DC.p.enq[AJ.k] = { z: AJ.z, x: AJ.x, y: AJ.y };
+    dcAjFecha(); dcMarca(); toast('Imagem ajustada. A prévia foi atualizada.');
+  });
+  (function () {   /* arrastar a imagem para mudar a posição */
+    const box = $('#dcAjBox'); let ar = null;
+    box.addEventListener('pointerdown', function (e) { ar = { x: e.clientX, y: e.clientY, ax: AJ.x, ay: AJ.y }; try { box.setPointerCapture(e.pointerId); } catch (x) { /* ok */ } e.preventDefault(); });
+    box.addEventListener('pointermove', function (e) { if (!ar) return; const r = box.getBoundingClientRect(); AJ.x = Math.max(0, Math.min(100, Math.round(ar.ax - (e.clientX - ar.x) / r.width * 100))); AJ.y = Math.max(0, Math.min(100, Math.round(ar.ay - (e.clientY - ar.y) / r.height * 100))); dcAjDesenha(); });
+    box.addEventListener('pointerup', function () { ar = null; }); box.addEventListener('pointercancel', function () { ar = null; });
+  }());
+
   $('#dcLibOk').addEventListener('click', function () {
     if (DC.alvo === 'logo') { if (DC.sel[0]) { DC.p.logo = DC.sel[0]; } } else DC.sel.forEach(function (k) { dcAdd(DC.alvo, k); });
     dcLibFecha(); dcRenderForm(); dcMarca();
@@ -4489,14 +4552,20 @@ body.pv-lock { overflow: hidden; }
     } catch (e) { console.error(e); toast('Não consegui enviar a imagem (' + (e.message || e) + ').', true); }
   });
   /* ---- páginas ---- */
+  var dcEnqAtual = {};
+  const dcEnqPadrao = function (e) { return !e || ((+e.z || 100) === 100 && (e.x === undefined || +e.x === 50) && (e.y === undefined || +e.y === 50)); };
+  const dcEnqStyle = function (e) { const x = e.x === undefined ? 50 : +e.x, y = e.y === undefined ? 50 : +e.y, z = (+e.z || 100) / 100; return { pos: x + '% ' + y + '%', tr: 'scale(' + z + ')', org: x + '% ' + y + '%' }; };
   function dcFotosHTML(imgs, bloco) {
     const L = (imgs || []).filter(function (k) { return dcSrc(k); }).slice(0, 9); if (!L.length) return '';
     return '<div class="dc-fotos n' + L.length + (bloco ? ' b' : '') + '">' + L.map(function (k, i) {
+      const e = dcEnqAtual && dcEnqAtual[k];
+      if (!dcEnqPadrao(e)) { const q = dcEnqStyle(e); return '<div class="dc-ph zz' + (!bloco && i === 0 && L.length <= 3 ? ' arch' : '') + '"><div class="zi" style="background:url(\'' + dcSrc(k) + '\') ' + q.pos + ' / cover no-repeat;transform:' + q.tr + ';transform-origin:' + q.org + '"></div></div>'; }
       return '<div class="dc-ph' + (!bloco && i === 0 && L.length <= 3 ? ' arch' : '') + '" style="background-image:url(\'' + dcSrc(k) + '\')"></div>';
     }).join('') + '</div>';
   }
   const dcLista = function (it, c2) { return it && it.length ? '<ul class="dc-bl' + (c2 ? ' c2' : '') + '">' + it.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : ''; };
   function dcHTML(p) {
+    dcEnqAtual = p.enq || {};
     const ct = QE.CONTATOS, dots = '<span class="dc-dots">' + p.paleta.map(function (c) { return '<i style="background:' + esc(c.c) + '"></i>'; }).join('') + '</span>';
     let n = 1;
     const foot = function () { n++; return '<div class="dc-ft">' + dots + '<span>QUINTA DOS ESQUILOS · ESPAÇO DE EVENTOS</span><b>' + String(n).padStart(2, '0') + '</b></div>'; };
