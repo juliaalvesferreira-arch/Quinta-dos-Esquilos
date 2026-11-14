@@ -947,6 +947,8 @@ body.pv-lock { overflow: hidden; }
 .bg-st { display: inline-flex; align-items: center; gap: 4px; } .bg-st button { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--bark); background: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0; } .bg-st button:active { background: var(--linen); } .bg-st input { width: 64px; height: 42px; text-align: center; font-size: 1.05rem; font-weight: 600; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; padding: 0 4px; -moz-appearance: textfield; } .bg-st input::-webkit-outer-spin-button, .bg-st input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .bg-es { background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; } .bg-es[hidden] { display: none; } .bg-es .top { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; } .bgn { flex: 1; min-width: 0; min-height: 40px; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; } .bg-es .bot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; } .bg-es .lbl { font-size: .8rem; color: var(--taupe); } .bg-un { min-height: 42px; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; } .bg-es .pk { display: inline-flex; align-items: center; gap: 4px; font-size: .85rem; padding: 6px 10px; background: var(--paper); border-radius: 999px; } .bg-es .pk input { width: 18px; height: 18px; }
 @media (max-width: 520px) { .bg-it .num { display: none; } .bg-g2 { grid-template-columns: 1fr; } .bg-prop .d { width: 62px; } }
+
+.bg-ed { grid-column: 1 / -1; } .bg-ed > summary { cursor: pointer; font-size: .8rem; color: var(--taupe); list-style: none; padding: 2px 0; } .bg-ed[open] > summary { margin-bottom: 8px; } .bg-ed .top { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; } .bg-ed .bot { display: flex; gap: 8px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
@@ -4666,9 +4668,25 @@ body.pv-lock { overflow: hidden; }
   const BG_UNS = ['un', 'garrafa', 'kg', 'L', 'caixa', 'bandeja', 'saco', 'fardo', 'pacote', 'maço', 'lata', 'dúzia'];
   const BG_PAC = { prata: 'Bar Prata', ouro: 'Bar Ouro' };
   const bgNz = function (t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
+  const BG_FR = { 'Abacaxi': 'un', 'Caju': 'bandeja', 'Limão taiti': 'kg', 'Limão siciliano': 'un', 'Maracujá': 'un', 'Melancia': 'un', 'Morango': 'bandeja', 'Uva': 'bandeja', 'Laranja': 'un', 'Mirtilo': 'bandeja', 'Pitaya': 'un', 'Grapefruit': 'un' };
+  function bgUnPadrao(c, nome) { return c === 'Frutas' && BG_FR[nome] ? BG_FR[nome] : (/^Energético/.test(nome) ? 'un' : BG_UN[c]); }
+  function bgMigra(d) {
+    let ch = false;
+    if (!d.mig) { const s = d.itens.find(function (i) { return i.nome === 'Cachaça Sagatiba'; }); if (s) s.prata = true; d.mig = 1; ch = true; }
+    if (d.mig < 2) {
+      d.itens.forEach(function (i) { if (i.cat === 'Frutas' && BG_FR[i.nome]) i.un = BG_FR[i.nome]; });
+      [['Energético Baly', 'prata'], ['Energético Red Bull', 'ouro']].forEach(function (p) {
+        const k = d.itens.findIndex(function (i) { return i.nome === p[0]; }); if (k < 0) return;
+        const a = d.itens[k]; a.nome = p[0] + ' Tropical'; a.un = 'un';
+        if (!d.itens.some(function (i) { return i.nome === p[0] + ' Melancia'; })) d.itens.splice(k + 1, 0, { id: bgId(), nome: p[0] + ' Melancia', cat: a.cat, un: 'un', prata: !!a.prata, ouro: !!a.ouro });
+      });
+      d.mig = 2; ch = true;
+    }
+    return ch;
+  }
   function bgPadrao() {
     const base = {
-      'Álcool': [['Vodka Smirnoff', 'p'], ['Vodka Absolut', 'o'], ['Saquê Azuma Kirin', 'po'], ['Cachaça Velho Barreiro', 'po'], ['Cachaça Sagatiba', 'po'], ['Gin Gordon\'s', 'p'], ['Gin Tanqueray', 'o'], ['Rum Bacardi', 'po'], ['Energético Baly', 'p'], ['Energético Red Bull', 'o'], ['Aperol', 'o'], ['Prosseco', 'o'], ['Campari', 'o'], ['Vermute', 'o'], ['Angustura', 'o']],
+      'Álcool': [['Vodka Smirnoff', 'p'], ['Vodka Absolut', 'o'], ['Saquê Azuma Kirin', 'po'], ['Cachaça Velho Barreiro', 'po'], ['Cachaça Sagatiba', 'po'], ['Gin Gordon\'s', 'p'], ['Gin Tanqueray', 'o'], ['Rum Bacardi', 'po'], ['Energético Baly Tropical', 'p'], ['Energético Baly Melancia', 'p'], ['Energético Red Bull Tropical', 'o'], ['Energético Red Bull Melancia', 'o'], ['Aperol', 'o'], ['Prosseco', 'o'], ['Campari', 'o'], ['Vermute', 'o'], ['Angustura', 'o']],
       'Xaropes': ['Gengibre', 'Morango', 'Frutas vermelhas', 'Maçã verde', 'Tangerina', 'Limão siciliano', 'Curaçao Blue'],
       'Bebidas': ['Água', 'Água com gás', 'Água tônica', 'Soda', 'Suco de abacaxi', 'Leite de coco', 'Leite condensado'],
       'Complementos': ['Alecrim', 'Hortelã', 'Laranja seca', 'Canela'],
@@ -4678,10 +4696,10 @@ body.pv-lock { overflow: hidden; }
     BG_CATS.forEach(function (c) {
       base[c].forEach(function (x) {
         const nome = typeof x === 'string' ? x : x[0], fl = typeof x === 'string' ? 'po' : x[1];
-        itens.push({ id: 'i' + (itens.length + 1), nome: nome, cat: c, un: BG_UN[c], prata: fl.indexOf('p') >= 0, ouro: fl.indexOf('o') >= 0 });
+        itens.push({ id: 'i' + (itens.length + 1), nome: nome, cat: c, un: bgUnPadrao(c, nome), prata: fl.indexOf('p') >= 0, ouro: fl.indexOf('o') >= 0 });
       });
     });
-    return { v: 2, mig: 1, itens: itens, estoque: {}, eventos: [] };
+    return { v: 3, mig: 2, itens: itens, estoque: {}, eventos: [] };
   }
   const bgId = function () { return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); };
   const bgN = function (v) { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) || n < 0 ? 0 : n; };
@@ -4711,7 +4729,7 @@ body.pv-lock { overflow: hidden; }
     try {
       const d = await limite(QE.db.docGet('bar_gestao'), 15000);
       BG.d = d && d.itens ? d : bgPadrao(); BG.d.estoque = BG.d.estoque || {}; BG.d.eventos = BG.d.eventos || []; BG.ok = true; BG.msg = '';
-      if (!BG.d.mig) { const s = BG.d.itens.find(function (i) { return i.nome === 'Cachaça Sagatiba'; }); if (s) s.prata = true; BG.d.mig = 1; bgSalva(); }
+      if (bgMigra(BG.d)) bgSalva();
     } catch (e) {
       console.error(e); BG.ok = false; BG.d = BG.d || bgPadrao(); BG.msg = 'Não consegui ler os dados do bar agora (' + (e.code || e.message) + '). Para não apagar nada, o salvamento está bloqueado.';
     }
@@ -4842,7 +4860,7 @@ body.pv-lock { overflow: hidden; }
   function bgVEstoque() {
     const por = bgPorCat(BG.d.itens);
     return '<input type="search" id="bgBuscaEst" class="bg-busca" placeholder="🔍 Buscar item…" autocomplete="off"><details class="bg-det"><summary>+ Cadastrar item novo</summary><div class="bg-card flat"><div class="f"><label>Nome</label><input id="bgNNome"></div><div class="bg-g2"><div class="f"><label>Categoria</label><select id="bgNCat">' + BG_CATS.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</select></div><div class="f"><label>Unidade</label>' + bgUnSel('id="bgNUn"', '', 'un') + '</div></div><label class="chk"><input type="checkbox" id="bgNP"> entra no Bar Prata</label><label class="chk"><input type="checkbox" id="bgNO"> entra no Bar Ouro</label><p class="hint" style="margin:4px 0">Sem marcar nenhum, vira item “extra” que você adiciona só nos eventos que quiser.</p><button type="button" class="btn pri" data-bg="additem">Cadastrar</button></div></details>' +
-      '<div class="bg-lista">' + por.map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(function (i) { return '<div class="bg-es" data-nome="' + esc(i.nome) + '"><div class="top"><input class="bgn" data-bgin="' + i.id + '" value="' + esc(i.nome) + '" aria-label="Nome"><button type="button" class="btn sm ghost" data-bgrmi="' + i.id + '" aria-label="Remover">🗑</button></div><div class="bot"><div class="lbl">Estoque</div>' + bgStep('data-bgest', i.id, bgN(BG.d.estoque[i.id]), i) + bgUnSel('data-bgun', i.id, i.un) + '<label class="pk"><input type="checkbox" data-bgpk="prata:' + i.id + '"' + (i.prata ? ' checked' : '') + '>Prata</label><label class="pk"><input type="checkbox" data-bgpk="ouro:' + i.id + '"' + (i.ouro ? ' checked' : '') + '>Ouro</label></div></div>'; }).join(''); }).join('') + '</div>';
+      '<div class="bg-lista">' + por.map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(function (i) { return '<div class="bg-es bg-row" data-nome="' + esc(i.nome) + '"><div class="n"><b>' + esc(i.nome) + '</b><small>' + esc(i.un) + (i.prata && i.ouro ? ' · Prata e Ouro' : i.prata ? ' · Prata' : i.ouro ? ' · Ouro' : ' · extra') + '</small></div>' + bgStep('data-bgest', i.id, bgN(BG.d.estoque[i.id]), i) + '<details class="bg-ed"><summary>editar item</summary><div class="top"><input class="bgn" data-bgin="' + i.id + '" value="' + esc(i.nome) + '" aria-label="Nome"><button type="button" class="btn sm ghost" data-bgrmi="' + i.id + '" aria-label="Remover">🗑</button></div><div class="bot"><label class="pk"><input type="checkbox" data-bgpk="prata:' + i.id + '"' + (i.prata ? ' checked' : '') + '>Prata</label><label class="pk"><input type="checkbox" data-bgpk="ouro:' + i.id + '"' + (i.ouro ? ' checked' : '') + '>Ouro</label></div></details></div>'; }).join(''); }).join('') + '</div>';
   }
   function bgHtmlHist() {
     const pac = BG.sugP, r = bgMedias(pac), por = bgPorCat(bgItensPac(pac).filter(function (i) { return r.m[i.id].tot > 0; })), s = bgSugere(pac, BG.sugN).nec;
