@@ -925,6 +925,13 @@ body.pv-lock { overflow: hidden; }
 .dc-th .aj { position: absolute; top: 3px; left: 3px; width: 22px; height: 20px; border: 0; border-radius: 6px; background: rgba(255, 255, 255, .9); cursor: pointer; padding: 0; line-height: 1; }
 .dc-ajbox { position: relative; overflow: hidden; width: min(100%, 320px); margin: 10px auto; border-radius: 14px; background: #ece6de; cursor: grab; touch-action: none; border: 1.5px solid var(--line); } .dc-ajbox .zi { position: absolute; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none; }
 #dcAjFmt { margin-bottom: 4px; }
+
+/* gestão bar */
+.tscroll { overflow-x: auto; } .bg-t td, .bg-t th { vertical-align: middle; } .bg-t tr.cat td { background: #f3ecdd; font-weight: 700; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+.bg-t tr.falta td:last-child b { color: #a23a2a; } .bg-t tr.ok td:last-child b { color: #4f6b3a; } .bgdet { display: block; color: #8a7a6a; font-size: .74rem; }
+.bgq { width: 90px; padding: 7px 8px; border: 1.5px solid #ddd2bf; border-radius: 8px; font: inherit; } .bgn { width: 100%; min-width: 150px; padding: 7px 8px; border: 1.5px solid #ddd2bf; border-radius: 8px; font: inherit; } .bgu { width: 90px; padding: 7px 8px; border: 1.5px solid #ddd2bf; border-radius: 8px; font: inherit; }
+.bg-evs { display: grid; gap: 10px; margin-top: 12px; } .bg-ev { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; background: #fff; border: 1.5px solid #ddd2bf; border-radius: 14px; padding: 12px 14px; }
+#bgImp, #bgImpP { max-width: 100%; padding: 9px 10px; border: 1.5px solid #ddd2bf; border-radius: 10px; background: #fff; font: inherit; }
 </style>
 </head>
 <body>
@@ -954,6 +961,7 @@ body.pv-lock { overflow: hidden; }
       <button data-v="fin">Financeiro</button>
       <button data-v="forn">Fornecedores</button>
       <button data-v="deco">Decoração</button>
+      <button data-v="bar">Gestão Bar</button>
       <button data-v="menus">Menus</button>
       <button data-v="fotos">Fotos</button>
     </nav>
@@ -1229,6 +1237,12 @@ body.pv-lock { overflow: hidden; }
         <div class="f"><label for="dcAjV">Posição vertical</label><input type="range" id="dcAjV" min="0" max="100"></div>
       </div></div>
       <input type="file" id="dcFile" accept="image/*" multiple hidden>
+    </section>
+
+    <section id="v-bar" class="view" hidden>
+      <div class="head"><h2>Gestão Bar</h2><span id="bgSt" class="hint"></span></div>
+      <div class="seg" id="bgSub" style="margin-bottom:12px"><button type="button" data-bs="compras" class="on">Compras</button><button type="button" data-bs="eventos">Eventos</button><button type="button" data-bs="estoque">Estoque</button><button type="button" data-bs="hist">Histórico e médias</button></div>
+      <div id="bgCorpo"></div>
     </section>
 
     <section id="v-menus" class="view" hidden>
@@ -2926,7 +2940,7 @@ body.pv-lock { overflow: hidden; }
 
   /* ---------- Navegação ---------- */
   function view(v) {
-    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras', 'menus', 'deco'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
+    ['lista', 'edit', 'disp', 'tab', 'fotos', 'kanban', 'forn', 'fin', 'vis', 'contrato', 'obras', 'menus', 'deco','bar'].forEach(function (n) { $('#v-' + n).hidden = n !== v; });
     $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === (v === 'edit' ? 'lista' : v)); });
     if (v === 'disp') renderDisp();
     if (v === 'tab') renderTab();
@@ -2939,6 +2953,7 @@ body.pv-lock { overflow: hidden; }
     if (v === 'fin') renderFin();
     if (v === 'vis') carregaVis().then(renderVis);
     if (v === 'obras') { if (OB.carregado) obRender(); else obCarrega(); }
+    if (v === 'bar') { if (BG.d && BG.ok) bgRender(); else bgCarrega(); }
     window.scrollTo(0, 0);
   }
   $('#tabs').addEventListener('click', function (e) {
@@ -4625,6 +4640,207 @@ body.pv-lock { overflow: hidden; }
     try { await dcSalva(true); const blob = await gerarPdfBlob(null, dcHTML(DC.p)); baixarBlob(blob, 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente')); toast('PDF baixado'); }
     catch (e) { console.error(e); toast('Não consegui gerar o PDF (' + (e && e.message || e) + ').', true); }
     finally { btn.disabled = false; btn.textContent = txt; }
+  });
+
+  /* ======================================================================
+     Gestão Bar — compras, estoque e histórico de consumo
+     ====================================================================== */
+  const BG = { d: null, ok: false, sub: 'compras', ev: null, selC: {}, sugN: 100, sugP: 'prata', msg: '' };
+  const BG_CATS = ['Álcool', 'Xaropes', 'Bebidas', 'Complementos', 'Frutas', 'Outros'];
+  const BG_UN = { 'Álcool': 'garrafa', 'Xaropes': 'garrafa', 'Bebidas': 'un', 'Complementos': 'un', 'Frutas': 'kg', 'Outros': 'un' };
+  const BG_PAC = { prata: 'Bar Prata', ouro: 'Bar Ouro' };
+  function bgPadrao() {
+    const base = {
+      'Álcool': [['Vodka Smirnoff', 'p'], ['Vodka Absolut', 'o'], ['Saquê Azuma Kirin', 'po'], ['Cachaça Velho Barreiro', 'po'], ['Cachaça Sagatiba', 'o'], ['Gin Gordon\'s', 'p'], ['Gin Tanqueray', 'o'], ['Rum Bacardi', 'po'], ['Energético Baly', 'p'], ['Energético Red Bull', 'o'], ['Aperol', 'o'], ['Prosseco', 'o'], ['Campari', 'o'], ['Vermute', 'o'], ['Angustura', 'o']],
+      'Xaropes': ['Gengibre', 'Morango', 'Frutas vermelhas', 'Maçã verde', 'Tangerina', 'Limão siciliano', 'Curaçao Blue'],
+      'Bebidas': ['Água', 'Água com gás', 'Água tônica', 'Soda', 'Suco de abacaxi', 'Leite de coco', 'Leite condensado'],
+      'Complementos': ['Alecrim', 'Hortelã', 'Laranja seca', 'Canela'],
+      'Frutas': ['Abacaxi', 'Caju', 'Limão taiti', 'Limão siciliano', 'Maracujá', 'Melancia', 'Morango', 'Uva', 'Laranja', 'Mirtilo', 'Pitaya', 'Grapefruit'],
+      'Outros': ['Gás', 'Emulsificante']
+    }, itens = [];
+    BG_CATS.forEach(function (c) {
+      base[c].forEach(function (x) {
+        const nome = typeof x === 'string' ? x : x[0], fl = typeof x === 'string' ? 'po' : x[1];
+        itens.push({ id: 'i' + (itens.length + 1), nome: nome, cat: c, un: BG_UN[c], prata: fl.indexOf('p') >= 0, ouro: fl.indexOf('o') >= 0 });
+      });
+    });
+    return { v: 1, itens: itens, estoque: {}, eventos: [] };
+  }
+  const bgId = function () { return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); };
+  const bgN = function (v) { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) || n < 0 ? 0 : n; };
+  const bgFmt = function (n) { n = Math.round(n * 100) / 100; return String(n).replace('.', ','); };
+  const bgItem = function (id) { return BG.d.itens.find(function (i) { return i.id === id; }); };
+  const bgEv = function (id) { return BG.d.eventos.find(function (e) { return e.id === id; }); };
+  const bgItensPac = function (pac) { return BG.d.itens.filter(function (i) { return i[pac]; }); };
+  const bgPorCat = function (lista) { return BG_CATS.concat(Object.keys(lista.reduce(function (m, i) { m[i.cat] = 1; return m; }, {})).filter(function (c) { return BG_CATS.indexOf(c) < 0; })).map(function (c) { return { cat: c, itens: lista.filter(function (i) { return i.cat === c; }) }; }).filter(function (g) { return g.itens.length; }); };
+  async function bgCarrega() {
+    $('#bgCorpo').innerHTML = '<p class="hint">Carregando…</p>';
+    try {
+      const d = await limite(QE.db.docGet('bar_gestao'), 15000);
+      BG.d = d && d.itens ? d : bgPadrao(); BG.d.estoque = BG.d.estoque || {}; BG.d.eventos = BG.d.eventos || []; BG.ok = true; BG.msg = '';
+    } catch (e) {
+      console.error(e); BG.ok = false; BG.d = BG.d || bgPadrao(); BG.msg = 'Não consegui ler os dados do bar agora (' + (e.code || e.message) + '). Para não apagar nada, o salvamento está bloqueado. Toque em “Tentar de novo”.';
+    }
+    bgRender();
+  }
+  let bgTimer = null;
+  function bgSalva() {
+    if (!BG.ok) { toast('Salvamento bloqueado: não consegui ler os dados do bar. Toque em “Tentar de novo”.', true); return; }
+    clearTimeout(bgTimer); $('#bgSt').textContent = 'Salvando…';
+    bgTimer = setTimeout(function () { QE.db.docSet('bar_gestao', BG.d).then(function () { $('#bgSt').textContent = 'Salvo'; }).catch(function (e) { $('#bgSt').textContent = ''; toast('Não consegui salvar o bar (' + (e.code || e.message) + ').', true); }); }, 500);
+  }
+  /* média histórica por pessoa (eventos realizados do mesmo pacote) */
+  function bgMedias(pac) {
+    const ev = BG.d.eventos.filter(function (e) { return e.status === 'realizado' && e.pacote === pac && +e.qtd > 0 && e.consumo; });
+    const pessoas = ev.reduce(function (t, e) { return t + (+e.qtd); }, 0), m = {};
+    bgItensPac(pac).forEach(function (i) {
+      const tot = ev.reduce(function (t, e) { return t + bgN(e.consumo[i.id]); }, 0), n = ev.filter(function (e) { return bgN(e.consumo[i.id]) > 0; }).length;
+      m[i.id] = { pp: pessoas ? tot / pessoas : 0, tot: tot, n: n };
+    });
+    return { m: m, eventos: ev.length, pessoas: pessoas };
+  }
+  function bgSugere(pac, qtd) {
+    const r = bgMedias(pac), out = {};
+    bgItensPac(pac).forEach(function (i) {
+      const v = r.m[i.id].pp * qtd; if (v <= 0) return;
+      out[i.id] = (i.un === 'kg' || i.un === 'L') ? Math.ceil(v * 2) / 2 : Math.ceil(v - 1e-9);
+    });
+    return { nec: out, eventos: r.eventos };
+  }
+  function bgNovoEv(pac, base) {
+    const e = Object.assign({ id: bgId(), nome: 'Novo evento', data: '', qtd: '', pacote: pac || 'prata', status: 'planejado', nec: {}, consumo: {}, baixa: null, obs: '', solId: '' }, base || {});
+    BG.d.eventos.push(e); BG.ev = e.id; BG.selC[e.id] = true; bgSalva(); return e;
+  }
+  const bgDataFmt = function (d) { return d ? QE.fmtData(d) : 'sem data'; };
+  /* consolidado das compras */
+  function bgConsol() {
+    const evs = BG.d.eventos.filter(function (e) { return e.status !== 'realizado' && BG.selC[e.id] !== false; }), tot = {}, det = {};
+    evs.forEach(function (e) { Object.keys(e.nec || {}).forEach(function (k) { const q = bgN(e.nec[k]); if (q <= 0 || !bgItem(k)) return; tot[k] = (tot[k] || 0) + q; (det[k] = det[k] || []).push((e.nome || 'Evento') + ' ' + bgFmt(q)); }); });
+    const linhas = Object.keys(tot).map(function (k) { const it = bgItem(k), est = bgN(BG.d.estoque[k]); return { it: it, nec: tot[k], est: est, comprar: Math.max(0, Math.round((tot[k] - est) * 100) / 100), det: det[k] }; });
+    return { evs: evs, linhas: linhas };
+  }
+  function bgTextoCompras(c) {
+    const por = bgPorCat(c.linhas.filter(function (l) { return l.comprar > 0; }).map(function (l) { return l.it; })), mapa = {}; c.linhas.forEach(function (l) { mapa[l.it.id] = l; });
+    let t = 'LISTA DE COMPRAS — BAR\n' + c.evs.map(function (e) { return '• ' + (e.nome || 'Evento') + ' (' + bgDataFmt(e.data) + ', ' + (e.qtd || '?') + ' pessoas, ' + BG_PAC[e.pacote] + ')'; }).join('\n') + '\n';
+    por.forEach(function (g) { t += '\n' + g.cat.toUpperCase() + '\n' + g.itens.map(function (i) { return '- ' + i.nome + ': ' + bgFmt(mapa[i.id].comprar) + ' ' + i.un; }).join('\n') + '\n'; });
+    return t.trim();
+  }
+  /* ---------- telas ---------- */
+  function bgRender() {
+    $$('#bgSub button').forEach(function (b) { b.classList.toggle('on', b.dataset.bs === BG.sub); });
+    let h = BG.ok ? '' : '<p class="demo">' + esc(BG.msg) + ' <button type="button" class="btn sm" data-bg="retry">Tentar de novo</button></p>';
+    if (BG.sub === 'compras') h += bgVCompras(); else if (BG.sub === 'eventos') h += BG.ev && bgEv(BG.ev) ? bgVEvento(bgEv(BG.ev)) : bgVEventos(); else if (BG.sub === 'estoque') h += bgVEstoque(); else h += bgVHist();
+    $('#bgCorpo').innerHTML = h;
+  }
+  function bgVCompras() {
+    const abertos = BG.d.eventos.filter(function (e) { return e.status !== 'realizado'; }).sort(function (a, b) { return String(a.data || '9').localeCompare(String(b.data || '9')); });
+    let h = '<div class="box open"><div class="in"><h3>Eventos incluídos na compra</h3>' + (abertos.length ? abertos.map(function (e) {
+      return '<label class="chk"><input type="checkbox" data-bgsel="' + e.id + '"' + (BG.selC[e.id] !== false ? ' checked' : '') + '> <b>' + esc(e.nome) + '</b> <small>' + bgDataFmt(e.data) + ' · ' + (e.qtd || '?') + ' pessoas · ' + BG_PAC[e.pacote] + '</small></label>';
+    }).join('') : '<p class="hint">Nenhum evento planejado. Crie na aba “Eventos”.</p>') + '</div></div>';
+    const c = bgConsol();
+    if (!c.linhas.length) return h + '<p class="hint">Preencha as quantidades necessárias nos eventos para ver a lista consolidada.</p>';
+    const por = bgPorCat(c.linhas.map(function (l) { return l.it; })), mapa = {}; c.linhas.forEach(function (l) { mapa[l.it.id] = l; });
+    const nComprar = c.linhas.filter(function (l) { return l.comprar > 0; }).length;
+    h += '<div class="vd-b"><div class="vd-hd"><h3>Lista consolidada <small>(' + c.evs.length + ' evento(s) · ' + nComprar + ' item(ns) a comprar)</small></h3><div class="vacoes"><button type="button" class="btn sm" data-bg="copiar">Copiar lista</button><button type="button" class="btn sm" data-bg="zap">Enviar por WhatsApp</button><button type="button" class="btn sm" data-bg="imprimir">Imprimir</button><button type="button" class="btn sm pri" data-bg="lancar">Lançar compra no estoque</button></div></div>' +
+      '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Necessário</th><th>Estoque</th><th>Comprar</th></tr></thead><tbody>' +
+      por.map(function (g) { return '<tr class="cat"><td colspan="4">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { const l = mapa[i.id]; return '<tr class="' + (l.comprar > 0 ? 'falta' : 'ok') + '"><td>' + esc(i.nome) + '<small class="bgdet">' + esc(l.det.join(' · ')) + '</small></td><td>' + bgFmt(l.nec) + ' ' + esc(i.un) + '</td><td>' + bgFmt(l.est) + '</td><td><b>' + (l.comprar > 0 ? bgFmt(l.comprar) + ' ' + esc(i.un) : '—') + '</b></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
+      '<p class="hint">“Comprar” = necessário somado dos eventos marcados − o que você tem em estoque. Depois de comprar, use “Lançar compra no estoque”.</p></div>';
+    return h;
+  }
+  function bgVEventos() {
+    const evs = BG.d.eventos.slice().sort(function (a, b) { return String(b.data || '0').localeCompare(String(a.data || '0')); });
+    const ganhos = lista.filter(function (x) { return stOf(x) === 'ganho' || stOf(x) === 'contrato'; });
+    return '<div class="vacoes"><button type="button" class="btn pri" data-bg="novoev">+ Novo evento</button> <select id="bgImp"><option value="">Criar a partir de uma proposta (Ganho / Em contrato)…</option>' + ganhos.map(function (x) { return '<option value="' + esc(x.id) + '">' + esc(x.empresa) + ' — ' + esc(QE.fmtData(x.dataEvento) || 'sem data') + ' — ' + (+x.qtd || '?') + ' pessoas</option>'; }).join('') + '</select> <select id="bgImpP"><option value="prata">Bar Prata</option><option value="ouro">Bar Ouro</option></select></div>' +
+      (evs.length ? '<div class="bg-evs">' + evs.map(function (e) { const nn = Object.keys(e.nec || {}).filter(function (k) { return bgN(e.nec[k]) > 0; }).length; return '<div class="bg-ev"><div><b>' + esc(e.nome) + '</b> <span class="badge ' + (e.status === 'realizado' ? 'st-ganho' : 'st-enviado') + '">' + (e.status === 'realizado' ? 'Realizado' : 'Planejado') + '</span><br><small>' + bgDataFmt(e.data) + ' · ' + (e.qtd || '?') + ' pessoas · ' + BG_PAC[e.pacote] + ' · ' + nn + ' item(ns) com quantidade</small></div><div class="vacoes"><button type="button" class="btn sm" data-bgabrir="' + e.id + '">Abrir</button><button type="button" class="btn sm ghost" data-bgdel="' + e.id + '">Excluir</button></div></div>'; }).join('') + '</div>' : '<p class="hint">Nenhum evento ainda.</p>');
+  }
+  function bgVEvento(e) {
+    const its = bgItensPac(e.pacote), por = bgPorCat(its), real = e.status === 'realizado';
+    return '<div class="vacoes"><button type="button" class="btn ghost" data-bg="voltar">← Voltar aos eventos</button></div><h3 style="margin:10px 0">' + esc(e.nome) + '</h3>' +
+      '<div class="box open"><div class="in"><div class="g2"><div class="f"><label>Nome do evento / cliente</label><input data-bgf="nome" value="' + esc(e.nome) + '"></div><div class="f"><label>Data</label><input type="date" data-bgf="data" value="' + esc(e.data || '') + '"></div></div>' +
+      '<div class="g2"><div class="f"><label>Convidados</label><input type="number" min="0" data-bgf="qtd" value="' + esc(e.qtd) + '"></div><div class="f"><label>Pacote do bar</label><select data-bgf="pacote"><option value="prata"' + (e.pacote === 'prata' ? ' selected' : '') + '>Bar Prata</option><option value="ouro"' + (e.pacote === 'ouro' ? ' selected' : '') + '>Bar Ouro</option></select></div></div>' +
+      '<div class="f"><label>Situação</label><select data-bgf="status"><option value="planejado"' + (!real ? ' selected' : '') + '>Planejado (entra na lista de compras)</option><option value="realizado"' + (real ? ' selected' : '') + '>Realizado (vira histórico)</option></select></div>' +
+      '<div class="vacoes"><button type="button" class="btn sm" data-bg="sugerir">Sugerir quantidades pela média histórica</button><button type="button" class="btn sm ghost" data-bg="zerar">Zerar quantidades</button><button type="button" class="btn sm ghost" data-bg="copiarcons">Copiar “necessário” para “consumido”</button></div></div></div>' +
+      '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Necessário</th><th>Consumido (real)</th></tr></thead><tbody>' +
+      por.map(function (g) { return '<tr class="cat"><td colspan="3">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { return '<tr><td>' + esc(i.nome) + ' <small>(' + esc(i.un) + ')</small></td><td><input class="bgq" type="number" min="0" step="any" inputmode="decimal" data-bgnec="' + i.id + '" value="' + (bgN(e.nec[i.id]) || '') + '"></td><td><input class="bgq" type="number" min="0" step="any" inputmode="decimal" data-bgcons="' + i.id + '" value="' + (bgN(e.consumo[i.id]) || '') + '" placeholder="' + (bgN(e.nec[i.id]) || '') + '"></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
+      '<div class="box open"><div class="in"><div class="f"><label>Observações</label><textarea data-bgf="obs" rows="2">' + esc(e.obs || '') + '</textarea></div>' +
+      '<div class="vacoes"><button type="button" class="btn pri" data-bg="baixa">Registrar consumo e dar baixa no estoque</button></div><p class="hint">Marca o evento como Realizado, guarda o consumo no histórico (para as médias por pessoa) e desconta do estoque o que foi consumido' + (e.baixa ? '. <b>Já houve baixa neste evento:</b> ao registrar de novo, a baixa anterior é devolvida ao estoque antes de aplicar a nova.' : '.') + '</p></div></div>';
+  }
+  function bgVEstoque() {
+    const por = bgPorCat(BG.d.itens);
+    return '<div class="box open"><div class="in"><h3>Adicionar item</h3><div class="g2"><div class="f"><label>Nome</label><input id="bgNNome"></div><div class="f"><label>Categoria</label><select id="bgNCat">' + BG_CATS.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</select></div></div><div class="g2"><div class="f"><label>Unidade</label><input id="bgNUn" value="un" list="bgUns"></div><div class="f"><label>Entra em</label><label class="chk"><input type="checkbox" id="bgNP" checked> Bar Prata</label><label class="chk"><input type="checkbox" id="bgNO" checked> Bar Ouro</label></div></div><button type="button" class="btn sm pri" data-bg="additem">Adicionar</button></div></div>' +
+      '<datalist id="bgUns"><option>un</option><option>garrafa</option><option>kg</option><option>L</option><option>caixa</option><option>maço</option><option>pacote</option></datalist>' +
+      '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Em estoque</th><th>Unidade</th><th>Prata</th><th>Ouro</th><th></th></tr></thead><tbody>' +
+      por.map(function (g) { return '<tr class="cat"><td colspan="6">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { return '<tr><td><input class="bgn" data-bgin="' + i.id + '" value="' + esc(i.nome) + '"></td><td><input class="bgq" type="number" min="0" step="any" inputmode="decimal" data-bgest="' + i.id + '" value="' + (bgN(BG.d.estoque[i.id]) || '') + '" placeholder="0"></td><td><input class="bgu" data-bgun="' + i.id + '" list="bgUns" value="' + esc(i.un) + '"></td><td><input type="checkbox" data-bgpk="prata:' + i.id + '"' + (i.prata ? ' checked' : '') + '></td><td><input type="checkbox" data-bgpk="ouro:' + i.id + '"' + (i.ouro ? ' checked' : '') + '></td><td><button type="button" class="btn sm ghost" data-bgrmi="' + i.id + '" title="Remover item">×</button></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>';
+  }
+  function bgVHist() {
+    const pac = BG.sugP, r = bgMedias(pac), por = bgPorCat(bgItensPac(pac).filter(function (i) { return r.m[i.id].tot > 0; }));
+    return '<div class="box open"><div class="in"><div class="g2"><div class="f"><label>Pacote</label><select id="bgHP"><option value="prata"' + (pac === 'prata' ? ' selected' : '') + '>Bar Prata</option><option value="ouro"' + (pac === 'ouro' ? ' selected' : '') + '>Bar Ouro</option></select></div><div class="f"><label>Convidados do próximo evento</label><input type="number" min="1" id="bgHN" value="' + BG.sugN + '"></div></div>' +
+      '<p class="hint">Base: <b>' + r.eventos + '</b> evento(s) realizado(s) do ' + BG_PAC[pac] + ' · <b>' + r.pessoas + '</b> pessoas no total.</p>' +
+      (r.eventos ? '<div class="vacoes"><button type="button" class="btn sm pri" data-bg="evsug">Criar evento com essa sugestão</button></div>' : '') + '</div></div>' +
+      (por.length ? '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Média por pessoa</th><th>Eventos</th><th>Sugestão p/ ' + BG.sugN + ' pessoas</th></tr></thead><tbody>' + por.map(function (g) { return '<tr class="cat"><td colspan="4">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { const s = bgSugere(pac, BG.sugN).nec[i.id]; return '<tr><td>' + esc(i.nome) + '</td><td>' + bgFmt(Math.round(r.m[i.id].pp * 1000) / 1000) + ' ' + esc(i.un) + '</td><td>' + r.m[i.id].n + '</td><td><b>' + (s ? bgFmt(s) + ' ' + esc(i.un) : '—') + '</b></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' : '<p class="hint">Ainda não há consumo registrado. Em cada evento, preencha “Consumido (real)” e toque em “Registrar consumo e dar baixa no estoque”: as médias por pessoa aparecem aqui.</p>');
+  }
+  /* ---------- eventos da tela ---------- */
+  $('#bgSub').addEventListener('click', function (e) { const b = e.target.closest('[data-bs]'); if (!b) return; BG.sub = b.dataset.bs; if (BG.sub !== 'eventos') BG.ev = null; bgRender(); });
+  $('#v-bar').addEventListener('input', function (e) {
+    const t = e.target, ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
+    if (ds.bgf !== undefined && ev) { ev[ds.bgf] = ds.bgf === 'qtd' ? (t.value === '' ? '' : +t.value) : t.value; bgSalva(); return; }
+    if (ds.bgnec !== undefined && ev) { ev.nec[ds.bgnec] = bgN(t.value); bgSalva(); return; }
+    if (ds.bgcons !== undefined && ev) { ev.consumo[ds.bgcons] = bgN(t.value); bgSalva(); return; }
+    if (ds.bgest !== undefined) { BG.d.estoque[ds.bgest] = bgN(t.value); bgSalva(); return; }
+    if (ds.bgin !== undefined) { const i = bgItem(ds.bgin); if (i) { i.nome = t.value; bgSalva(); } return; }
+    if (ds.bgun !== undefined) { const i = bgItem(ds.bgun); if (i) { i.un = t.value; bgSalva(); } return; }
+    if (t.id === 'bgHN') { BG.sugN = Math.max(1, +t.value || 1); clearTimeout(BG.rt); BG.rt = setTimeout(function () { const p = t.selectionStart; bgRender(); const n = $('#bgHN'); if (n) { n.focus(); } }, 500); }
+  });
+  $('#v-bar').addEventListener('change', function (e) {
+    const t = e.target, ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
+    if (ds.bgsel !== undefined) { BG.selC[ds.bgsel] = t.checked; bgRender(); return; }
+    if (ds.bgf === 'pacote' || ds.bgf === 'status') { if (ev) { ev[ds.bgf] = t.value; bgSalva(); bgRender(); } return; }
+    if (ds.bgpk) { const q = ds.bgpk.split(':'), i = bgItem(q[1]); if (i) { i[q[0]] = t.checked; bgSalva(); } return; }
+    if (t.id === 'bgHP') { BG.sugP = t.value; bgRender(); return; }
+    if (t.id === 'bgImp' && t.value) {
+      const x = lista.find(function (y) { return y.id === t.value; }); if (!x) return;
+      const e2 = bgNovoEv($('#bgImpP').value, { nome: x.empresa + (x.contato && x.contato !== x.empresa ? ' — ' + x.contato : ''), data: x.dataEvento || '', qtd: +x.qtd || '', solId: x.id }); bgRender(); return;
+    }
+  });
+  $('#v-bar').addEventListener('click', function (e) {
+    const t = e.target.closest('button'); if (!t) return; const ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
+    if (ds.bg === 'retry') { bgCarrega(); return; }
+    if (ds.bg === 'novoev') { bgNovoEv('prata'); bgRender(); return; }
+    if (ds.bgabrir) { BG.ev = ds.bgabrir; bgRender(); window.scrollTo(0, 0); return; }
+    if (ds.bgdel) { const x = bgEv(ds.bgdel); if (x && confirm('Excluir o evento "' + x.nome + '"? ' + (x.baixa ? 'A baixa no estoque NÃO será desfeita.' : ''))) { BG.d.eventos = BG.d.eventos.filter(function (y) { return y !== x; }); bgSalva(); bgRender(); } return; }
+    if (ds.bg === 'voltar') { BG.ev = null; bgRender(); return; }
+    if (ds.bg === 'zerar' && ev) { if (confirm('Zerar todas as quantidades necessárias deste evento?')) { ev.nec = {}; bgSalva(); bgRender(); } return; }
+    if (ds.bg === 'copiarcons' && ev) { ev.consumo = Object.assign({}, ev.nec); bgSalva(); bgRender(); return; }
+    if (ds.bg === 'sugerir' && ev) {
+      if (!(+ev.qtd > 0)) return toast('Informe a quantidade de convidados primeiro.', true);
+      const s = bgSugere(ev.pacote, +ev.qtd); if (!s.eventos) return toast('Ainda não há histórico de consumo deste pacote. Registre o consumo de um evento realizado primeiro.', true);
+      if (Object.keys(ev.nec).some(function (k) { return bgN(ev.nec[k]) > 0; }) && !confirm('Substituir as quantidades atuais pela sugestão (média de ' + s.eventos + ' evento(s))?')) return;
+      ev.nec = s.nec; bgSalva(); bgRender(); toast('Quantidades sugeridas pela média de ' + s.eventos + ' evento(s) realizado(s).'); return;
+    }
+    if (ds.bg === 'baixa' && ev) {
+      const cons = {}; bgItensPac(ev.pacote).forEach(function (i) { const v = ev.consumo[i.id] !== undefined && ev.consumo[i.id] !== 0 ? bgN(ev.consumo[i.id]) : 0; if (v > 0) cons[i.id] = v; });
+      if (!Object.keys(cons).length) return toast('Preencha a coluna “Consumido (real)” (ou use “Copiar necessário para consumido”).', true);
+      if (!confirm('Registrar o consumo de "' + ev.nome + '" e descontar do estoque?')) return;
+      if (ev.baixa) Object.keys(ev.baixa).forEach(function (k) { BG.d.estoque[k] = bgN(BG.d.estoque[k]) + bgN(ev.baixa[k]); });
+      Object.keys(cons).forEach(function (k) { BG.d.estoque[k] = Math.max(0, Math.round((bgN(BG.d.estoque[k]) - cons[k]) * 100) / 100); });
+      ev.consumo = cons; ev.baixa = Object.assign({}, cons); ev.status = 'realizado'; bgSalva(); bgRender(); toast('Consumo registrado e estoque atualizado.'); return;
+    }
+    if (ds.bg === 'additem') {
+      const nome = $('#bgNNome').value.trim(); if (!nome) return toast('Digite o nome do item.', true);
+      BG.d.itens.push({ id: bgId(), nome: nome, cat: $('#bgNCat').value, un: $('#bgNUn').value.trim() || 'un', prata: $('#bgNP').checked, ouro: $('#bgNO').checked }); bgSalva(); bgRender(); toast('Item adicionado.'); return;
+    }
+    if (ds.bgrmi) { const i = bgItem(ds.bgrmi); if (i && confirm('Remover "' + i.nome + '" da lista? Ele some dos eventos (o histórico guardado dos eventos não é apagado).')) { BG.d.itens = BG.d.itens.filter(function (y) { return y !== i; }); delete BG.d.estoque[i.id]; bgSalva(); bgRender(); } return; }
+    if (ds.bg === 'evsug') {
+      const s = bgSugere(BG.sugP, BG.sugN); const e2 = bgNovoEv(BG.sugP, { nome: 'Evento ' + BG.sugN + ' pessoas', qtd: BG.sugN, nec: s.nec }); BG.sub = 'eventos'; bgRender(); toast('Evento criado com a sugestão histórica. Ajuste o nome e a data.'); return;
+    }
+    if (ds.bg === 'copiar') { const tx = bgTextoCompras(bgConsol()); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(tx) : Promise.reject()).then(function () { toast('Lista copiada.'); }).catch(function () { window.prompt('Copie a lista:', tx); }); return; }
+    if (ds.bg === 'zap') { window.open('https://wa.me/?text=' + encodeURIComponent(bgTextoCompras(bgConsol())), '_blank', 'noopener'); return; }
+    if (ds.bg === 'imprimir') { const w = window.open('', '_blank'); if (!w) return toast('Libere pop-ups para imprimir.', true); w.document.write('<pre style="font:15px/1.5 sans-serif;white-space:pre-wrap">' + esc(bgTextoCompras(bgConsol())) + '</pre>'); w.document.close(); w.focus(); w.print(); return; }
+    if (ds.bg === 'lancar') {
+      const c = bgConsol(), falta = c.linhas.filter(function (l) { return l.comprar > 0; }); if (!falta.length) return toast('Nada a comprar: o estoque já cobre tudo.', true);
+      if (!confirm('Somar ao estoque as ' + falta.length + ' compra(s) da lista? Faça isso depois de comprar.')) return;
+      falta.forEach(function (l) { BG.d.estoque[l.it.id] = Math.round((bgN(BG.d.estoque[l.it.id]) + l.comprar) * 100) / 100; }); bgSalva(); bgRender(); toast('Estoque atualizado com as compras.'); return;
+    }
   });
 
   /* ---------- Menus (para mostrar ao cliente em visita) ---------- */
