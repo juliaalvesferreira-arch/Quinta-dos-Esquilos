@@ -927,11 +927,26 @@ body.pv-lock { overflow: hidden; }
 #dcAjFmt { margin-bottom: 4px; }
 
 /* gestão bar */
-.tscroll { overflow-x: auto; } .bg-t td, .bg-t th { vertical-align: middle; } .bg-t tr.cat td { background: #f3ecdd; font-weight: 700; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
-.bg-t tr.falta td:last-child b { color: #a23a2a; } .bg-t tr.ok td:last-child b { color: #4f6b3a; } .bgdet { display: block; color: #8a7a6a; font-size: .74rem; }
-.bgq { width: 90px; padding: 7px 8px; border: 1.5px solid #ddd2bf; border-radius: 8px; font: inherit; } .bgn { width: 100%; min-width: 150px; padding: 7px 8px; border: 1.5px solid #ddd2bf; border-radius: 8px; font: inherit; } .bgu { width: 90px; padding: 7px 8px; border: 1.5px solid #ddd2bf; border-radius: 8px; font: inherit; }
-.bg-evs { display: grid; gap: 10px; margin-top: 12px; } .bg-ev { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; background: #fff; border: 1.5px solid #ddd2bf; border-radius: 14px; padding: 12px 14px; }
-#bgImp, #bgImpP { max-width: 100%; padding: 9px 10px; border: 1.5px solid #ddd2bf; border-radius: 10px; background: #fff; font: inherit; }
+#v-bar { max-width: 760px; } #v-bar input[type=date] { width: 100%; max-width: 100%; min-width: 0; -webkit-appearance: none; appearance: none; text-align: left; min-height: 44px; }
+.bg-card { background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; margin: 0 0 12px; } .bg-card.flat { background: var(--paper); margin-top: 8px; }
+.bg-card .f { margin-bottom: 10px; } .bg-card .f input, .bg-card .f select, .bg-card .f textarea { width: 100%; min-height: 44px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+.bg-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .bg-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; } .bg-h h3, .bg-card > h3 { font-size: 1.1rem; }
+.bg-t2 { font-size: 1.15rem; margin: 18px 0 8px; } .bg-big { width: 100%; padding: 14px; font-size: 1rem; margin: 10px 0; border-radius: 14px; } .bg-acts { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; } .bg-acts .btn { flex: 1; text-align: center; }
+.bg-busca { width: 100%; min-height: 46px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; margin: 8px 0; }
+.bg-sel { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--linen); cursor: pointer; } .bg-sel input { width: 22px; height: 22px; flex: none; } .bg-sel span { flex: 1; min-width: 0; } .bg-sel b, .bg-ev b, .bg-prop b, .bg-it b { overflow-wrap: anywhere; } .bg-sel small, .bg-ev small, .bg-prop small, .bg-it small { display: block; color: var(--taupe); font-size: .8rem; }
+.bg-pill { flex: none; padding: 3px 10px; border-radius: 999px; font-size: .75rem; font-weight: 700; } .bg-pill.prata { background: #e9e9ec; color: #4a4a55; } .bg-pill.ouro { background: #f3e2b0; color: #6b4f00; }
+.bg-sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; } .bg-sum div { background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 10px; text-align: center; } .bg-sum b { display: block; font-size: 1.6rem; font-family: 'Marcellus', Georgia, serif; } .bg-sum small { color: var(--taupe); font-size: .75rem; } .bg-sum .alert { background: #fbeee9; border-color: #e3b9ad; } .bg-sum .alert b { color: #a23a2a; }
+.bg-cat { background: var(--linen); color: var(--bark); font-weight: 700; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; padding: 7px 12px; border-radius: 8px; margin: 12px 0 6px; }
+.bg-it { display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid var(--line); border-left-width: 5px; border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; } .bg-it.falta { border-left-color: #c0553f; } .bg-it.ok { border-left-color: var(--moss); } .bg-it .n { flex: 1; min-width: 0; } .bg-it .num { display: flex; flex-direction: column; font-size: .78rem; color: var(--taupe); text-align: right; white-space: nowrap; } .bg-it .num b { color: #2a1c13; }
+.bg-it .buy { min-width: 62px; text-align: center; background: var(--paper); border-radius: 10px; padding: 6px 8px; } .bg-it.falta .buy { background: #fbeee9; } .bg-it .buy b { display: block; font-size: 1.25rem; line-height: 1.1; } .bg-it.falta .buy b { color: #a23a2a; } .bg-it.ok .buy b { color: var(--moss); }
+.bg-okmsg { background: #e9f0dd; color: #3f5a22; padding: 12px; border-radius: 12px; font-weight: 600; } .bg-det { margin: 12px 0; } .bg-det > summary { cursor: pointer; padding: 12px 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; font-weight: 600; list-style: none; } .bg-det[open] > summary { border-color: var(--bark); }
+.bg-prop { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; cursor: pointer; } .bg-prop:hover:not([disabled]) { border-color: var(--bark); background: var(--paper); } .bg-prop[disabled] { opacity: .5; cursor: default; } .bg-prop.passou { opacity: .65; } .bg-prop .d { flex: none; width: 74px; font-weight: 700; color: var(--bark); font-size: .85rem; } .bg-prop .n { flex: 1; min-width: 0; } .bg-props { max-height: 340px; overflow-y: auto; margin-top: 4px; }
+.bg-ev { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 8px; } .bg-ev .i { flex: 1; min-width: 150px; } .bg-ev .a { display: flex; gap: 6px; }
+.bg-link { background: var(--paper); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; } .bg-link small { display: block; color: var(--taupe); margin-top: 4px; }
+.bg-row { background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: center; } .bg-row .n small { display: block; color: var(--taupe); font-size: .8rem; } .bg-cons { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; background: #f3f7ec; border-radius: 10px; padding: 6px 10px; } .bg-cons span { font-size: .85rem; color: var(--moss); font-weight: 600; }
+.bg-st { display: inline-flex; align-items: center; gap: 4px; } .bg-st button { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--bark); background: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0; } .bg-st button:active { background: var(--linen); } .bg-st input { width: 64px; height: 42px; text-align: center; font-size: 1.05rem; font-weight: 600; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; padding: 0 4px; -moz-appearance: textfield; } .bg-st input::-webkit-outer-spin-button, .bg-st input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.bg-es { background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; } .bg-es[hidden] { display: none; } .bg-es .top { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; } .bgn { flex: 1; min-width: 0; min-height: 40px; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; } .bg-es .bot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; } .bg-es .lbl { font-size: .8rem; color: var(--taupe); } .bg-un { min-height: 42px; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; } .bg-es .pk { display: inline-flex; align-items: center; gap: 4px; font-size: .85rem; padding: 6px 10px; background: var(--paper); border-radius: 999px; } .bg-es .pk input { width: 18px; height: 18px; }
+@media (max-width: 520px) { .bg-it .num { display: none; } .bg-g2 { grid-template-columns: 1fr; } .bg-prop .d { width: 62px; } }
 </style>
 </head>
 <body>
@@ -1241,7 +1256,7 @@ body.pv-lock { overflow: hidden; }
 
     <section id="v-bar" class="view" hidden>
       <div class="head"><h2>Gestão Bar</h2><span id="bgSt" class="hint"></span></div>
-      <div class="seg" id="bgSub" style="margin-bottom:12px"><button type="button" data-bs="compras" class="on">Compras</button><button type="button" data-bs="eventos">Eventos</button><button type="button" data-bs="estoque">Estoque</button><button type="button" data-bs="hist">Histórico e médias</button></div>
+      <div class="seg" id="bgSub" style="margin-bottom:12px"><button type="button" data-bs="compras" class="on">Compras</button><button type="button" data-bs="eventos">Eventos</button><button type="button" data-bs="estoque">Estoque</button><button type="button" data-bs="hist">Histórico</button></div>
       <div id="bgCorpo"></div>
     </section>
 
@@ -4645,13 +4660,15 @@ body.pv-lock { overflow: hidden; }
   /* ======================================================================
      Gestão Bar — compras, estoque e histórico de consumo
      ====================================================================== */
-  const BG = { d: null, ok: false, sub: 'compras', ev: null, selC: {}, sugN: 100, sugP: 'prata', msg: '' };
+  const BG = { d: null, ok: false, sub: 'compras', ev: null, selC: {}, sugN: 100, sugP: 'prata', msg: '', cons: false, q: '', todas: false, extra: false };
   const BG_CATS = ['Álcool', 'Xaropes', 'Bebidas', 'Complementos', 'Frutas', 'Outros'];
   const BG_UN = { 'Álcool': 'garrafa', 'Xaropes': 'garrafa', 'Bebidas': 'un', 'Complementos': 'un', 'Frutas': 'kg', 'Outros': 'un' };
+  const BG_UNS = ['un', 'garrafa', 'kg', 'L', 'caixa', 'bandeja', 'saco', 'fardo', 'pacote', 'maço', 'lata', 'dúzia'];
   const BG_PAC = { prata: 'Bar Prata', ouro: 'Bar Ouro' };
+  const bgNz = function (t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
   function bgPadrao() {
     const base = {
-      'Álcool': [['Vodka Smirnoff', 'p'], ['Vodka Absolut', 'o'], ['Saquê Azuma Kirin', 'po'], ['Cachaça Velho Barreiro', 'po'], ['Cachaça Sagatiba', 'o'], ['Gin Gordon\'s', 'p'], ['Gin Tanqueray', 'o'], ['Rum Bacardi', 'po'], ['Energético Baly', 'p'], ['Energético Red Bull', 'o'], ['Aperol', 'o'], ['Prosseco', 'o'], ['Campari', 'o'], ['Vermute', 'o'], ['Angustura', 'o']],
+      'Álcool': [['Vodka Smirnoff', 'p'], ['Vodka Absolut', 'o'], ['Saquê Azuma Kirin', 'po'], ['Cachaça Velho Barreiro', 'po'], ['Cachaça Sagatiba', 'po'], ['Gin Gordon\'s', 'p'], ['Gin Tanqueray', 'o'], ['Rum Bacardi', 'po'], ['Energético Baly', 'p'], ['Energético Red Bull', 'o'], ['Aperol', 'o'], ['Prosseco', 'o'], ['Campari', 'o'], ['Vermute', 'o'], ['Angustura', 'o']],
       'Xaropes': ['Gengibre', 'Morango', 'Frutas vermelhas', 'Maçã verde', 'Tangerina', 'Limão siciliano', 'Curaçao Blue'],
       'Bebidas': ['Água', 'Água com gás', 'Água tônica', 'Soda', 'Suco de abacaxi', 'Leite de coco', 'Leite condensado'],
       'Complementos': ['Alecrim', 'Hortelã', 'Laranja seca', 'Canela'],
@@ -4664,7 +4681,7 @@ body.pv-lock { overflow: hidden; }
         itens.push({ id: 'i' + (itens.length + 1), nome: nome, cat: c, un: BG_UN[c], prata: fl.indexOf('p') >= 0, ouro: fl.indexOf('o') >= 0 });
       });
     });
-    return { v: 1, itens: itens, estoque: {}, eventos: [] };
+    return { v: 2, mig: 1, itens: itens, estoque: {}, eventos: [] };
   }
   const bgId = function () { return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); };
   const bgN = function (v) { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) || n < 0 ? 0 : n; };
@@ -4672,14 +4689,31 @@ body.pv-lock { overflow: hidden; }
   const bgItem = function (id) { return BG.d.itens.find(function (i) { return i.id === id; }); };
   const bgEv = function (id) { return BG.d.eventos.find(function (e) { return e.id === id; }); };
   const bgItensPac = function (pac) { return BG.d.itens.filter(function (i) { return i[pac]; }); };
+  function bgItensEv(e) {
+    const base = bgItensPac(e.pacote);
+    return base.concat((e.ex || []).map(bgItem).filter(function (i) { return i && base.indexOf(i) < 0; }));
+  }
   const bgPorCat = function (lista) { return BG_CATS.concat(Object.keys(lista.reduce(function (m, i) { m[i.cat] = 1; return m; }, {})).filter(function (c) { return BG_CATS.indexOf(c) < 0; })).map(function (c) { return { cat: c, itens: lista.filter(function (i) { return i.cat === c; }) }; }).filter(function (g) { return g.itens.length; }); };
+  const bgStp = function (i) { return i && (i.un === 'kg' || i.un === 'L') ? 0.5 : 1; };
+  function bgPacProp(x) { return x && x.orc && x.orc.bar === 'ouro' ? 'ouro' : 'prata'; }
+  function bgQtdProp(x) { try { const c = QE.calc(x, cfg); if (c && c.q) return +c.q; } catch (e) {} return +x.qtd || ''; }
+  const bgDataFmt = function (d) { return d ? QE.fmtData(d) : 'sem data'; };
+  const bgNomeProp = function (x) { return x.empresa + (!mesmoNome(x) ? ' — ' + x.contato : ''); };
+  function bgProp(e) { return e.solId ? lista.find(function (y) { return y.id === e.solId; }) : null; }
+  function bgSync(e) {
+    const x = bgProp(e); if (!x || e.status === 'realizado') return false;
+    const p = bgPacProp(x), d = x.dataEvento || '', q = bgQtdProp(x); let ch = false;
+    if (e.pacote !== p) { e.pacote = p; ch = true; } if (d && e.data !== d) { e.data = d; ch = true; } if (q && e.qtd !== q) { e.qtd = q; ch = true; }
+    return ch;
+  }
   async function bgCarrega() {
     $('#bgCorpo').innerHTML = '<p class="hint">Carregando…</p>';
     try {
       const d = await limite(QE.db.docGet('bar_gestao'), 15000);
       BG.d = d && d.itens ? d : bgPadrao(); BG.d.estoque = BG.d.estoque || {}; BG.d.eventos = BG.d.eventos || []; BG.ok = true; BG.msg = '';
+      if (!BG.d.mig) { const s = BG.d.itens.find(function (i) { return i.nome === 'Cachaça Sagatiba'; }); if (s) s.prata = true; BG.d.mig = 1; bgSalva(); }
     } catch (e) {
-      console.error(e); BG.ok = false; BG.d = BG.d || bgPadrao(); BG.msg = 'Não consegui ler os dados do bar agora (' + (e.code || e.message) + '). Para não apagar nada, o salvamento está bloqueado. Toque em “Tentar de novo”.';
+      console.error(e); BG.ok = false; BG.d = BG.d || bgPadrao(); BG.msg = 'Não consegui ler os dados do bar agora (' + (e.code || e.message) + '). Para não apagar nada, o salvamento está bloqueado.';
     }
     bgRender();
   }
@@ -4687,9 +4721,8 @@ body.pv-lock { overflow: hidden; }
   function bgSalva() {
     if (!BG.ok) { toast('Salvamento bloqueado: não consegui ler os dados do bar. Toque em “Tentar de novo”.', true); return; }
     clearTimeout(bgTimer); $('#bgSt').textContent = 'Salvando…';
-    bgTimer = setTimeout(function () { QE.db.docSet('bar_gestao', BG.d).then(function () { $('#bgSt').textContent = 'Salvo'; }).catch(function (e) { $('#bgSt').textContent = ''; toast('Não consegui salvar o bar (' + (e.code || e.message) + ').', true); }); }, 500);
+    bgTimer = setTimeout(function () { QE.db.docSet('bar_gestao', BG.d).then(function () { $('#bgSt').textContent = 'Salvo ✓'; }).catch(function (e) { $('#bgSt').textContent = ''; toast('Não consegui salvar o bar (' + (e.code || e.message) + ').', true); }); }, 500);
   }
-  /* média histórica por pessoa (eventos realizados do mesmo pacote) */
   function bgMedias(pac) {
     const ev = BG.d.eventos.filter(function (e) { return e.status === 'realizado' && e.pacote === pac && +e.qtd > 0 && e.consumo; });
     const pessoas = ev.reduce(function (t, e) { return t + (+e.qtd); }, 0), m = {};
@@ -4703,123 +4736,184 @@ body.pv-lock { overflow: hidden; }
     const r = bgMedias(pac), out = {};
     bgItensPac(pac).forEach(function (i) {
       const v = r.m[i.id].pp * qtd; if (v <= 0) return;
-      out[i.id] = (i.un === 'kg' || i.un === 'L') ? Math.ceil(v * 2) / 2 : Math.ceil(v - 1e-9);
+      out[i.id] = bgStp(i) === 0.5 ? Math.ceil(v * 2) / 2 : Math.ceil(v - 1e-9);
     });
     return { nec: out, eventos: r.eventos };
   }
   function bgNovoEv(pac, base) {
-    const e = Object.assign({ id: bgId(), nome: 'Novo evento', data: '', qtd: '', pacote: pac || 'prata', status: 'planejado', nec: {}, consumo: {}, baixa: null, obs: '', solId: '' }, base || {});
+    const e = Object.assign({ id: bgId(), nome: 'Novo evento', data: '', qtd: '', pacote: pac || 'prata', status: 'planejado', nec: {}, consumo: {}, baixa: null, obs: '', solId: '', ex: [] }, base || {});
     BG.d.eventos.push(e); BG.ev = e.id; BG.selC[e.id] = true; bgSalva(); return e;
   }
-  const bgDataFmt = function (d) { return d ? QE.fmtData(d) : 'sem data'; };
-  /* consolidado das compras */
+  const bgOrdData = function (a, b) { return String(a.data || '9999').localeCompare(String(b.data || '9999')); };
   function bgConsol() {
-    const evs = BG.d.eventos.filter(function (e) { return e.status !== 'realizado' && BG.selC[e.id] !== false; }), tot = {}, det = {};
-    evs.forEach(function (e) { Object.keys(e.nec || {}).forEach(function (k) { const q = bgN(e.nec[k]); if (q <= 0 || !bgItem(k)) return; tot[k] = (tot[k] || 0) + q; (det[k] = det[k] || []).push((e.nome || 'Evento') + ' ' + bgFmt(q)); }); });
+    const evs = BG.d.eventos.filter(function (e) { return e.status !== 'realizado' && BG.selC[e.id] !== false; }).sort(bgOrdData), tot = {}, det = {};
+    evs.forEach(function (e) {
+      const ids = {}; bgItensEv(e).forEach(function (i) { ids[i.id] = 1; });
+      Object.keys(e.nec || {}).forEach(function (k) { const q = bgN(e.nec[k]); if (q <= 0 || !ids[k]) return; tot[k] = (tot[k] || 0) + q; (det[k] = det[k] || []).push((e.nome || 'Evento').split(' — ')[0] + ' ' + bgFmt(q)); });
+    });
     const linhas = Object.keys(tot).map(function (k) { const it = bgItem(k), est = bgN(BG.d.estoque[k]); return { it: it, nec: tot[k], est: est, comprar: Math.max(0, Math.round((tot[k] - est) * 100) / 100), det: det[k] }; });
     return { evs: evs, linhas: linhas };
   }
   function bgTextoCompras(c) {
-    const por = bgPorCat(c.linhas.filter(function (l) { return l.comprar > 0; }).map(function (l) { return l.it; })), mapa = {}; c.linhas.forEach(function (l) { mapa[l.it.id] = l; });
+    const falta = c.linhas.filter(function (l) { return l.comprar > 0; }), mapa = {}; falta.forEach(function (l) { mapa[l.it.id] = l; });
     let t = 'LISTA DE COMPRAS — BAR\n' + c.evs.map(function (e) { return '• ' + (e.nome || 'Evento') + ' (' + bgDataFmt(e.data) + ', ' + (e.qtd || '?') + ' pessoas, ' + BG_PAC[e.pacote] + ')'; }).join('\n') + '\n';
-    por.forEach(function (g) { t += '\n' + g.cat.toUpperCase() + '\n' + g.itens.map(function (i) { return '- ' + i.nome + ': ' + bgFmt(mapa[i.id].comprar) + ' ' + i.un; }).join('\n') + '\n'; });
+    bgPorCat(falta.map(function (l) { return l.it; })).forEach(function (g) { t += '\n' + g.cat.toUpperCase() + '\n' + g.itens.map(function (i) { return '☐ ' + i.nome + ': ' + bgFmt(mapa[i.id].comprar) + ' ' + i.un; }).join('\n') + '\n'; });
     return t.trim();
   }
+  /* ---------- componentes ---------- */
+  function bgStep(attr, id, val, it) {
+    return '<div class="bg-st"><button type="button" data-bgstep="-1" aria-label="menos">−</button><input type="number" inputmode="decimal" min="0" step="any" data-stp="' + bgStp(it) + '" ' + attr + '="' + id + '" value="' + (val ? bgFmt(val).replace(',', '.') : '') + '" placeholder="0"><button type="button" data-bgstep="1" aria-label="mais">+</button></div>';
+  }
+  function bgUnSel(attr, id, cur) {
+    const l = BG_UNS.indexOf(cur) < 0 ? BG_UNS.concat([cur]) : BG_UNS;
+    return '<select class="bg-un" ' + attr + (id ? '="' + id + '"' : '') + '>' + l.map(function (u) { return '<option' + (u === cur ? ' selected' : '') + '>' + esc(u) + '</option>'; }).join('') + '</select>';
+  }
+  const bgPill = function (pac) { return '<span class="bg-pill ' + pac + '">' + BG_PAC[pac] + '</span>'; };
   /* ---------- telas ---------- */
   function bgRender() {
+    let ch = false; BG.d.eventos.forEach(function (e) { if (bgSync(e)) ch = true; }); if (ch && BG.ok) bgSalva();
     $$('#bgSub button').forEach(function (b) { b.classList.toggle('on', b.dataset.bs === BG.sub); });
     let h = BG.ok ? '' : '<p class="demo">' + esc(BG.msg) + ' <button type="button" class="btn sm" data-bg="retry">Tentar de novo</button></p>';
     if (BG.sub === 'compras') h += bgVCompras(); else if (BG.sub === 'eventos') h += BG.ev && bgEv(BG.ev) ? bgVEvento(bgEv(BG.ev)) : bgVEventos(); else if (BG.sub === 'estoque') h += bgVEstoque(); else h += bgVHist();
     $('#bgCorpo').innerHTML = h;
   }
   function bgVCompras() {
-    const abertos = BG.d.eventos.filter(function (e) { return e.status !== 'realizado'; }).sort(function (a, b) { return String(a.data || '9').localeCompare(String(b.data || '9')); });
-    let h = '<div class="box open"><div class="in"><h3>Eventos incluídos na compra</h3>' + (abertos.length ? abertos.map(function (e) {
-      return '<label class="chk"><input type="checkbox" data-bgsel="' + e.id + '"' + (BG.selC[e.id] !== false ? ' checked' : '') + '> <b>' + esc(e.nome) + '</b> <small>' + bgDataFmt(e.data) + ' · ' + (e.qtd || '?') + ' pessoas · ' + BG_PAC[e.pacote] + '</small></label>';
-    }).join('') : '<p class="hint">Nenhum evento planejado. Crie na aba “Eventos”.</p>') + '</div></div>';
+    const abertos = BG.d.eventos.filter(function (e) { return e.status !== 'realizado'; }).sort(bgOrdData);
+    let h = '<div class="bg-card"><div class="bg-h"><h3>Eventos desta compra</h3>' + (abertos.length > 1 ? '<span><button type="button" class="btn sm ghost" data-bg="todos">Todos</button> <button type="button" class="btn sm ghost" data-bg="nenhum">Nenhum</button></span>' : '') + '</div>' +
+      (abertos.length ? abertos.map(function (e) {
+        return '<label class="bg-sel"><input type="checkbox" data-bgsel="' + e.id + '"' + (BG.selC[e.id] !== false ? ' checked' : '') + '><span><b>' + esc(e.nome) + '</b><small>' + bgDataFmt(e.data) + ' · ' + (e.qtd || '?') + ' pessoas</small></span>' + bgPill(e.pacote) + '</label>';
+      }).join('') : '<p class="hint">Nenhum evento planejado ainda. Vá em “Eventos” e adicione.</p>') + '</div>';
     const c = bgConsol();
-    if (!c.linhas.length) return h + '<p class="hint">Preencha as quantidades necessárias nos eventos para ver a lista consolidada.</p>';
-    const por = bgPorCat(c.linhas.map(function (l) { return l.it; })), mapa = {}; c.linhas.forEach(function (l) { mapa[l.it.id] = l; });
-    const nComprar = c.linhas.filter(function (l) { return l.comprar > 0; }).length;
-    h += '<div class="vd-b"><div class="vd-hd"><h3>Lista consolidada <small>(' + c.evs.length + ' evento(s) · ' + nComprar + ' item(ns) a comprar)</small></h3><div class="vacoes"><button type="button" class="btn sm" data-bg="copiar">Copiar lista</button><button type="button" class="btn sm" data-bg="zap">Enviar por WhatsApp</button><button type="button" class="btn sm" data-bg="imprimir">Imprimir</button><button type="button" class="btn sm pri" data-bg="lancar">Lançar compra no estoque</button></div></div>' +
-      '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Necessário</th><th>Estoque</th><th>Comprar</th></tr></thead><tbody>' +
-      por.map(function (g) { return '<tr class="cat"><td colspan="4">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { const l = mapa[i.id]; return '<tr class="' + (l.comprar > 0 ? 'falta' : 'ok') + '"><td>' + esc(i.nome) + '<small class="bgdet">' + esc(l.det.join(' · ')) + '</small></td><td>' + bgFmt(l.nec) + ' ' + esc(i.un) + '</td><td>' + bgFmt(l.est) + '</td><td><b>' + (l.comprar > 0 ? bgFmt(l.comprar) + ' ' + esc(i.un) : '—') + '</b></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
-      '<p class="hint">“Comprar” = necessário somado dos eventos marcados − o que você tem em estoque. Depois de comprar, use “Lançar compra no estoque”.</p></div>';
+    if (!c.linhas.length) return h + (abertos.length ? '<p class="hint">Informe as quantidades necessárias em cada evento para ver a lista consolidada.</p>' : '');
+    const falta = c.linhas.filter(function (l) { return l.comprar > 0; }), ok = c.linhas.filter(function (l) { return l.comprar <= 0; });
+    const linha = function (l) {
+      return '<div class="bg-it ' + (l.comprar > 0 ? 'falta' : 'ok') + '"><div class="n"><b>' + esc(l.it.nome) + '</b><small>' + esc(l.det.join(' · ')) + '</small></div><div class="num"><span>Precisa <b>' + bgFmt(l.nec) + '</b></span><span>Tem <b>' + bgFmt(l.est) + '</b></span></div><div class="buy">' + (l.comprar > 0 ? '<b>' + bgFmt(l.comprar) + '</b><small>' + esc(l.it.un) + '</small>' : '<b>✓</b>') + '</div></div>';
+    };
+    const lst = function (ls) { const m = {}; ls.forEach(function (l) { m[l.it.id] = l; }); return bgPorCat(ls.map(function (l) { return l.it; })).map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(function (i) { return linha(m[i.id]); }).join(''); }).join(''); };
+    h += '<div class="bg-sum"><div><b>' + c.evs.length + '</b><small>evento(s)</small></div><div class="alert"><b>' + falta.length + '</b><small>itens a comprar</small></div><div><b>' + ok.length + '</b><small>cobertos pelo estoque</small></div></div>' +
+      '<div class="bg-acts"><button type="button" class="btn" data-bg="copiar">Copiar</button><button type="button" class="btn" data-bg="zap">WhatsApp</button><button type="button" class="btn" data-bg="imprimir">Imprimir</button></div>' +
+      (falta.length ? '<h3 class="bg-t2">O que comprar</h3><div class="bg-lista">' + lst(falta) + '</div><button type="button" class="btn pri bg-big" data-bg="lancar">Já comprei tudo → lançar no estoque</button><p class="hint">Faça isso depois de comprar: soma as quantidades acima ao seu estoque.</p>' : '<p class="bg-okmsg">✓ O estoque já cobre todos os eventos marcados.</p>') +
+      (ok.length ? '<details class="bg-det"><summary>Itens cobertos pelo estoque (' + ok.length + ')</summary><div class="bg-lista">' + lst(ok) + '</div></details>' : '');
     return h;
   }
+  function bgHtmlProp() {
+    const q = bgNz(BG.q), usados = {}, hoje = QE.hoje(); BG.d.eventos.forEach(function (e) { if (e.solId) usados[e.solId] = 1; });
+    let ps = lista.filter(function (x) { return BG.todas || stOf(x) === 'ganho' || stOf(x) === 'contrato'; });
+    if (q) ps = ps.filter(function (x) { return bgNz([x.empresa, x.contato, QE.fmtData(x.dataEvento), QE.evento(x).tag].join(' ')).indexOf(q) >= 0; });
+    ps.sort(function (a, b) { const da = a.dataEvento || '', db = b.dataEvento || '', pa = da && da < hoje, pb = db && db < hoje; if (pa !== pb) return pa ? 1 : -1; if (!da !== !db) return da ? -1 : 1; return pa ? db.localeCompare(da) : da.localeCompare(db); });
+    if (!ps.length) return '<p class="hint">Nenhuma proposta encontrada' + (BG.todas ? '' : ' entre as fechadas (marque “mostrar todas” se ainda não fechou)') + '.</p>';
+    return ps.slice(0, 60).map(function (x) {
+      const passou = x.dataEvento && x.dataEvento < hoje, u = usados[x.id];
+      return '<button type="button" class="bg-prop' + (passou ? ' passou' : '') + '" data-bgprop="' + esc(x.id) + '"' + (u ? ' disabled' : '') + '><span class="d">' + esc(QE.fmtData(x.dataEvento) || 'sem data') + '</span><span class="n"><b>' + esc(bgNomeProp(x)) + '</b><small>' + (bgQtdProp(x) || '?') + ' pessoas · ' + esc(QE.STATUS[stOf(x)]) + (u ? ' · já adicionado' : '') + '</small></span>' + bgPill(bgPacProp(x)) + '</button>';
+    }).join('') + (ps.length > 60 ? '<p class="hint">Mostrando 60 — use a busca para filtrar.</p>' : '');
+  }
   function bgVEventos() {
-    const evs = BG.d.eventos.slice().sort(function (a, b) { return String(b.data || '0').localeCompare(String(a.data || '0')); });
-    const ganhos = lista.filter(function (x) { return stOf(x) === 'ganho' || stOf(x) === 'contrato'; });
-    return '<div class="vacoes"><button type="button" class="btn pri" data-bg="novoev">+ Novo evento</button> <select id="bgImp"><option value="">Criar a partir de uma proposta (Ganho / Em contrato)…</option>' + ganhos.map(function (x) { return '<option value="' + esc(x.id) + '">' + esc(x.empresa) + ' — ' + esc(QE.fmtData(x.dataEvento) || 'sem data') + ' — ' + (+x.qtd || '?') + ' pessoas</option>'; }).join('') + '</select> <select id="bgImpP"><option value="prata">Bar Prata</option><option value="ouro">Bar Ouro</option></select></div>' +
-      (evs.length ? '<div class="bg-evs">' + evs.map(function (e) { const nn = Object.keys(e.nec || {}).filter(function (k) { return bgN(e.nec[k]) > 0; }).length; return '<div class="bg-ev"><div><b>' + esc(e.nome) + '</b> <span class="badge ' + (e.status === 'realizado' ? 'st-ganho' : 'st-enviado') + '">' + (e.status === 'realizado' ? 'Realizado' : 'Planejado') + '</span><br><small>' + bgDataFmt(e.data) + ' · ' + (e.qtd || '?') + ' pessoas · ' + BG_PAC[e.pacote] + ' · ' + nn + ' item(ns) com quantidade</small></div><div class="vacoes"><button type="button" class="btn sm" data-bgabrir="' + e.id + '">Abrir</button><button type="button" class="btn sm ghost" data-bgdel="' + e.id + '">Excluir</button></div></div>'; }).join('') + '</div>' : '<p class="hint">Nenhum evento ainda.</p>');
+    const ab = BG.d.eventos.filter(function (e) { return e.status !== 'realizado'; }).sort(bgOrdData), re = BG.d.eventos.filter(function (e) { return e.status === 'realizado'; }).sort(function (a, b) { return bgOrdData(b, a); });
+    const card = function (e) {
+      const nn = Object.keys(e.nec || {}).filter(function (k) { return bgN(e.nec[k]) > 0; }).length;
+      return '<div class="bg-ev"><div class="i"><b>' + esc(e.nome) + '</b><small>' + bgDataFmt(e.data) + ' · ' + (e.qtd || '?') + ' pessoas · ' + nn + ' item(ns)</small></div>' + bgPill(e.pacote) + '<div class="a"><button type="button" class="btn sm" data-bgabrir="' + e.id + '">Abrir</button><button type="button" class="btn sm ghost" data-bgdel="' + e.id + '" aria-label="Excluir">🗑</button></div></div>';
+    };
+    return '<div class="bg-card"><h3>Adicionar evento da proposta</h3><input type="search" id="bgBusca" class="bg-busca" placeholder="🔍 Buscar pelo nome do cliente ou data…" value="' + esc(BG.q) + '" autocomplete="off"><label class="chk" style="margin:6px 0"><input type="checkbox" id="bgTodas"' + (BG.todas ? ' checked' : '') + '> mostrar também propostas ainda não fechadas</label><div id="bgPropLista" class="bg-props">' + bgHtmlProp() + '</div><p class="hint">Em ordem de data (próximos primeiro). O pacote, a data e os convidados vêm direto da proposta.</p></div>' +
+      '<button type="button" class="btn bg-big" data-bg="novoev">+ Evento avulso (sem proposta)</button>' +
+      '<h3 class="bg-t2">Planejados (' + ab.length + ')</h3><div class="bg-evs">' + (ab.map(card).join('') || '<p class="hint">Nenhum evento planejado.</p>') + '</div>' +
+      (re.length ? '<h3 class="bg-t2">Realizados — histórico (' + re.length + ')</h3><div class="bg-evs">' + re.map(card).join('') + '</div>' : '');
   }
   function bgVEvento(e) {
-    const its = bgItensPac(e.pacote), por = bgPorCat(its), real = e.status === 'realizado';
-    return '<div class="vacoes"><button type="button" class="btn ghost" data-bg="voltar">← Voltar aos eventos</button></div><h3 style="margin:10px 0">' + esc(e.nome) + '</h3>' +
-      '<div class="box open"><div class="in"><div class="g2"><div class="f"><label>Nome do evento / cliente</label><input data-bgf="nome" value="' + esc(e.nome) + '"></div><div class="f"><label>Data</label><input type="date" data-bgf="data" value="' + esc(e.data || '') + '"></div></div>' +
-      '<div class="g2"><div class="f"><label>Convidados</label><input type="number" min="0" data-bgf="qtd" value="' + esc(e.qtd) + '"></div><div class="f"><label>Pacote do bar</label><select data-bgf="pacote"><option value="prata"' + (e.pacote === 'prata' ? ' selected' : '') + '>Bar Prata</option><option value="ouro"' + (e.pacote === 'ouro' ? ' selected' : '') + '>Bar Ouro</option></select></div></div>' +
-      '<div class="f"><label>Situação</label><select data-bgf="status"><option value="planejado"' + (!real ? ' selected' : '') + '>Planejado (entra na lista de compras)</option><option value="realizado"' + (real ? ' selected' : '') + '>Realizado (vira histórico)</option></select></div>' +
-      '<div class="vacoes"><button type="button" class="btn sm" data-bg="sugerir">Sugerir quantidades pela média histórica</button><button type="button" class="btn sm ghost" data-bg="zerar">Zerar quantidades</button><button type="button" class="btn sm ghost" data-bg="copiarcons">Copiar “necessário” para “consumido”</button></div></div></div>' +
-      '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Necessário</th><th>Consumido (real)</th></tr></thead><tbody>' +
-      por.map(function (g) { return '<tr class="cat"><td colspan="3">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { return '<tr><td>' + esc(i.nome) + ' <small>(' + esc(i.un) + ')</small></td><td><input class="bgq" type="number" min="0" step="any" inputmode="decimal" data-bgnec="' + i.id + '" value="' + (bgN(e.nec[i.id]) || '') + '"></td><td><input class="bgq" type="number" min="0" step="any" inputmode="decimal" data-bgcons="' + i.id + '" value="' + (bgN(e.consumo[i.id]) || '') + '" placeholder="' + (bgN(e.nec[i.id]) || '') + '"></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
-      '<div class="box open"><div class="in"><div class="f"><label>Observações</label><textarea data-bgf="obs" rows="2">' + esc(e.obs || '') + '</textarea></div>' +
-      '<div class="vacoes"><button type="button" class="btn pri" data-bg="baixa">Registrar consumo e dar baixa no estoque</button></div><p class="hint">Marca o evento como Realizado, guarda o consumo no histórico (para as médias por pessoa) e desconta do estoque o que foi consumido' + (e.baixa ? '. <b>Já houve baixa neste evento:</b> ao registrar de novo, a baixa anterior é devolvida ao estoque antes de aplicar a nova.' : '.') + '</p></div></div>';
+    const its = bgItensEv(e), real = e.status === 'realizado', x = bgProp(e), cons = BG.cons || real, base = bgItensPac(e.pacote);
+    const linha = function (i) {
+      const extra = base.indexOf(i) < 0;
+      return '<div class="bg-row"><div class="n"><b>' + esc(i.nome) + '</b><small>' + esc(i.un) + (extra ? ' · extra <a href="#" data-bgrmex="' + i.id + '">remover</a>' : '') + '</small></div>' + bgStep('data-bgnec', i.id, bgN(e.nec[i.id]), i) +
+        (cons ? '<div class="bg-cons"><span>Consumiu</span>' + bgStep('data-bgcons', i.id, bgN(e.consumo[i.id]), i) + '</div>' : '') + '</div>';
+    };
+    const naoPac = BG.d.itens.filter(function (i) { return its.indexOf(i) < 0; });
+    return '<button type="button" class="btn ghost" data-bg="voltar">← Voltar</button><h3 class="bg-t2">' + esc(e.nome) + '</h3>' +
+      '<div class="bg-card">' +
+      (x ? '<div class="bg-link"><div>' + bgPill(e.pacote) + ' <b>' + bgDataFmt(e.data) + '</b> · <b>' + (e.qtd || '?') + '</b> pessoas</div><small>Pacote, data e convidados vêm da proposta' + (real ? ' (congelado: evento realizado)' : ' e se atualizam sozinhos') + '. <a href="#" data-bg="desv">Desvincular</a></small></div>' +
+        '<div class="f"><label>Nome do evento</label><input data-bgf="nome" value="' + esc(e.nome) + '"></div>' :
+        '<div class="f"><label>Nome do evento / cliente</label><input data-bgf="nome" value="' + esc(e.nome) + '"></div><div class="bg-g2"><div class="f"><label>Data</label><input type="date" data-bgf="data" value="' + esc(e.data || '') + '"></div><div class="f"><label>Convidados</label><input type="number" inputmode="numeric" min="0" data-bgf="qtd" value="' + esc(e.qtd) + '"></div></div><div class="f"><label>Pacote do bar</label><select data-bgf="pacote"><option value="prata"' + (e.pacote === 'prata' ? ' selected' : '') + '>Bar Prata</option><option value="ouro"' + (e.pacote === 'ouro' ? ' selected' : '') + '>Bar Ouro</option></select></div>') +
+      '<div class="bg-acts"><button type="button" class="btn sm" data-bg="sugerir">Sugerir pela média histórica</button><button type="button" class="btn sm ghost" data-bg="zerar">Zerar</button></div></div>' +
+      '<h3 class="bg-t2">Quantidade necessária</h3><div class="bg-lista">' + bgPorCat(its).map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(linha).join(''); }).join('') + '</div>' +
+      '<details class="bg-det"' + (BG.extra ? ' open' : '') + '><summary>+ Adicionar item extra a este evento</summary><div class="bg-card flat"><div class="f"><label>Item (escolha um existente ou digite um novo)</label><input id="bgExNome" list="bgExLista" placeholder="Ex.: Cerveja, Gelo, Aperol…" autocomplete="off"><datalist id="bgExLista">' + naoPac.map(function (i) { return '<option value="' + esc(i.nome) + '">'; }).join('') + '</datalist></div><div class="bg-g2"><div class="f"><label>Categoria (se for novo)</label><select id="bgExCat">' + BG_CATS.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</select></div><div class="f"><label>Unidade (se for novo)</label>' + bgUnSel('id="bgExUn"', '', 'un') + '</div></div><button type="button" class="btn pri" data-bg="addextra">Adicionar ao evento</button></div></details>' +
+      '<div class="bg-card"><div class="f"><label>Observações</label><textarea data-bgf="obs" rows="2">' + esc(e.obs || '') + '</textarea></div></div>' +
+      (cons ? '<div class="bg-card"><p class="hint" style="margin:0 0 8px">Depois do evento, preencha “Consumiu” (ou copie do necessário) e registre. Isso guarda o consumo no histórico e baixa do estoque.</p><div class="bg-acts"><button type="button" class="btn sm ghost" data-bg="copiarcons">Copiar necessário → consumiu</button></div><button type="button" class="btn pri bg-big" data-bg="baixa">Registrar consumo e dar baixa no estoque</button>' + (e.baixa ? '<p class="hint">Já houve baixa neste evento: ao registrar de novo, a anterior é devolvida ao estoque antes.</p>' : '') + '</div>' :
+        '<button type="button" class="btn bg-big" data-bg="vercons">Registrar consumo (depois que o evento acontecer)</button>') +
+      '<div class="bg-card flat"><label class="chk"><input type="checkbox" data-bgreal' + (real ? ' checked' : '') + '> Marcar como evento realizado</label></div>';
   }
   function bgVEstoque() {
     const por = bgPorCat(BG.d.itens);
-    return '<div class="box open"><div class="in"><h3>Adicionar item</h3><div class="g2"><div class="f"><label>Nome</label><input id="bgNNome"></div><div class="f"><label>Categoria</label><select id="bgNCat">' + BG_CATS.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</select></div></div><div class="g2"><div class="f"><label>Unidade</label><input id="bgNUn" value="un" list="bgUns"></div><div class="f"><label>Entra em</label><label class="chk"><input type="checkbox" id="bgNP" checked> Bar Prata</label><label class="chk"><input type="checkbox" id="bgNO" checked> Bar Ouro</label></div></div><button type="button" class="btn sm pri" data-bg="additem">Adicionar</button></div></div>' +
-      '<datalist id="bgUns"><option>un</option><option>garrafa</option><option>kg</option><option>L</option><option>caixa</option><option>maço</option><option>pacote</option></datalist>' +
-      '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Em estoque</th><th>Unidade</th><th>Prata</th><th>Ouro</th><th></th></tr></thead><tbody>' +
-      por.map(function (g) { return '<tr class="cat"><td colspan="6">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { return '<tr><td><input class="bgn" data-bgin="' + i.id + '" value="' + esc(i.nome) + '"></td><td><input class="bgq" type="number" min="0" step="any" inputmode="decimal" data-bgest="' + i.id + '" value="' + (bgN(BG.d.estoque[i.id]) || '') + '" placeholder="0"></td><td><input class="bgu" data-bgun="' + i.id + '" list="bgUns" value="' + esc(i.un) + '"></td><td><input type="checkbox" data-bgpk="prata:' + i.id + '"' + (i.prata ? ' checked' : '') + '></td><td><input type="checkbox" data-bgpk="ouro:' + i.id + '"' + (i.ouro ? ' checked' : '') + '></td><td><button type="button" class="btn sm ghost" data-bgrmi="' + i.id + '" title="Remover item">×</button></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>';
+    return '<input type="search" id="bgBuscaEst" class="bg-busca" placeholder="🔍 Buscar item…" autocomplete="off"><details class="bg-det"><summary>+ Cadastrar item novo</summary><div class="bg-card flat"><div class="f"><label>Nome</label><input id="bgNNome"></div><div class="bg-g2"><div class="f"><label>Categoria</label><select id="bgNCat">' + BG_CATS.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</select></div><div class="f"><label>Unidade</label>' + bgUnSel('id="bgNUn"', '', 'un') + '</div></div><label class="chk"><input type="checkbox" id="bgNP"> entra no Bar Prata</label><label class="chk"><input type="checkbox" id="bgNO"> entra no Bar Ouro</label><p class="hint" style="margin:4px 0">Sem marcar nenhum, vira item “extra” que você adiciona só nos eventos que quiser.</p><button type="button" class="btn pri" data-bg="additem">Cadastrar</button></div></details>' +
+      '<div class="bg-lista">' + por.map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(function (i) { return '<div class="bg-es" data-nome="' + esc(i.nome) + '"><div class="top"><input class="bgn" data-bgin="' + i.id + '" value="' + esc(i.nome) + '" aria-label="Nome"><button type="button" class="btn sm ghost" data-bgrmi="' + i.id + '" aria-label="Remover">🗑</button></div><div class="bot"><div class="lbl">Estoque</div>' + bgStep('data-bgest', i.id, bgN(BG.d.estoque[i.id]), i) + bgUnSel('data-bgun', i.id, i.un) + '<label class="pk"><input type="checkbox" data-bgpk="prata:' + i.id + '"' + (i.prata ? ' checked' : '') + '>Prata</label><label class="pk"><input type="checkbox" data-bgpk="ouro:' + i.id + '"' + (i.ouro ? ' checked' : '') + '>Ouro</label></div></div>'; }).join(''); }).join('') + '</div>';
+  }
+  function bgHtmlHist() {
+    const pac = BG.sugP, r = bgMedias(pac), por = bgPorCat(bgItensPac(pac).filter(function (i) { return r.m[i.id].tot > 0; })), s = bgSugere(pac, BG.sugN).nec;
+    if (!por.length) return '<p class="hint">Ainda não há consumo registrado para o ' + BG_PAC[pac] + '. Em cada evento realizado, preencha “Consumiu” e registre: as médias por pessoa aparecem aqui.</p>';
+    return '<div class="bg-lista">' + por.map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(function (i) { return '<div class="bg-it"><div class="n"><b>' + esc(i.nome) + '</b><small>média ' + bgFmt(Math.round(r.m[i.id].pp * 1000) / 1000) + ' ' + esc(i.un) + '/pessoa · ' + r.m[i.id].n + ' evento(s)</small></div><div class="buy"><b>' + (s[i.id] ? bgFmt(s[i.id]) : '—') + '</b><small>' + esc(i.un) + '</small></div></div>'; }).join(''); }).join('') + '</div>';
   }
   function bgVHist() {
-    const pac = BG.sugP, r = bgMedias(pac), por = bgPorCat(bgItensPac(pac).filter(function (i) { return r.m[i.id].tot > 0; }));
-    return '<div class="box open"><div class="in"><div class="g2"><div class="f"><label>Pacote</label><select id="bgHP"><option value="prata"' + (pac === 'prata' ? ' selected' : '') + '>Bar Prata</option><option value="ouro"' + (pac === 'ouro' ? ' selected' : '') + '>Bar Ouro</option></select></div><div class="f"><label>Convidados do próximo evento</label><input type="number" min="1" id="bgHN" value="' + BG.sugN + '"></div></div>' +
-      '<p class="hint">Base: <b>' + r.eventos + '</b> evento(s) realizado(s) do ' + BG_PAC[pac] + ' · <b>' + r.pessoas + '</b> pessoas no total.</p>' +
-      (r.eventos ? '<div class="vacoes"><button type="button" class="btn sm pri" data-bg="evsug">Criar evento com essa sugestão</button></div>' : '') + '</div></div>' +
-      (por.length ? '<div class="tscroll"><table class="vd-t bg-t"><thead><tr><th>Item</th><th>Média por pessoa</th><th>Eventos</th><th>Sugestão p/ ' + BG.sugN + ' pessoas</th></tr></thead><tbody>' + por.map(function (g) { return '<tr class="cat"><td colspan="4">' + esc(g.cat) + '</td></tr>' + g.itens.map(function (i) { const s = bgSugere(pac, BG.sugN).nec[i.id]; return '<tr><td>' + esc(i.nome) + '</td><td>' + bgFmt(Math.round(r.m[i.id].pp * 1000) / 1000) + ' ' + esc(i.un) + '</td><td>' + r.m[i.id].n + '</td><td><b>' + (s ? bgFmt(s) + ' ' + esc(i.un) : '—') + '</b></td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' : '<p class="hint">Ainda não há consumo registrado. Em cada evento, preencha “Consumido (real)” e toque em “Registrar consumo e dar baixa no estoque”: as médias por pessoa aparecem aqui.</p>');
+    const pac = BG.sugP, r = bgMedias(pac);
+    return '<div class="bg-card"><div class="bg-g2"><div class="f"><label>Pacote</label><select id="bgHP"><option value="prata"' + (pac === 'prata' ? ' selected' : '') + '>Bar Prata</option><option value="ouro"' + (pac === 'ouro' ? ' selected' : '') + '>Bar Ouro</option></select></div><div class="f"><label>Convidados</label><input type="number" inputmode="numeric" min="1" id="bgHN" value="' + BG.sugN + '"></div></div>' +
+      '<p class="hint" style="margin:0">Base: <b>' + r.eventos + '</b> evento(s) realizado(s) · <b>' + r.pessoas + '</b> pessoas.</p>' + (r.eventos ? '<button type="button" class="btn pri bg-big" data-bg="evsug">Criar evento com essa sugestão</button>' : '') + '</div><h3 class="bg-t2">Sugestão para <span id="bgHNt">' + BG.sugN + '</span> pessoas</h3><div id="bgHList">' + bgHtmlHist() + '</div>';
   }
   /* ---------- eventos da tela ---------- */
   $('#bgSub').addEventListener('click', function (e) { const b = e.target.closest('[data-bs]'); if (!b) return; BG.sub = b.dataset.bs; if (BG.sub !== 'eventos') BG.ev = null; bgRender(); });
   $('#v-bar').addEventListener('input', function (e) {
     const t = e.target, ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
+    if (t.id === 'bgBusca') { BG.q = t.value; $('#bgPropLista').innerHTML = bgHtmlProp(); return; }
+    if (t.id === 'bgBuscaEst') { const q = bgNz(t.value); $$('#bgCorpo .bg-es').forEach(function (r) { r.hidden = !!q && bgNz(r.dataset.nome).indexOf(q) < 0; }); return; }
     if (ds.bgf !== undefined && ev) { ev[ds.bgf] = ds.bgf === 'qtd' ? (t.value === '' ? '' : +t.value) : t.value; bgSalva(); return; }
     if (ds.bgnec !== undefined && ev) { ev.nec[ds.bgnec] = bgN(t.value); bgSalva(); return; }
     if (ds.bgcons !== undefined && ev) { ev.consumo[ds.bgcons] = bgN(t.value); bgSalva(); return; }
     if (ds.bgest !== undefined) { BG.d.estoque[ds.bgest] = bgN(t.value); bgSalva(); return; }
     if (ds.bgin !== undefined) { const i = bgItem(ds.bgin); if (i) { i.nome = t.value; bgSalva(); } return; }
-    if (ds.bgun !== undefined) { const i = bgItem(ds.bgun); if (i) { i.un = t.value; bgSalva(); } return; }
-    if (t.id === 'bgHN') { BG.sugN = Math.max(1, +t.value || 1); clearTimeout(BG.rt); BG.rt = setTimeout(function () { const p = t.selectionStart; bgRender(); const n = $('#bgHN'); if (n) { n.focus(); } }, 500); }
+    if (t.id === 'bgHN') { BG.sugN = Math.max(1, +t.value || 1); $('#bgHNt').textContent = BG.sugN; $('#bgHList').innerHTML = bgHtmlHist(); }
   });
   $('#v-bar').addEventListener('change', function (e) {
     const t = e.target, ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
     if (ds.bgsel !== undefined) { BG.selC[ds.bgsel] = t.checked; bgRender(); return; }
-    if (ds.bgf === 'pacote' || ds.bgf === 'status') { if (ev) { ev[ds.bgf] = t.value; bgSalva(); bgRender(); } return; }
+    if (t.id === 'bgTodas') { BG.todas = t.checked; $('#bgPropLista').innerHTML = bgHtmlProp(); return; }
+    if (ds.bgf === 'pacote') { if (ev) { ev.pacote = t.value; bgSalva(); bgRender(); } return; }
+    if (ds.bgreal !== undefined && ev) { ev.status = t.checked ? 'realizado' : 'planejado'; if (t.checked) BG.cons = true; bgSalva(); bgRender(); return; }
     if (ds.bgpk) { const q = ds.bgpk.split(':'), i = bgItem(q[1]); if (i) { i[q[0]] = t.checked; bgSalva(); } return; }
+    if (ds.bgun !== undefined) { const i = bgItem(ds.bgun); if (i) { i.un = t.value; bgSalva(); } return; }
     if (t.id === 'bgHP') { BG.sugP = t.value; bgRender(); return; }
-    if (t.id === 'bgImp' && t.value) {
-      const x = lista.find(function (y) { return y.id === t.value; }); if (!x) return;
-      const e2 = bgNovoEv($('#bgImpP').value, { nome: x.empresa + (x.contato && x.contato !== x.empresa ? ' — ' + x.contato : ''), data: x.dataEvento || '', qtd: +x.qtd || '', solId: x.id }); bgRender(); return;
-    }
   });
   $('#v-bar').addEventListener('click', function (e) {
-    const t = e.target.closest('button'); if (!t) return; const ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
+    const st = e.target.closest('[data-bgstep]');
+    if (st) { const inp = st.parentNode.querySelector('input'), stp = +inp.dataset.stp || 1; inp.value = String(Math.max(0, Math.round((bgN(inp.value) + (+st.dataset.bgstep) * stp) * 100) / 100)); inp.dispatchEvent(new Event('input', { bubbles: true })); return; }
+    const lk = e.target.closest('a[data-bg],a[data-bgrmex]'); if (lk) e.preventDefault();
+    const t = lk || e.target.closest('button,[data-bgprop]'); if (!t) return; const ds = t.dataset, ev = BG.ev ? bgEv(BG.ev) : null;
+    if (ds.bgprop) {
+      const x = lista.find(function (y) { return y.id === ds.bgprop; }); if (!x) return;
+      bgNovoEv(bgPacProp(x), { nome: bgNomeProp(x), data: x.dataEvento || '', qtd: bgQtdProp(x), solId: x.id }); BG.cons = false; bgRender(); window.scrollTo(0, 0); toast('Evento adicionado: ' + BG_PAC[bgPacProp(x)] + '. Informe as quantidades.'); return;
+    }
     if (ds.bg === 'retry') { bgCarrega(); return; }
-    if (ds.bg === 'novoev') { bgNovoEv('prata'); bgRender(); return; }
-    if (ds.bgabrir) { BG.ev = ds.bgabrir; bgRender(); window.scrollTo(0, 0); return; }
+    if (ds.bg === 'novoev') { bgNovoEv('prata'); BG.cons = false; bgRender(); window.scrollTo(0, 0); return; }
+    if (ds.bgabrir) { BG.ev = ds.bgabrir; const x = bgEv(BG.ev); BG.cons = !!(x && x.status === 'realizado'); bgRender(); window.scrollTo(0, 0); return; }
     if (ds.bgdel) { const x = bgEv(ds.bgdel); if (x && confirm('Excluir o evento "' + x.nome + '"? ' + (x.baixa ? 'A baixa no estoque NÃO será desfeita.' : ''))) { BG.d.eventos = BG.d.eventos.filter(function (y) { return y !== x; }); bgSalva(); bgRender(); } return; }
     if (ds.bg === 'voltar') { BG.ev = null; bgRender(); return; }
+    if (ds.bg === 'todos') { BG.d.eventos.forEach(function (x) { BG.selC[x.id] = true; }); bgRender(); return; }
+    if (ds.bg === 'nenhum') { BG.d.eventos.forEach(function (x) { BG.selC[x.id] = false; }); bgRender(); return; }
+    if (ds.bg === 'desv' && ev) { ev.solId = ''; bgSalva(); bgRender(); return; }
+    if (ds.bg === 'vercons') { BG.cons = true; bgRender(); return; }
+    if (ds.bgrmex && ev) { ev.ex = (ev.ex || []).filter(function (k) { return k !== ds.bgrmex; }); bgSalva(); bgRender(); return; }
+    if (ds.bg === 'addextra' && ev) {
+      const nome = $('#bgExNome').value.trim(); if (!nome) return toast('Digite ou escolha o item.', true);
+      let it = BG.d.itens.find(function (i) { return bgNz(i.nome) === bgNz(nome); });
+      if (!it) { it = { id: bgId(), nome: nome, cat: $('#bgExCat').value, un: $('#bgExUn').value, prata: false, ouro: false }; BG.d.itens.push(it); }
+      if (bgItensEv(ev).indexOf(it) >= 0) return toast('Esse item já está neste evento.', true);
+      ev.ex = (ev.ex || []).concat([it.id]); BG.extra = true; bgSalva(); bgRender(); toast('“' + it.nome + '” adicionado ao evento. Informe a quantidade.'); return;
+    }
     if (ds.bg === 'zerar' && ev) { if (confirm('Zerar todas as quantidades necessárias deste evento?')) { ev.nec = {}; bgSalva(); bgRender(); } return; }
     if (ds.bg === 'copiarcons' && ev) { ev.consumo = Object.assign({}, ev.nec); bgSalva(); bgRender(); return; }
     if (ds.bg === 'sugerir' && ev) {
       if (!(+ev.qtd > 0)) return toast('Informe a quantidade de convidados primeiro.', true);
       const s = bgSugere(ev.pacote, +ev.qtd); if (!s.eventos) return toast('Ainda não há histórico de consumo deste pacote. Registre o consumo de um evento realizado primeiro.', true);
       if (Object.keys(ev.nec).some(function (k) { return bgN(ev.nec[k]) > 0; }) && !confirm('Substituir as quantidades atuais pela sugestão (média de ' + s.eventos + ' evento(s))?')) return;
-      ev.nec = s.nec; bgSalva(); bgRender(); toast('Quantidades sugeridas pela média de ' + s.eventos + ' evento(s) realizado(s).'); return;
+      ev.nec = s.nec; bgSalva(); bgRender(); toast('Quantidades sugeridas pela média de ' + s.eventos + ' evento(s).'); return;
     }
     if (ds.bg === 'baixa' && ev) {
-      const cons = {}; bgItensPac(ev.pacote).forEach(function (i) { const v = ev.consumo[i.id] !== undefined && ev.consumo[i.id] !== 0 ? bgN(ev.consumo[i.id]) : 0; if (v > 0) cons[i.id] = v; });
-      if (!Object.keys(cons).length) return toast('Preencha a coluna “Consumido (real)” (ou use “Copiar necessário para consumido”).', true);
+      const cons = {}; bgItensEv(ev).forEach(function (i) { const v = bgN(ev.consumo[i.id]); if (v > 0) cons[i.id] = v; });
+      if (!Object.keys(cons).length) return toast('Preencha “Consumiu” (ou use “Copiar necessário → consumiu”).', true);
       if (!confirm('Registrar o consumo de "' + ev.nome + '" e descontar do estoque?')) return;
       if (ev.baixa) Object.keys(ev.baixa).forEach(function (k) { BG.d.estoque[k] = bgN(BG.d.estoque[k]) + bgN(ev.baixa[k]); });
       Object.keys(cons).forEach(function (k) { BG.d.estoque[k] = Math.max(0, Math.round((bgN(BG.d.estoque[k]) - cons[k]) * 100) / 100); });
@@ -4827,17 +4921,15 @@ body.pv-lock { overflow: hidden; }
     }
     if (ds.bg === 'additem') {
       const nome = $('#bgNNome').value.trim(); if (!nome) return toast('Digite o nome do item.', true);
-      BG.d.itens.push({ id: bgId(), nome: nome, cat: $('#bgNCat').value, un: $('#bgNUn').value.trim() || 'un', prata: $('#bgNP').checked, ouro: $('#bgNO').checked }); bgSalva(); bgRender(); toast('Item adicionado.'); return;
+      BG.d.itens.push({ id: bgId(), nome: nome, cat: $('#bgNCat').value, un: $('#bgNUn').value || 'un', prata: $('#bgNP').checked, ouro: $('#bgNO').checked }); bgSalva(); bgRender(); toast('Item cadastrado.'); return;
     }
-    if (ds.bgrmi) { const i = bgItem(ds.bgrmi); if (i && confirm('Remover "' + i.nome + '" da lista? Ele some dos eventos (o histórico guardado dos eventos não é apagado).')) { BG.d.itens = BG.d.itens.filter(function (y) { return y !== i; }); delete BG.d.estoque[i.id]; bgSalva(); bgRender(); } return; }
-    if (ds.bg === 'evsug') {
-      const s = bgSugere(BG.sugP, BG.sugN); const e2 = bgNovoEv(BG.sugP, { nome: 'Evento ' + BG.sugN + ' pessoas', qtd: BG.sugN, nec: s.nec }); BG.sub = 'eventos'; bgRender(); toast('Evento criado com a sugestão histórica. Ajuste o nome e a data.'); return;
-    }
+    if (ds.bgrmi) { const i = bgItem(ds.bgrmi); if (i && confirm('Remover "' + i.nome + '" da lista? Ele some dos eventos (o histórico guardado não é apagado).')) { BG.d.itens = BG.d.itens.filter(function (y) { return y !== i; }); delete BG.d.estoque[i.id]; bgSalva(); bgRender(); } return; }
+    if (ds.bg === 'evsug') { const s = bgSugere(BG.sugP, BG.sugN); bgNovoEv(BG.sugP, { nome: 'Evento ' + BG.sugN + ' pessoas', qtd: BG.sugN, nec: s.nec }); BG.sub = 'eventos'; BG.cons = false; bgRender(); toast('Evento criado com a sugestão histórica. Ajuste nome e data.'); return; }
     if (ds.bg === 'copiar') { const tx = bgTextoCompras(bgConsol()); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(tx) : Promise.reject()).then(function () { toast('Lista copiada.'); }).catch(function () { window.prompt('Copie a lista:', tx); }); return; }
     if (ds.bg === 'zap') { window.open('https://wa.me/?text=' + encodeURIComponent(bgTextoCompras(bgConsol())), '_blank', 'noopener'); return; }
     if (ds.bg === 'imprimir') { const w = window.open('', '_blank'); if (!w) return toast('Libere pop-ups para imprimir.', true); w.document.write('<pre style="font:15px/1.5 sans-serif;white-space:pre-wrap">' + esc(bgTextoCompras(bgConsol())) + '</pre>'); w.document.close(); w.focus(); w.print(); return; }
     if (ds.bg === 'lancar') {
-      const c = bgConsol(), falta = c.linhas.filter(function (l) { return l.comprar > 0; }); if (!falta.length) return toast('Nada a comprar: o estoque já cobre tudo.', true);
+      const c = bgConsol(), falta = c.linhas.filter(function (l) { return l.comprar > 0; }); if (!falta.length) return toast('Nada a comprar.', true);
       if (!confirm('Somar ao estoque as ' + falta.length + ' compra(s) da lista? Faça isso depois de comprar.')) return;
       falta.forEach(function (l) { BG.d.estoque[l.it.id] = Math.round((bgN(BG.d.estoque[l.it.id]) + l.comprar) * 100) / 100; }); bgSalva(); bgRender(); toast('Estoque atualizado com as compras.'); return;
     }
