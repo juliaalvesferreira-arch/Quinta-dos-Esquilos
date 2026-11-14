@@ -949,6 +949,9 @@ body.pv-lock { overflow: hidden; }
 @media (max-width: 520px) { .bg-it .num { display: none; } .bg-g2 { grid-template-columns: 1fr; } .bg-prop .d { width: 62px; } }
 
 .bg-ed { grid-column: 1 / -1; } .bg-ed > summary { cursor: pointer; font-size: .8rem; color: var(--taupe); list-style: none; padding: 2px 0; } .bg-ed[open] > summary { margin-bottom: 8px; } .bg-ed .top { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; } .bg-ed .bot { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.bg-chk { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--bark); background: #fff; font-size: 1.2rem; font-weight: 700; color: #fff; cursor: pointer; padding: 0; } .bg-chk.on { background: var(--moss); border-color: var(--moss); }
+.bg-it.feito { border-left-color: var(--moss); background: #f3f7ec; } .bg-it.feito .n b { text-decoration: line-through; color: var(--taupe); } .bg-it.feito .buy { background: #e1ecd0; } .bg-it.feito .buy b { color: var(--moss); } .bg-sum .done { background: #eef4e4; border-color: #c5d6ac; } .bg-sum .done b { color: var(--moss); }
 </style>
 </head>
 <body>
@@ -4669,7 +4672,7 @@ body.pv-lock { overflow: hidden; }
   const BG_PAC = { prata: 'Bar Prata', ouro: 'Bar Ouro' };
   const bgNz = function (t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
   const BG_FR = { 'Abacaxi': 'un', 'Caju': 'bandeja', 'Limão taiti': 'kg', 'Limão siciliano': 'un', 'Maracujá': 'un', 'Melancia': 'un', 'Morango': 'bandeja', 'Uva': 'bandeja', 'Laranja': 'un', 'Mirtilo': 'bandeja', 'Pitaya': 'un', 'Grapefruit': 'un' };
-  function bgUnPadrao(c, nome) { return c === 'Frutas' && BG_FR[nome] ? BG_FR[nome] : (/^Energético/.test(nome) ? 'un' : BG_UN[c]); }
+  function bgUnPadrao(c, nome) { return c === 'Frutas' && BG_FR[nome] ? BG_FR[nome] : (/^Energético/.test(nome) ? 'un' : /^Polpa/.test(nome) ? 'pacote' : BG_UN[c]); }
   function bgMigra(d) {
     let ch = false;
     if (!d.mig) { const s = d.itens.find(function (i) { return i.nome === 'Cachaça Sagatiba'; }); if (s) s.prata = true; d.mig = 1; ch = true; }
@@ -4682,12 +4685,16 @@ body.pv-lock { overflow: hidden; }
       });
       d.mig = 2; ch = true;
     }
+    if (d.mig < 3) {
+      ['Polpa de morango', 'Polpa de frutas vermelhas', 'Polpa de maracujá'].forEach(function (n) { if (!d.itens.some(function (i) { return bgNz(i.nome) === bgNz(n); })) d.itens.push({ id: bgId(), nome: n, cat: 'Xaropes', un: 'pacote', prata: true, ouro: true }); });
+      d.mig = 3; ch = true;
+    }
     return ch;
   }
   function bgPadrao() {
     const base = {
       'Álcool': [['Vodka Smirnoff', 'p'], ['Vodka Absolut', 'o'], ['Saquê Azuma Kirin', 'po'], ['Cachaça Velho Barreiro', 'po'], ['Cachaça Sagatiba', 'po'], ['Gin Gordon\'s', 'p'], ['Gin Tanqueray', 'o'], ['Rum Bacardi', 'po'], ['Energético Baly Tropical', 'p'], ['Energético Baly Melancia', 'p'], ['Energético Red Bull Tropical', 'o'], ['Energético Red Bull Melancia', 'o'], ['Aperol', 'o'], ['Prosseco', 'o'], ['Campari', 'o'], ['Vermute', 'o'], ['Angustura', 'o']],
-      'Xaropes': ['Gengibre', 'Morango', 'Frutas vermelhas', 'Maçã verde', 'Tangerina', 'Limão siciliano', 'Curaçao Blue'],
+      'Xaropes': ['Gengibre', 'Morango', 'Frutas vermelhas', 'Maçã verde', 'Tangerina', 'Limão siciliano', 'Curaçao Blue', 'Polpa de morango', 'Polpa de frutas vermelhas', 'Polpa de maracujá'],
       'Bebidas': ['Água', 'Água com gás', 'Água tônica', 'Soda', 'Suco de abacaxi', 'Leite de coco', 'Leite condensado'],
       'Complementos': ['Alecrim', 'Hortelã', 'Laranja seca', 'Canela'],
       'Frutas': ['Abacaxi', 'Caju', 'Limão taiti', 'Limão siciliano', 'Maracujá', 'Melancia', 'Morango', 'Uva', 'Laranja', 'Mirtilo', 'Pitaya', 'Grapefruit'],
@@ -4699,7 +4706,7 @@ body.pv-lock { overflow: hidden; }
         itens.push({ id: 'i' + (itens.length + 1), nome: nome, cat: c, un: bgUnPadrao(c, nome), prata: fl.indexOf('p') >= 0, ouro: fl.indexOf('o') >= 0 });
       });
     });
-    return { v: 3, mig: 2, itens: itens, estoque: {}, eventos: [] };
+    return { v: 4, mig: 3, itens: itens, estoque: {}, eventos: [] };
   }
   const bgId = function () { return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); };
   const bgN = function (v) { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) || n < 0 ? 0 : n; };
@@ -4803,14 +4810,18 @@ body.pv-lock { overflow: hidden; }
       }).join('') : '<p class="hint">Nenhum evento planejado ainda. Vá em “Eventos” e adicione.</p>') + '</div>';
     const c = bgConsol();
     if (!c.linhas.length) return h + (abertos.length ? '<p class="hint">Informe as quantidades necessárias em cada evento para ver a lista consolidada.</p>' : '');
-    const falta = c.linhas.filter(function (l) { return l.comprar > 0; }), ok = c.linhas.filter(function (l) { return l.comprar <= 0; });
+    const comp = BG.d.comp || {}, falta = c.linhas.filter(function (l) { return l.comprar > 0; }), feitos = c.linhas.filter(function (l) { return l.comprar <= 0 && comp[l.it.id]; }), ok = c.linhas.filter(function (l) { return l.comprar <= 0 && !comp[l.it.id]; });
     const linha = function (l) {
-      return '<div class="bg-it ' + (l.comprar > 0 ? 'falta' : 'ok') + '"><div class="n"><b>' + esc(l.it.nome) + '</b><small>' + esc(l.det.join(' · ')) + '</small></div><div class="num"><span>Precisa <b>' + bgFmt(l.nec) + '</b></span><span>Tem <b>' + bgFmt(l.est) + '</b></span></div><div class="buy">' + (l.comprar > 0 ? '<b>' + bgFmt(l.comprar) + '</b><small>' + esc(l.it.un) + '</small>' : '<b>✓</b>') + '</div></div>';
+      const comp = BG.d.comp && BG.d.comp[l.it.id], feito = l.comprar <= 0 && !!comp, cls = l.comprar > 0 ? 'falta' : (feito ? 'feito' : 'ok');
+      const chk = l.comprar > 0 || feito ? '<button type="button" class="bg-chk' + (feito ? ' on' : '') + '" data-bgchk="' + l.it.id + '" aria-label="' + (feito ? 'Desmarcar' : 'Marcar como comprado') + '">' + (feito ? '✓' : '') + '</button>' : '';
+      return '<div class="bg-it ' + cls + '">' + chk + '<div class="n"><b>' + esc(l.it.nome) + '</b><small>' + esc(l.det.join(' · ')) + (comp && l.comprar > 0 ? ' · já comprou +' + bgFmt(comp.q) : '') + '</small></div><div class="num"><span>Precisa <b>' + bgFmt(l.nec) + '</b></span><span>Tem <b>' + bgFmt(l.est) + '</b></span></div><div class="buy">' + (l.comprar > 0 ? '<b>' + bgFmt(l.comprar) + '</b><small>' + esc(l.it.un) + '</small>' : feito ? '<b>+' + bgFmt(comp.q) + '</b><small>' + esc(l.it.un) + '</small>' : '<b>✓</b>') + '</div></div>';
     };
     const lst = function (ls) { const m = {}; ls.forEach(function (l) { m[l.it.id] = l; }); return bgPorCat(ls.map(function (l) { return l.it; })).map(function (g) { return '<div class="bg-cat">' + esc(g.cat) + '</div>' + g.itens.map(function (i) { return linha(m[i.id]); }).join(''); }).join(''); };
-    h += '<div class="bg-sum"><div><b>' + c.evs.length + '</b><small>evento(s)</small></div><div class="alert"><b>' + falta.length + '</b><small>itens a comprar</small></div><div><b>' + ok.length + '</b><small>cobertos pelo estoque</small></div></div>' +
+    h += '<div class="bg-sum"><div class="alert"><b>' + falta.length + '</b><small>a comprar</small></div><div class="done"><b>' + feitos.length + '</b><small>já comprados</small></div><div><b>' + ok.length + '</b><small>cobertos pelo estoque</small></div></div>' +
       '<div class="bg-acts"><button type="button" class="btn" data-bg="copiar">Copiar</button><button type="button" class="btn" data-bg="zap">WhatsApp</button><button type="button" class="btn" data-bg="imprimir">Imprimir</button></div>' +
-      (falta.length ? '<h3 class="bg-t2">O que comprar</h3><div class="bg-lista">' + lst(falta) + '</div><button type="button" class="btn pri bg-big" data-bg="lancar">Já comprei tudo → lançar no estoque</button><p class="hint">Faça isso depois de comprar: soma as quantidades acima ao seu estoque.</p>' : '<p class="bg-okmsg">✓ O estoque já cobre todos os eventos marcados.</p>') +
+      (falta.length || feitos.length ? '<h3 class="bg-t2">Lista de compras</h3><p class="hint" style="margin:0 0 6px">Toque no círculo ao comprar cada item: a quantidade entra no estoque na hora. Tocou sem querer? Toque de novo para desfazer.</p><div class="bg-lista">' + lst(falta.concat(feitos)) + '</div>' : '<p class="bg-okmsg">✓ O estoque já cobre todos os eventos marcados.</p>') +
+      (falta.length > 1 ? '<button type="button" class="btn bg-big" data-bg="lancar">Comprei tudo → marcar todos</button>' : '') +
+      (feitos.length && !falta.length ? '<button type="button" class="btn pri bg-big" data-bg="limpar">Finalizar compra (limpar marcações)</button>' : '') +
       (ok.length ? '<details class="bg-det"><summary>Itens cobertos pelo estoque (' + ok.length + ')</summary><div class="bg-lista">' + lst(ok) + '</div></details>' : '');
     return h;
   }
@@ -4946,10 +4957,17 @@ body.pv-lock { overflow: hidden; }
     if (ds.bg === 'copiar') { const tx = bgTextoCompras(bgConsol()); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(tx) : Promise.reject()).then(function () { toast('Lista copiada.'); }).catch(function () { window.prompt('Copie a lista:', tx); }); return; }
     if (ds.bg === 'zap') { window.open('https://wa.me/?text=' + encodeURIComponent(bgTextoCompras(bgConsol())), '_blank', 'noopener'); return; }
     if (ds.bg === 'imprimir') { const w = window.open('', '_blank'); if (!w) return toast('Libere pop-ups para imprimir.', true); w.document.write('<pre style="font:15px/1.5 sans-serif;white-space:pre-wrap">' + esc(bgTextoCompras(bgConsol())) + '</pre>'); w.document.close(); w.focus(); w.print(); return; }
+    if (ds.bgchk) {
+      const c = bgConsol(), l = c.linhas.find(function (y) { return y.it.id === ds.bgchk; }); BG.d.comp = BG.d.comp || {}; const cp = BG.d.comp[ds.bgchk];
+      if (l && l.comprar > 0) { BG.d.estoque[l.it.id] = Math.round((bgN(BG.d.estoque[l.it.id]) + l.comprar) * 100) / 100; BG.d.comp[l.it.id] = { q: Math.round(((cp ? cp.q : 0) + l.comprar) * 100) / 100 }; }
+      else if (cp) { BG.d.estoque[ds.bgchk] = Math.max(0, Math.round((bgN(BG.d.estoque[ds.bgchk]) - cp.q) * 100) / 100); delete BG.d.comp[ds.bgchk]; }
+      bgSalva(); bgRender(); return;
+    }
+    if (ds.bg === 'limpar') { BG.d.comp = {}; bgSalva(); bgRender(); toast('Marcações limpas. O estoque foi mantido.'); return; }
     if (ds.bg === 'lancar') {
       const c = bgConsol(), falta = c.linhas.filter(function (l) { return l.comprar > 0; }); if (!falta.length) return toast('Nada a comprar.', true);
-      if (!confirm('Somar ao estoque as ' + falta.length + ' compra(s) da lista? Faça isso depois de comprar.')) return;
-      falta.forEach(function (l) { BG.d.estoque[l.it.id] = Math.round((bgN(BG.d.estoque[l.it.id]) + l.comprar) * 100) / 100; }); bgSalva(); bgRender(); toast('Estoque atualizado com as compras.'); return;
+      if (!confirm('Marcar os ' + falta.length + ' itens como comprados e somar ao estoque?')) return;
+      BG.d.comp = BG.d.comp || {}; falta.forEach(function (l) { const cp = BG.d.comp[l.it.id]; BG.d.estoque[l.it.id] = Math.round((bgN(BG.d.estoque[l.it.id]) + l.comprar) * 100) / 100; BG.d.comp[l.it.id] = { q: Math.round(((cp ? cp.q : 0) + l.comprar) * 100) / 100 }; }); bgSalva(); bgRender(); toast('Tudo marcado como comprado e lançado no estoque.'); return;
     }
   });
 
