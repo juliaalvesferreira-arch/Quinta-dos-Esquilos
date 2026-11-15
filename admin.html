@@ -768,7 +768,7 @@ body.pv-lock { overflow: hidden; }
 .mnv[hidden] { display: none; }
 .mnv img { max-width: 100vw; max-height: 100vh; object-fit: contain; display: block; }
 .mnb { position: absolute; z-index: 2; border: 0; background: rgba(255, 255, 255, .85); color: #222; width: 52px; height: 52px; border-radius: 50%; font-size: 30px; line-height: 1; cursor: pointer; }
-.mnx { top: 14px; right: 14px; } .mnp { left: 10px; top: 50%; transform: translateY(-50%); } .mnn { right: 10px; top: 50%; transform: translateY(-50%); }
+.mnx { top: 14px; right: 14px; } .mnb.mnp { left: 10px; top: 50%; transform: translateY(-50%); } .mnb.mnn { right: 10px; top: 50%; transform: translateY(-50%); }
 .mnt { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; color: #fff; font-size: .95rem; text-shadow: 0 1px 4px #000; z-index: 2; pointer-events: none; }
 
 @media (min-width: 700px) {
@@ -956,6 +956,26 @@ body.pv-lock { overflow: hidden; }
 .bg-seg2 { margin: 0 0 12px; } .bg-pk { grid-template-columns: 1fr auto; } .bg-pk .bg-ed .f { margin-bottom: 8px; } .bg-pk .bg-ed .f input, .bg-pk .bg-ed .f select { width: 100%; min-height: 42px; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
 .bg-sec .n { display: block; } .bg-sec .n input { width: 100%; } .bg-mv { display: flex; gap: 4px; } .bg-mv .btn { min-width: 40px; min-height: 40px; padding: 0 8px; }
 #bgSub button { padding-left: 6px; padding-right: 6px; font-size: .88rem; }
+
+.fed.w { flex-basis: 100%; } .fed textarea { width: 100%; min-width: 220px; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 8px; font: inherit; resize: vertical; }
+.ad-it { background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; margin: 8px 0; } .ad-it.oc { opacity: .55; } .ad-q { color: var(--bark); font-weight: 700; } .ad-d { color: var(--taupe); font-size: .88rem; margin-top: 2px; white-space: pre-line; } .ad-s { margin: 4px 0 0 18px; padding: 0; font-size: .86rem; color: var(--taupe); } .ad-m { margin-top: 6px; font-size: .8rem; color: var(--taupe); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+/* edição no celular / iPad: nada passa da largura da tela */
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.f, .g2 > *, .g3 > * { min-width: 0; }
+.f input, .f select, .f textarea, .g2 input, .g2 select, .g3 input, .g3 select { max-width: 100%; min-width: 0; }
+input[type=date], input[type=time], input[type=month] { min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; }
+@media (max-width: 640px) {
+  .g2, .g3 { grid-template-columns: minmax(0, 1fr); }
+  .crl:not(.cust), .crl.b2 { grid-template-columns: 22px minmax(0, 1fr) minmax(0, 1fr) auto; }
+  .crl:not(.cust) > :nth-child(2) { grid-column: 2 / -1; }
+  .crl:not(.cust) > :nth-child(3) { grid-column: 2; } .crl:not(.cust) > :nth-child(4) { grid-column: 3; } .crl:not(.cust) > :nth-child(5) { grid-column: 4; }
+  .crl input[type=time] { min-height: 40px; font-size: 1rem; }
+}
+.ed, .ed-ctl, .ed-pv { min-width: 0; } .ed-ctl > * { min-width: 0; max-width: 100%; }
+.ed-ctl input, .ed-ctl select, .ed-ctl textarea { max-width: 100%; }
+details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width: 0; max-width: 100%; }
+@media (max-width: 560px) { .par { grid-template-columns: 52px minmax(0, 1.25fr) minmax(0, 1fr) 34px; gap: 5px; } .par > span { font-size: .78rem; line-height: 1.15; } .par input { min-width: 0; width: 100%; } }
 </style>
 </head>
 <body>
@@ -1224,7 +1244,7 @@ body.pv-lock { overflow: hidden; }
       <datalist id="fornNomes"></datalist>
       <div id="fornLista" class="flista"></div>
       <div id="fornAgenda" hidden></div>
-      <h3 class="fh3">Pré-visualização do documento</h3>
+      <h3 class="fh3" id="fornPvH">Pré-visualização do documento</h3>
       <div id="fornPv" class="pv"><div id="fornPvIn" class="pv-in"></div></div>
     </section>
 
@@ -1242,6 +1262,7 @@ body.pv-lock { overflow: hidden; }
       <div id="dcEdit" hidden>
         <div class="head sticky"><button id="dcVoltar" class="btn ghost">Voltar aos projetos</button><h2 id="dcTitulo">Projeto</h2>
           <div class="head-r"><button id="dcSalvar" class="btn">Salvar</button><button id="dcEnviar" class="btn">Enviar</button><button id="dcPdf" class="btn pri">Baixar PDF</button></div></div>
+        <div id="dcImgAviso" class="demo" hidden></div>
         <div class="ed"><div class="ed-ctl" id="dcForm"></div><div class="ed-pv"><div id="dcPv" class="pv"><div id="dcPvIn" class="dc-pvin"></div></div></div></div>
       </div>
       <div id="dcLibModal" class="vmodal" hidden><div class="vbox wbox" role="dialog" aria-label="Banco de imagens">
@@ -2008,7 +2029,8 @@ body.pv-lock { overflow: hidden; }
   QE.FORNECEDORES = [
     ['bar', 'Bar de drinks'], ['dj', 'DJ'], ['chopp-germania', 'Chopp Germânia'], ['chopp-bh', 'Chopp Brahma / Heineken'],
     ['buffet', 'Buffet'], ['banda', 'Banda'], ['apresentacao', 'Estrutura para apresentação'], ['gerador', 'Gerador'], ['fotografia', 'Fotografia'],
-    ['backdrop', 'Backdrop'], ['recreacao', 'Recreação'], ['inflaveis', 'Brinquedos infláveis'], ['sorvete', 'Carrinho de sorvete']
+    ['backdrop', 'Backdrop'], ['recreacao', 'Recreação'], ['inflaveis', 'Brinquedos infláveis'], ['sorvete', 'Carrinho de sorvete'],
+    ['cabine', 'Cabine de fotos'], ['doces', 'Mesa de doces'], ['cafe', 'Café da manhã'], ['adicionais', '★ Itens adicionais contratados (visão rápida)']
   ];
   const DIAS = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
   QE.fornItens = function (req, cfg, tipo) {
@@ -2030,6 +2052,8 @@ body.pv-lock { overflow: hidden; }
       itens.push(item); return item;
     };
     const j = c.janela;
+    const hr = function (a, b) { return a && b ? a + ' às ' + b : (a || b || 'a definir'); };
+    const sabores = function (t) { return String(t || '').split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean).join(' · '); };
     const edv = function (eds, k) { return (eds.find(function (e) { return e.k === k; }) || {}).valor; };
     const nomeMenu = function (id) {
       if (id === 'churrasco') return 'Churrasco ' + (req.escopo === 'standard' ? 'Standard' : 'Premium');
@@ -2104,12 +2128,32 @@ body.pv-lock { overflow: hidden; }
         return [['Crianças', edv(eds, 'criancas') || 'a definir'], ['Início', edv(eds, 'ini')], ['Fim', edv(eds, 'fim')]];
       }, [{ k: 'criancas', label: 'Crianças', tipo: 'number', padrao: kids }, { k: 'ini', label: 'Início', tipo: 'time', padrao: seg('recreadores', 0) }, { k: 'fim', label: 'Fim', tipo: 'time', padrao: seg('recreadores', 1) }]);
     } else if (tipo === 'inflaveis') {
-      const it = cron('inflaveis');
-      add('inflaveis', '', !!(it && it.on), function (eds) { return [['Início', edv(eds, 'ini')], ['Fim', edv(eds, 'fim')]]; },
-        [{ k: 'ini', label: 'Início', tipo: 'time', padrao: seg('inflaveis', 0) }, { k: 'fim', label: 'Fim', tipo: 'time', padrao: seg('inflaveis', 1) }]);
+      const TIPOS = [['h4', 'Guerra de cotonete'], ['h3', 'Touro mecânico'], ['h6', 'Escorregador gigante'], ['h5', 'Giro radical']];
+      const sel = TIPOS.filter(function (t) { return on(t[0]); }).map(function (t) { return t[1]; });
+      const itc = ['inflaveis', 'touro', 'escorregador'].map(cron).find(function (x) { return x && x.on; });
+      const tem = !!(sel.length || (cron('inflaveis') && cron('inflaveis').on));
+      add('inflaveis', '', tem, function (eds) {
+        return [['Brinquedo(s)', edv(eds, 'tipos') || 'a definir', true], ['Horário do evento', j[0] + ' às ' + j[1]], ['Horário da atração', hr(edv(eds, 'ini'), edv(eds, 'fim'))]];
+      }, [{ k: 'tipos', label: 'Brinquedo(s)', tipo: 'text', padrao: sel.join(' + ') }, { k: 'ini', label: 'Início da atração', tipo: 'time', padrao: itc ? itc.segs[0][0] : j[0] }, { k: 'fim', label: 'Fim da atração', tipo: 'time', padrao: itc ? itc.segs[0][1] : j[1] }]);
     } else if (tipo === 'sorvete') {
-      add('sorvete', '', on('h7'), function (eds) { return [['Pessoas', edv(eds, 'pessoas')], ['Início', edv(eds, 'ini')], ['Fim', edv(eds, 'fim')]]; },
-        [{ k: 'pessoas', label: 'Pessoas', tipo: 'number', padrao: c.q }, { k: 'ini', label: 'Início', tipo: 'time', padrao: j[0] }, { k: 'fim', label: 'Fim', tipo: 'time', padrao: j[1] }]);
+      const cs = c.cron.find(function (x) { return x.on && /sorvete/i.test(x.nome || ''); });
+      add('sorvete', '', on('h7'), function (eds) {
+        const l = [['Horário do evento', j[0] + ' às ' + j[1]], ['Horário do carrinho', hr(edv(eds, 'ini'), edv(eds, 'fim'))], ['Pessoas', edv(eds, 'pessoas') || 'a definir']];
+        if (edv(eds, 'sorvetes')) l.push(['Quantidade de sorvetes', edv(eds, 'sorvetes')]);
+        const sab = sabores(edv(eds, 'sabores')); if (sab) l.push(['Sabores', sab, true]);
+        return l;
+      }, [{ k: 'ini', label: 'Início do carrinho', tipo: 'time', padrao: cs ? cs.segs[0][0] : j[0] }, { k: 'fim', label: 'Fim do carrinho', tipo: 'time', padrao: cs ? cs.segs[0][1] : j[1] },
+        { k: 'pessoas', label: 'Pessoas', tipo: 'number', padrao: c.q }, { k: 'sorvetes', label: 'Qtd. de sorvetes', tipo: 'number', padrao: '' },
+        { k: 'sabores', label: 'Sabores (um por linha, ex.: Chocolate 40)', tipo: 'area', padrao: '' }]);
+    } else if (tipo === 'cabine') {
+      add('cabine', '', on('h1'), function (eds) { return [['Horário do evento', j[0] + ' às ' + j[1]], ['Horário da cabine', hr(edv(eds, 'ini'), edv(eds, 'fim'))]]; },
+        [{ k: 'ini', label: 'Início da cabine', tipo: 'time', padrao: seg('cabine', 0) || j[0] }, { k: 'fim', label: 'Fim da cabine', tipo: 'time', padrao: seg('cabine', 1) || j[1] }]);
+    } else if (tipo === 'doces') {
+      add('doces', '', on('d1'), function (eds) { return [['Horário do evento', j[0] + ' às ' + j[1]], ['Horário da mesa de doces', hr(edv(eds, 'ini'), edv(eds, 'fim'))], ['Pessoas', edv(eds, 'pessoas') || 'a definir']]; },
+        [{ k: 'ini', label: 'Início da mesa', tipo: 'time', padrao: seg('doces', 0) || j[0] }, { k: 'fim', label: 'Fim da mesa', tipo: 'time', padrao: seg('doces', 1) || j[1] }, { k: 'pessoas', label: 'Pessoas', tipo: 'number', padrao: (linha('d1') && linha('d1').qtd) || c.q }]);
+    } else if (tipo === 'cafe') {
+      add('cafe', '', on('c1'), function (eds) { return [['Horário do evento', j[0] + ' às ' + j[1]], ['Horário do café da manhã', hr(edv(eds, 'ini'), edv(eds, 'fim'))], ['Pessoas', edv(eds, 'pessoas') || 'a definir']]; },
+        [{ k: 'ini', label: 'Início do café', tipo: 'time', padrao: seg('cafe', 0) || j[0] }, { k: 'fim', label: 'Fim do café', tipo: 'time', padrao: seg('cafe', 1) || j[1] }, { k: 'pessoas', label: 'Pessoas', tipo: 'number', padrao: (linha('c1') && linha('c1').qtd) || c.q }]);
     }
     return { itens: itens, c: c };
   };
@@ -2990,6 +3034,7 @@ body.pv-lock { overflow: hidden; }
 
   /* ---------- Lista ---------- */
   const tagEvento = function (x) { const e = QE.evento(x); return '<span class="tag ev-' + e.id + '">' + esc(e.tag) + '</span>'; };
+  function porDataEv(a, b) { const da = String(a.dataEvento || ''), db = String(b.dataEvento || ''); if (!da !== !db) return da ? -1 : 1; return da.localeCompare(db); }
   function renderLista() {
     const f = $('#fStatus').value;
     const nz = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); };
@@ -2999,7 +3044,7 @@ body.pv-lock { overflow: hidden; }
       if (!bq.length) return true;
       const t = nz([x.empresa, x.contato, x.email, x.telefone, QE.evento(x).tag, QE.fmtData(x.dataEvento), x.dataEvento, x.qtd, STATUS[stOf(x)]].join(' '));
       return bq.every(function (w) { return t.indexOf(w) >= 0; });
-    }).sort(function (a, b) { return bq.length ? nz(a.empresa).localeCompare(nz(b.empresa), 'pt-BR') : 0; });
+    }).sort(function (a, b) { if (f === 'ganho') return porDataEv(a, b); return bq.length ? nz(a.empresa).localeCompare(nz(b.empresa), 'pt-BR') : 0; });
     $('#lista').innerHTML = itens.length ? itens.map(function (x) {
       return '<div class="sol" role="button" tabindex="0" data-id="' + x.id + '"><b>' + esc(x.empresa) + (mesmoNome(x) ? '' : ' <small>— ' + esc(x.contato) + '</small>') + ' ' + tagEvento(x) + '</b><span class="badge ' + stOf(x) + '">' + STATUS[stOf(x)] + '</span>' +
         '<small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas · ' + (x.escopo === 'standard' ? 'Standard' : 'Premium') + ' · ' + esc(cardNome(x)) + '</small>' +
@@ -3019,7 +3064,7 @@ body.pv-lock { overflow: hidden; }
     const ordem = Object.keys(STATUS);
     if (VD && VD.vista === 'painel') { vdTipos(); vdRender(); }
     $('#kanban').innerHTML = ordem.map(function (st) {
-      const itens = lista.filter(function (x) { return stOf(x) === st; });
+      const itens = lista.filter(function (x) { return stOf(x) === st; }); if (st === 'ganho') itens.sort(porDataEv);
       return '<div class="kcol" data-col="' + st + '"><h3>' + STATUS[st] + ' <span>' + itens.length + '</span></h3><div class="kbody">' + (itens.map(function (x) {
         let tot = '—'; try { if (x.orc) tot = QE.brl(QE.calc(x, cfg).total); } catch (e) { /* sem orçamento ainda */ }
         return '<div class="kcard" draggable="true" data-id="' + x.id + '">' + tagEvento(x) + '<b>' + esc(x.empresa) + '</b>' + (mesmoNome(x) ? '' : '<small>' + esc(x.contato) + '</small>') + '<small>' + (QE.fmtData(x.dataEvento) || 'sem data') + ' · ' + esc(x.qtd) + ' pessoas</small><span class="kt">' + tot + '</span>' +
@@ -4019,7 +4064,53 @@ body.pv-lock { overflow: hidden; }
     return out;
   }
   const fkey = function (e) { return e.req.id + '|' + e.item.id; };
+  /* ---------- Itens adicionais contratados (visão rápida) ---------- */
+  FN.adVis = 'item'; FN.adBusca = ''; FN.adOcultos = false;
+  const FN_HORAS = /hora[s]?\s*extra|h\.?\s*extra|extra[s]?\s+de\s+hora|hora[s]?\s+adicional/i;
+  function fornAdItens() {
+    const out = [];
+    fornGanhas().forEach(function (x) {
+      let c; try { c = QE.calc(x, cfg); } catch (e) { return; }
+      c.extras.forEach(function (it, i) {
+        if (FN_HORAS.test([it.t, it.d].concat(it.subs).join(' '))) return;
+        const key = i + '|' + String(it.t || it.d).toLowerCase().replace(/\s+/g, ' ').trim().slice(0, 40);
+        out.push({ req: x, it: it, key: key, oculto: !!(x.adOcultos && x.adOcultos[key]) });
+      });
+    });
+    return out;
+  }
+  function fornAdHead(nOc) {
+    return '<div class="bg-card"><input type="search" id="fornAdBusca" class="bg-busca" placeholder="🔍 Buscar item ou cliente…" value="' + esc(FN.adBusca) + '" autocomplete="off"><div class="bg-acts"><select id="fornAdVis" class="bg-un" style="flex:1"><option value="item"' + (FN.adVis === 'item' ? ' selected' : '') + '>Agrupar por item</option><option value="evento"' + (FN.adVis === 'evento' ? ' selected' : '') + '>Agrupar por evento (data)</option></select></div>' +
+      '<label class="chk"><input type="checkbox" id="fornAdOc"' + (FN.adOcultos ? ' checked' : '') + '> mostrar também os ocultos (' + nOc + ')</label><p class="hint" style="margin:6px 0 0">Vêm dos “Serviços adicionais” escritos à mão nas propostas <b>Ganho</b>. Horas extras ficam de fora. Se algum item não depende de fornecedor, oculte.</p></div>';
+  }
+  function renderAdicionais() {
+    const nz = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); };
+    const todos = fornAdItens(), q = nz(FN.adBusca).split(/\s+/).filter(Boolean);
+    const vis = todos.filter(function (e) { return (FN.adOcultos || !e.oculto) && (!q.length || q.every(function (w) { return nz([e.req.empresa, e.it.t, e.it.d, e.it.subs.join(' ')].join(' ')).indexOf(w) >= 0; })); });
+    const card = function (e, mostraCli) {
+      return '<div class="ad-it' + (e.oculto ? ' oc' : '') + '"><div class="ad-t"><b>' + esc(e.it.t || e.it.d || 'Item sem título') + '</b>' + (e.it.q > 1 ? ' <span class="ad-q">× ' + e.it.q + '</span>' : '') + '</div>' +
+        (e.it.t && e.it.d ? '<div class="ad-d">' + esc(e.it.d) + '</div>' : '') + (e.it.subs.length ? '<ul class="ad-s">' + e.it.subs.map(function (z) { return '<li>' + esc(z) + '</li>'; }).join('') + '</ul>' : '') +
+        '<div class="ad-m">' + (mostraCli ? '<b>' + esc(e.req.empresa) + '</b> · ' : '') + esc(QE.fmtData(e.req.dataEvento) || 'sem data') + ' · ' + (+e.req.qtd || '?') + ' pessoas <button type="button" class="btn sm ghost" data-adoc="' + esc(e.req.id) + '|' + esc(e.key) + '">' + (e.oculto ? 'Mostrar de novo' : 'Não é de fornecedor — ocultar') + '</button></div></div>';
+    };
+    let h = '';
+    if (!vis.length) return h + '<p class="hint">' + (todos.length ? 'Nada encontrado com esse filtro.' : 'Nenhuma proposta ganha tem serviços adicionais' + (FN.passados ? '' : ' nos eventos que ainda vão acontecer') + '.') + '</p>';
+    if (FN.adVis === 'evento') {
+      const por = {}, ordem = []; vis.forEach(function (e) { if (!por[e.req.id]) { por[e.req.id] = []; ordem.push(e.req); } por[e.req.id].push(e); });
+      return h + ordem.map(function (r) { return '<section class="ccli"><header><div><b>' + esc(r.empresa) + '</b> ' + tagEvento(r) + '</div><div class="cinfo"><span><b>' + esc(QE.fmtData(r.dataEvento) || 'sem data') + '</b></span></div></header>' + por[r.id].map(function (e) { return card(e, false); }).join('') + '</section>'; }).join('');
+    }
+    const grp = {}, nomes = []; vis.forEach(function (e) { const k = nz(e.it.t || e.it.d).trim(); if (!grp[k]) { grp[k] = []; nomes.push(k); } grp[k].push(e); });
+    nomes.sort(function (a, b) { return grp[b].length - grp[a].length || a.localeCompare(b, 'pt-BR'); });
+    return h + nomes.map(function (k) { const es = grp[k]; return '<section class="ccli"><header><div><b>' + esc(es[0].it.t || es[0].it.d) + '</b></div><div class="cinfo"><span><b>' + es.length + '</b> evento' + (es.length === 1 ? '' : 's') + '</span></div></header>' + es.map(function (e) { return card(e, true); }).join('') + '</section>'; }).join('');
+  }
+  function fornAdTudo() { return fornAdHead(fornAdItens().filter(function (e) { return e.oculto; }).length) + '<div id="fornAdRes">' + renderAdicionais() + '</div>'; }
   function renderForn() {
+    const ad = FN.tipo === 'adicionais';
+    ['#fornPdf', '#fornMarca', '#fornLimpa', '#fornPvH', '#fornPv'].forEach(function (q) { $(q).hidden = ad; });
+    $('#fornTodos').closest('label').hidden = ad;
+    if (ad) {
+      $('#fornTipo').innerHTML = QE.FORNECEDORES.map(function (f) { return '<option value="' + f[0] + '"' + (f[0] === FN.tipo ? ' selected' : '') + '>' + esc(f[1]) + '</option>'; }).join('');
+      $('#fornPassados').checked = FN.passados; $('#fornAgenda').hidden = true; $('#fornLista').innerHTML = fornAdTudo(); return;
+    }
     $('#fornTipo').innerHTML = QE.FORNECEDORES.map(function (f) { return '<option value="' + f[0] + '"' + (f[0] === FN.tipo ? ' selected' : '') + '>' + esc(f[1]) + '</option>'; }).join('');
     $('#fornPassados').checked = FN.passados; $('#fornTodos').checked = FN.todos;
     const itens = fornItens(), todasGanhas = lista.filter(function (x) { return stOf(x) === 'ganho'; }).length;
@@ -4029,7 +4120,7 @@ body.pv-lock { overflow: hidden; }
     } else {
       $('#fornLista').innerHTML = itens.map(function (e) {
         const k = fkey(e), env = (e.req.fornLog && e.req.fornLog[FN.tipo + ':' + e.item.id]) || '';
-        const ed = e.item.ed.map(function (f) { return '<label class="fed">' + esc(f.label) + '<input type="' + (f.tipo === 'time' ? 'time' : f.tipo === 'number' ? 'number' : 'text') + '" ' + (f.tipo === 'number' ? 'min="0" ' : '') + 'data-fed="' + esc(e.req.id) + '|' + esc(e.item.id) + '|' + f.k + '"' + (f.k === 'nome' ? ' list="fornNomes" placeholder="Digite ou escolha um nome já usado" autocomplete="off"' : '') + ' value="' + esc(f.valor) + '"></label>'; }).join('');
+        const ed = e.item.ed.map(function (f) { const da = 'data-fed="' + esc(e.req.id) + '|' + esc(e.item.id) + '|' + f.k + '"'; if (f.tipo === 'area') return '<label class="fed w">' + esc(f.label) + '<textarea rows="3" ' + da + ' placeholder="Chocolate 40&#10;Morango 30&#10;Limão 20">' + esc(f.valor) + '</textarea></label>'; return '<label class="fed">' + esc(f.label) + '<input type="' + (f.tipo === 'time' ? 'time' : f.tipo === 'number' ? 'number' : 'text') + '" ' + (f.tipo === 'number' ? 'min="0" ' : '') + da + (f.k === 'nome' ? ' list="fornNomes" placeholder="Digite ou escolha um nome já usado" autocomplete="off"' : '') + ' value="' + esc(f.valor) + '"></label>'; }).join('');
         return '<div class="fe' + (e.item.el ? '' : ' fx') + '"><label class="fe-t"><input type="checkbox" data-fe="' + esc(k) + '"' + (FN.sel[k] ? ' checked' : '') + '> <b>' + esc(e.req.empresa) + '</b>' + (e.item.sub ? ' <span class="fsub">' + esc(e.item.sub) + '</span>' : '') + ' ' + tagEvento(e.req) + '</label>' +
           '<div class="fe-i">' + esc(e.item.data) + (e.item.dia ? ' · ' + esc(e.item.dia) : '') + ' · ' + e.item.campos.slice(0, 3).map(function (c) { return esc(c[0]) + ': ' + esc(c[1]); }).join(' · ') + (e.item.nota ? ' · <i>' + esc(e.item.nota) + '</i>' : '') + (e.item.el ? '' : ' · <i>serviço não contratado neste orçamento</i>') + (env ? ' · <span class="env">enviado em ' + esc(QE.fmtData(env)) + '</span>' : '') + '</div>' +
           (ed ? '<div class="fe-e">' + ed + '</div>' : '') + '</div>';
@@ -4091,12 +4182,21 @@ body.pv-lock { overflow: hidden; }
   $('#fornTodos').addEventListener('change', function () { FN.todos = this.checked; renderForn(); });
   $('#fornMarca').addEventListener('click', function () { fornItens().forEach(function (e) { if (e.item.el) FN.sel[fkey(e)] = true; }); renderForn(); });
   $('#fornLimpa').addEventListener('click', function () { FN.sel = {}; renderForn(); });
+  $('#fornLista').addEventListener('click', function (e) {
+    const b = e.target.closest('[data-adoc]'); if (!b) return;
+    const p = b.dataset.adoc.split('|'), x = lista.find(function (r) { return r.id === p[0]; }); if (!x) return;
+    const k = b.dataset.adoc.slice(p[0].length + 1); x.adOcultos = x.adOcultos || {}; if (x.adOcultos[k]) delete x.adOcultos[k]; else x.adOcultos[k] = true;
+    QE.db.salvar(x.id, { adOcultos: x.adOcultos }).catch(function () { toast('Não consegui salvar.', true); }); $('#fornLista').innerHTML = fornAdTudo();
+  });
   $('#fornLista').addEventListener('change', function (e) {
     const t = e.target;
+    if (t.id === 'fornAdVis') { FN.adVis = t.value; $('#fornAdRes').innerHTML = renderAdicionais(); return; }
+    if (t.id === 'fornAdOc') { FN.adOcultos = t.checked; $('#fornLista').innerHTML = fornAdTudo(); return; }
     if (t.dataset.fe) { FN.sel[t.dataset.fe] = t.checked; desenhaFornPv(); }
   });
   $('#fornAgenda').addEventListener('change', function (e) { if (e.target.id === 'fornAgSel') { FN.ag = e.target.value; fornAgenda(); } });
   $('#fornLista').addEventListener('input', function (e) {
+    if (e.target.id === 'fornAdBusca') { FN.adBusca = e.target.value; $('#fornAdRes').innerHTML = renderAdicionais(); return; }
     const t = e.target; if (!t.dataset.fed) return;
     const p = t.dataset.fed.split('|'), x = lista.find(function (r) { return r.id === p[0]; }); if (!x) return;
     x.forn = x.forn || {}; x.forn[FN.tipo] = x.forn[FN.tipo] || {}; x.forn[FN.tipo][p[1] + '.' + p[2]] = t.value;
@@ -4393,6 +4493,48 @@ body.pv-lock { overflow: hidden; }
   };
   const dcSrc = function (k) { if (!k) return ''; if (k.indexOf('u:') === 0) return DC.imgs[k.slice(2)] || ''; return QE.foto(k); };
   const dcData = function (d) { return d ? QE.fmtData(d) : ''; };
+  /* ---- imagens do projeto: cache no aparelho (elas nunca mudam depois de enviadas), novas tentativas e aviso quando faltar ---- */
+  var dcIdbP = null;
+  function dcIdb() {
+    if (!dcIdbP) dcIdbP = new Promise(function (res) { try { const r = indexedDB.open('qe_decoimg', 1); r.onupgradeneeded = function () { r.result.createObjectStore('i'); }; r.onsuccess = function () { res(r.result); }; r.onerror = function () { res(null); }; } catch (e) { res(null); } });
+    return dcIdbP;
+  }
+  function dcCacheGet(id) { return dcIdb().then(function (db) { return !db ? null : new Promise(function (res) { try { const q = db.transaction('i').objectStore('i').get(id); q.onsuccess = function () { res(q.result || null); }; q.onerror = function () { res(null); }; } catch (e) { res(null); } }); }); }
+  function dcCachePut(id, data) { dcIdb().then(function (db) { if (db) { try { db.transaction('i', 'readwrite').objectStore('i').put(data, id); } catch (e) { /* sem cache */ } } }); }
+  async function dcBaixaImg(id) {
+    const c = await dcCacheGet(id); if (c) return c;
+    for (let t = 0; t < 4; t++) {
+      try { const r = await limite(QE.db.docGet('decoimg_' + id), 30000); if (r && r.data) { dcCachePut(id, r.data); return r.data; } } catch (e) { /* tenta de novo */ }
+      await new Promise(function (r) { setTimeout(r, 700 * (t + 1)); });
+    }
+    return '';
+  }
+  const dcFaltam = function () { return DC.p ? dcRefs(DC.p).filter(function (k) { return !DC.imgs[k.slice(2)]; }) : []; };
+  function dcAtualizaImgs() {
+    $$('#dcForm [data-k]').forEach(function (el) { const s = dcSrc(el.dataset.k); if (s) { el.style.backgroundImage = 'url("' + s + '")'; if (el.id === 'dcLogoPv') el.textContent = ''; } });
+    dcPreview();
+  }
+  function dcAviso() {
+    const box = $('#dcImgAviso'); if (!box) return; const f = dcFaltam(), tot = dcRefs(DC.p || {}).length;
+    if (!f.length) { box.hidden = true; return; }
+    box.hidden = false;
+    box.innerHTML = DC.carregando ? '⏳ Carregando as imagens do projeto… (' + (tot - f.length) + ' de ' + tot + ')' : '⚠ ' + f.length + ' imagem(ns) do projeto não carregaram (internet lenta?). O PDF só é gerado com todas as fotos. <button type="button" class="btn sm" id="dcImgRetry">Tentar de novo</button>';
+  }
+  function dcCarregaImgs() {
+    if (DC.imgP) return DC.imgP;
+    const proj = DC.p, fila = dcFaltam(); if (!fila.length) { dcAviso(); return Promise.resolve(); }
+    DC.carregando = true; dcAviso();
+    let tm = null; const refresca = function () { clearTimeout(tm); tm = setTimeout(function () { if (DC.p === proj) { dcAtualizaImgs(); dcAviso(); } }, 200); };
+    const um = async function () { while (fila.length) { const k = fila.shift(), id = k.slice(2), d = await dcBaixaImg(id); if (d && DC.p === proj) { DC.imgs[id] = d; refresca(); } } };
+    DC.imgP = Promise.all([um(), um(), um(), um()]).then(function () { DC.carregando = false; DC.imgP = null; if (DC.p === proj) { dcAtualizaImgs(); dcAviso(); } }, function () { DC.carregando = false; DC.imgP = null; });
+    return DC.imgP;
+  }
+  async function dcGarante() {
+    if (DC.imgP) await DC.imgP;
+    if (dcFaltam().length) await dcCarregaImgs();
+    const f = dcFaltam();
+    if (f.length) throw new Error(f.length + ' imagem(ns) do projeto não carregaram. Confira a internet e tente de novo — o PDF não é gerado sem as fotos');
+  }
   async function dcCarregaLista() {
     try { const d = await limite(QE.db.docGet('deco_lista'), 15000); DC.lista = (d && d.projetos) || []; $('#dcMsg').textContent = ''; }
     catch (e) { DC.lista = []; $('#dcMsg').textContent = 'Não consegui ler os projetos agora (' + (e.code || e.message) + '). Toque em “Decoração” de novo para tentar outra vez.'; }
@@ -4413,16 +4555,15 @@ body.pv-lock { overflow: hidden; }
   $('#dcCancela').addEventListener('click', function () { $('#dcNovoBox').hidden = true; });
   $('#dcCriar').addEventListener('click', function () {
     const x = lista.find(function (y) { return y.id === $('#dcSol').value; });
-    DC.p = dcModelo(x); DC.imgs = {}; DC.aberto = {}; DC.sujo = true; $('#dcNovoBox').hidden = true; dcAbreEd();
+    DC.p = dcModelo(x); DC.imgs = {}; DC.aberto = {}; DC.sujo = true; DC.imgP = null; DC.carregando = false; $('#dcNovoBox').hidden = true; dcAbreEd();
   });
   $('#dcLista').addEventListener('click', async function (e) {
     const a = e.target.closest('[data-dcabrir]'), d = e.target.closest('[data-dcdel]');
     if (a) {
       try { DC.p = await limite(QE.db.docGet('deco_' + a.dataset.dcabrir), 15000); } catch (er) { return toast('Não consegui abrir o projeto agora.', true); }
       if (!DC.p) return toast('Projeto não encontrado.', true);
-      DC.imgs = {}; DC.aberto = {}; DC.sujo = false;
-      await Promise.all(dcRefs(DC.p).map(function (k) { return limite(QE.db.docGet('decoimg_' + k.slice(2)), 20000).then(function (r) { if (r) DC.imgs[k.slice(2)] = r.data; }).catch(function () { /* imagem não carregou */ }); }));
-      dcAbreEd();
+      DC.imgs = {}; DC.aberto = {}; DC.sujo = false; DC.imgP = null; DC.carregando = false;
+      dcAbreEd(); dcCarregaImgs();   // abre na hora; as fotos chegam em seguida (cache + novas tentativas)
     }
     if (d) {
       if (!confirm('Excluir este projeto de decoração?')) return;
@@ -4435,6 +4576,7 @@ body.pv-lock { overflow: hidden; }
       } catch (er) { toast('Não foi possível excluir.', true); }
     }
   });
+  $('#dcEdit').addEventListener('click', function (e) { if (e.target.id === 'dcImgRetry') { dcCarregaImgs(); } });
   function dcAbreEd() {
     $('#dcHome').hidden = true; $('#dcEdit').hidden = false;
     $('#dcTitulo').textContent = 'Decoração — ' + (DC.p.cliente || 'novo projeto');
@@ -4445,7 +4587,7 @@ body.pv-lock { overflow: hidden; }
   const dcI = function (k, lab, tipo, extra) { const v = getP(DC.p, k); return '<div class="f"><label>' + lab + '</label><input type="' + (tipo || 'text') + '" data-dc="' + k + '" value="' + esc(v === null || v === undefined ? '' : v) + '"' + (extra || '') + '></div>'; };
   const dcThumbs = function (path, imgs) {
     return '<div class="dc-ths">' + (imgs || []).map(function (k, i) {
-      return '<div class="dc-th" style="background-image:url(\'' + esc(dcSrc(k)) + '\')"><button type="button" class="x" data-dcimgdel="' + path + ':' + i + '" title="Remover">×</button><button type="button" class="aj" data-dcimgaj="' + path + ':' + i + '" title="Ajustar / redimensionar a imagem">⤢</button><div class="mv"><button type="button" data-dcimgmv="' + path + ':' + i + ':-1">‹</button><button type="button" data-dcimgmv="' + path + ':' + i + ':1">›</button></div></div>';
+      return '<div class="dc-th" data-k="' + esc(k) + '" style="background-image:url(\'' + esc(dcSrc(k)) + '\')"><button type="button" class="x" data-dcimgdel="' + path + ':' + i + '" title="Remover">×</button><button type="button" class="aj" data-dcimgaj="' + path + ':' + i + '" title="Ajustar / redimensionar a imagem">⤢</button><div class="mv"><button type="button" data-dcimgmv="' + path + ':' + i + ':-1">‹</button><button type="button" data-dcimgmv="' + path + ':' + i + ':1">›</button></div></div>';
     }).join('') + '</div><div class="vacoes"><button type="button" class="btn sm" data-dclib="' + path + '">+ Do banco de imagens</button><button type="button" class="btn sm" data-dcup="' + path + '">+ Do celular / computador</button></div>';
   };
   const dcBloco = function (path, o, ehSub) {
@@ -4467,7 +4609,7 @@ body.pv-lock { overflow: hidden; }
       '<h4 class="sh first">Cliente e dados</h4>' + dcI('cliente', 'Cliente / empresa') + dcI('titulo', 'Título do projeto') +
       '<div class="g2">' + dcI('evento', 'Tipo de evento') + dcI('qtd', 'Convidados', 'number', ' min="0"') + '</div><div class="g2">' + dcI('data', 'Data do evento', 'date') + dcI('atualizacao', 'Atualização', 'date') + '</div>' +
       '<div class="vacoes"><button type="button" class="btn sm ghost" id="dcPuxa">Atualizar dados a partir da proposta</button></div>' +
-      '<h4 class="sh">Logo e paleta de cores</h4><div class="dc-lg"><div class="pv-l" id="dcLogoPv" style="background-image:url(\'' + esc(dcSrc(p.logo)) + '\')">' + (p.logo ? '' : 'Logo do cliente') + '</div><div><button type="button" class="btn sm" data-dcup="logo">Enviar logo</button> ' + (p.logo ? '<button type="button" class="btn sm ghost" data-dclogodel="1">Remover</button>' : '') + '</div></div>' + (p.logo ? '<label class="chk"><input type="checkbox" data-dccheck="logoCover"' + (p.logoCover ? ' checked' : '') + '> Preencher toda a moldura (pode cortar as bordas do logo)</label>' : '') +
+      '<h4 class="sh">Logo e paleta de cores</h4><div class="dc-lg"><div class="pv-l" id="dcLogoPv" data-k="' + esc(p.logo || '') + '" style="background-image:url(\'' + esc(dcSrc(p.logo)) + '\')">' + (p.logo ? '' : 'Logo do cliente') + '</div><div><button type="button" class="btn sm" data-dcup="logo">Enviar logo</button> ' + (p.logo ? '<button type="button" class="btn sm ghost" data-dclogodel="1">Remover</button>' : '') + '</div></div>' + (p.logo ? '<label class="chk"><input type="checkbox" data-dccheck="logoCover"' + (p.logoCover ? ' checked' : '') + '> Preencher toda a moldura (pode cortar as bordas do logo)</label>' : '') +
       '<div id="dcPal">' + p.paleta.map(function (c, i) { return '<div class="dc-pal"><input type="color" data-dc="paleta.' + i + '.c" value="' + esc(c.c) + '"><button class="btn sm ghost" data-dcrmcor="' + i + '">×</button></div>'; }).join('') + '</div>' +
       '<div class="vacoes"><button type="button" class="btn sm" id="dcAddCor">+ Adicionar cor</button></div>' +
       '<h4 class="sh">Imagens da página de identidade</h4>' + dcThumbs('abertura.imgs', p.abertura.imgs) +
@@ -4585,7 +4727,7 @@ body.pv-lock { overflow: hidden; }
     try {
       for (let i = 0; i < fs.length; i++) {
         const logo = DC.alvo === 'logo', data = await dcReduz(fs[i], logo ? 700 : 1400, logo), id = dcId();
-        await QE.db.docSet('decoimg_' + id, { data: data }); DC.imgs[id] = data;
+        await QE.db.docSet('decoimg_' + id, { data: data }); DC.imgs[id] = data; dcCachePut(id, data);
         if (logo) DC.p.logo = 'u:' + id; else dcAdd(DC.alvo, 'u:' + id);
       }
       dcRenderForm(); dcMarca(); toast('Imagem adicionada');
@@ -4654,14 +4796,14 @@ body.pv-lock { overflow: hidden; }
   $('#dcEnviar').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
     try {
-      await dcSalva(true); WA.modo = 'deco'; WA.blob = await gerarPdfBlob(null, dcHTML(DC.p));
+      await dcSalva(true); await dcGarante(); WA.modo = 'deco'; WA.blob = await gerarPdfBlob(null, dcHTML(DC.p));
       WA.base = 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente'); WA.nomeArq = WA.base + '.pdf'; WA.registrado = true; waAbre();
     } catch (e) { console.error(e); toast('Não consegui gerar o projeto para enviar (' + (e && e.message || e) + ').', true); }
     finally { btn.disabled = false; btn.textContent = txt; }
   });
   $('#dcPdf').addEventListener('click', async function () {
     const btn = this, txt = btn.textContent; btn.disabled = true; btn.textContent = 'Gerando…';
-    try { await dcSalva(true); const blob = await gerarPdfBlob(null, dcHTML(DC.p)); baixarBlob(blob, 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente')); toast('PDF baixado'); }
+    try { await dcSalva(true); await dcGarante(); const blob = await gerarPdfBlob(null, dcHTML(DC.p)); baixarBlob(blob, 'Projeto de Decoracao - ' + (DC.p.cliente || 'cliente')); toast('PDF baixado'); }
     catch (e) { console.error(e); toast('Não consegui gerar o PDF (' + (e && e.message || e) + ').', true); }
     finally { btn.disabled = false; btn.textContent = txt; }
   });
