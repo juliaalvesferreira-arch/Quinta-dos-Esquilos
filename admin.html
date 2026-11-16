@@ -997,6 +997,28 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
 .es-r { display: flex; align-items: center; gap: 18px; padding: 13px 0; border-bottom: 1px solid var(--dcline); } .es-dt { flex: none; width: 82px; text-align: center; border: 1px solid var(--dcgold); padding: 7px 0; background: #fff; } .es-dt b { display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; line-height: 1; color: var(--dcbark); font-weight: 600; } .es-dt span { display: block; font-size: 8.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--dctaupe); margin-top: 2px; }
 .es-in { flex: 1; min-width: 0; } .es-in b { display: block; font-weight: 500; font-size: 15px; color: var(--dcbark); } .es-in span { display: block; font-size: 12px; color: var(--dctaupe); margin-top: 1px; } .es-hh { flex: none; text-align: right; } .es-hh small { display: block; font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: var(--dcgold); } .es-hh b { font-weight: 500; font-size: 16px; color: var(--dcbark); white-space: nowrap; }
 .es-obs { margin-top: 18px; padding: 12px 14px; background: #fff; border-left: 3px solid var(--dcgold); font-size: 12.5px; white-space: pre-line; } .es-obs b { display: block; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--dcgold); font-weight: 500; margin-bottom: 4px; }
+
+/* escala: visual de tabela */
+.es-tb { background: #fff; border: 1.5px solid var(--line); border-radius: 12px; margin: 0 0 14px; overflow: hidden; }
+.es-tb .bg-cat { margin: 0; border-radius: 0; }
+.es-th, .es-tb .es-ln { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 62px 62px 26px; gap: 4px; align-items: center; padding: 4px 6px; }
+.es-th { font-size: .66rem; text-transform: uppercase; letter-spacing: .06em; color: var(--taupe); background: var(--paper); padding-top: 5px; padding-bottom: 5px; }
+.es-tb .es-ln { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; margin: 0; background: #fff; }
+.es-tb .es-ln input { min-height: 38px; padding: 4px 5px; font-size: 13px; border-radius: 8px; width: 100%; min-width: 0; text-overflow: ellipsis; }
+.es-tb .es-ln input[type=time] { padding: 4px 2px; text-align: center; }
+.es-tb .es-ln .bg-x { width: 26px; height: 26px; min-width: 0; padding: 0; font-size: .8rem; }
+.es-tb .es-ln .es-w { grid-column: 1 / -1; }
+.es-add { display: block; width: 100%; padding: 11px; background: none; border: 0; color: var(--bark); font: inherit; font-weight: 600; cursor: pointer; text-align: left; }
+.es-add:hover { background: var(--paper); }
+@media (min-width: 720px) { .es-th, .es-tb .es-ln { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 90px 90px 30px; padding: 5px 10px; } .es-tb .es-ln input { font-size: 15px; } }
+.es-tb .es-ln > *, .es-tb .es-ln > .bg-x { grid-column: auto; grid-row: auto; order: 0; }
+.es-tb .es-ln > .es-w { grid-column: 1 / -1; }
+.es-tb .es-ln input[type=time]::-webkit-calendar-picker-indicator { display: none; }
+.es-th, .es-tb .es-ln { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 56px 56px 26px; }
+@media (min-width: 720px) { .es-th, .es-tb .es-ln { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 90px 90px 30px; } }
+.es-th, .es-tb .es-ln { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 54px 54px 24px; gap: 3px; padding-left: 4px; padding-right: 4px; }
+.es-tb .es-ln input { font-size: 12.5px; padding-left: 4px; padding-right: 4px; }
+@media (min-width: 720px) { .es-th, .es-tb .es-ln { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 90px 90px 30px; gap: 4px; padding-left: 10px; padding-right: 10px; } .es-tb .es-ln input { font-size: 15px; } }
 </style>
 </head>
 <body>
@@ -5270,10 +5292,18 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     let h = ES.ok ? '' : '<p class="demo">' + esc(ES.msg) + ' <button type="button" class="btn sm" data-esb="retry">Tentar de novo</button></p>';
     const v = { eventos: esVEventos, massa: esVMassa, pessoas: esVPessoas, enviar: esVEnviar, padroes: esVPadroes }[ES.sub];
     if (ES.sub === 'eventos' && ES.ev) { const x = lista.find(function (y) { return y.id === ES.ev; }); h += x ? esVEvento(x) : esVEventos(); } else h += v();
-    const fn = ES.c.funcoes.concat(ES.c.padroes.reduce(function (a, p) { return a.concat(p.itens.map(function (i) { return i.funcao; })); }, [])).filter(function (f, i, a) { return f && a.findIndex(function (z) { return esNz(z) === esNz(f); }) === i; });
+    const fn = esFuncList();
     h += '<datalist id="esFunc">' + fn.map(function (f) { return '<option value="' + esc(f) + '">'; }).join('') + '</datalist><datalist id="esPess">' + ES.c.pessoas.map(function (p) { return '<option value="' + esc(p.nome) + '">'; }).join('') + '</datalist>';
     $('#esCorpo').innerHTML = h;
   }
+  function esFuncList() {
+    const r = [], add = function (f) { f = String(f || '').trim(); if (f && !r.some(function (z) { return esNz(z) === esNz(f); })) r.push(f); };
+    ES.c.funcoes.forEach(add); ES.c.padroes.forEach(function (p) { p.itens.forEach(function (i) { add(i.funcao); }); });
+    esEventos().forEach(function (x) { esEscala(x).linhas.forEach(function (l) { add(l.funcao); }); });
+    ES.c.pessoas.forEach(function (p) { add(p.funcao); });
+    return r.sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
+  }
+  function esAtualizaFunc() { const d = $('#esFunc'); if (d) d.innerHTML = esFuncList().map(function (f) { return '<option value="' + esc(f) + '">'; }).join(''); }
   function esVEventos() {
     const q = esNz(ES.q); let evs = esEventos().filter(function (x) { return ES.pass || esProx(x); });
     if (q) evs = evs.filter(function (x) { return esNz([x.empresa, x.contato, QE.fmtData(x.dataEvento)].join(' ')).indexOf(q) >= 0; });
@@ -5286,9 +5316,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
   }
   function esLinhaHTML(x, l) {
     const w = esConflito(x, l);
-    return '<div class="es-ln" data-esl="' + l.id + '"><div class="f1"><input list="esFunc" data-esf="funcao" value="' + esc(l.funcao) + '" placeholder="Função" autocomplete="off"></div><button type="button" class="bg-x" data-esdel="' + l.id + '" aria-label="Remover da escala">✕</button>' +
-      '<div class="f2"><input list="esPess" data-esf="nome" value="' + esc(l.nome) + '" placeholder="Nome da pessoa (vaga aberta)" autocomplete="off"></div>' +
-      '<div class="f3"><input type="time" data-esf="ini" value="' + esc(l.ini || '') + '" aria-label="Início do serviço"><span>às</span><input type="time" data-esf="fim" value="' + esc(l.fim || '') + '" aria-label="Fim do serviço"></div><small class="es-w">' + esc(w) + '</small></div>';
+    return '<div class="es-ln" data-esl="' + l.id + '"><input list="esFunc" data-esf="funcao" value="' + esc(l.funcao) + '" placeholder="Função" autocomplete="off" aria-label="Função"><input list="esPess" data-esf="nome" value="' + esc(l.nome) + '" placeholder="Nome" autocomplete="off" aria-label="Nome"><input type="time" data-esf="ini" value="' + esc(l.ini || '') + '" aria-label="Início"><input type="time" data-esf="fim" value="' + esc(l.fim || '') + '" aria-label="Fim"><button type="button" class="bg-x" data-esdel="' + l.id + '" aria-label="Remover linha">✕</button><small class="es-w">' + esc(w) + '</small></div>';
   }
   function esVEvento(x) {
     const e = esEscala(x), j = esJanela(x), sug = esPadSugerido(x), sel = ES.padSel[x.id] || (e.pad && ES.c.padroes.find(function (p) { return p.id === e.pad; }) ? e.pad : (sug ? sug.id : '')), n = esCont(x), secs = esSecoes(x), dm = esDM(x.dataEvento);
@@ -5299,7 +5327,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       '<div class="bg-acts"><button type="button" class="btn sm pri" data-esb="aplicar">Aplicar padrão</button><button type="button" class="btn sm" data-esb="horarios">Horário do evento em todos</button><button type="button" class="btn sm ghost" data-esb="limpar">Limpar escala</button></div><p class="hint" style="margin:0">Aplicar só <b>acrescenta as vagas que faltam</b>; nada que você preencheu é apagado. Depois é só editar, remover ou acrescentar pessoas livremente.</p></div>' +
       (secs.length ? secs.map(function (s) {
         const ls = e.linhas.filter(function (l) { return l.sec === s; });
-        return '<div class="bg-cat">' + esc(s) + ' <span class="es-cnt" data-escnt="' + esc(s) + '">' + ls.filter(function (l) { return l.nome; }).length + '/' + ls.length + '</span></div>' + ls.map(function (l) { return esLinhaHTML(x, l); }).join('') + '<button type="button" class="btn sm" data-esadd="' + esc(s) + '">+ Adicionar pessoa em ' + esc(s) + '</button>';
+        return '<div class="es-tb"><div class="bg-cat">' + esc(s) + ' <span class="es-cnt" data-escnt="' + esc(s) + '">' + ls.filter(function (l) { return l.nome; }).length + '/' + ls.length + '</span></div><div class="es-th"><span>Função</span><span>Nome</span><span>Início</span><span>Fim</span><span></span></div>' + ls.map(function (l) { return esLinhaHTML(x, l); }).join('') + '<button type="button" class="es-add" data-esadd="' + esc(s) + '">+ Adicionar linha</button></div>';
       }).join('') : '<p class="hint">Escala vazia. Aplique um padrão acima ou adicione uma seção.</p>') +
       '<div class="bg-card flat"><div class="f"><label>Adicionar seção a este evento</label><select id="esSecNova">' + livres.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join('') + '<option value="__outra">Outra (digitar)…</option></select></div><button type="button" class="btn sm" data-esb="addsec">+ Adicionar seção</button></div>';
   }
@@ -5427,7 +5455,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       }
       esSalvaEv(r.x); esAtualizaAvisos(); return;
     }
-    if (ds.esf === 'funcao') { const r = esLinhaDe(t); if (r.l) { esFuncaoNova(t.value); } return; }
+    if (ds.esf === 'funcao') { const r = esLinhaDe(t); if (r.l) { esFuncaoNova(t.value); esAtualizaFunc(); } return; }
     if (t.id === 'esPass') { ES.pass = t.checked; esRender(); return; }
     if (t.id === 'esPadSel') { if (ES.ev) ES.padSel[ES.ev] = t.value; return; }
     if (t.id === 'esmSec') { ES.massa.sec = t.value; return; } if (t.id === 'esmModo') { ES.massa.modo = t.value; esRender(); return; }
