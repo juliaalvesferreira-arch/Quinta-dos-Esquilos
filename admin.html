@@ -1832,7 +1832,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
   QE.calc = function (req, cfg) {
     cfg = cfg || QE.defaultConfig();
     const o = req.orc || QE.orcInicial(req, cfg);
-    if (o.cfgSnap) cfg = Object.assign({}, cfg, o.cfgSnap);   // usa as tabelas congeladas deste orçamento
+    if (o.cfgSnap && QE.normStatus(req.status) !== 'novo') cfg = Object.assign({}, cfg, o.cfgSnap);   // usa as tabelas congeladas deste orçamento (pendentes seguem as tabelas atuais)
     const q = Math.max(1, Math.round(+req.qtd || 0));
     const ev = QE.evento(req);
     const fx = Object.assign({ cafe: 0, doces: 0 }, QE.faixa(ev.social ? ((cfg.tabelasEvento && cfg.tabelasEvento[ev.id] && cfg.tabelasEvento[ev.id].length) ? cfg.tabelasEvento[ev.id] : cfg.tabelaSocial) : cfg.tabela, q));
@@ -2755,10 +2755,10 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       email: req.email || '', emails: null,
       dataAss: QE.hoje(),
       t1: { nome: 'Júlia Alves Ferreira', cpf: '470.079.728-29', email: 'juliaalvesferreira241203@gmail.com' },
-      t2on: false, t2: { nome: '', cpf: '', email: '' },
+      t2on: false, t2: { nome: '', cpf: '', email: '' }, repOn: false, rep: { nome: '', cpf: '', email: '' },
       pctAcr: 10, staffAdic: null, ed: {}, add: {}, pos: {}, cl: []
     }, ct || {});
-    d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {});
+    d.t1 = Object.assign({ nome: '', cpf: '', email: '' }, d.t1 || {}); d.rep = Object.assign({ nome: '', cpf: '', email: '' }, d.rep || {});
     d.t2 = Object.assign({ nome: '', cpf: '', email: '' }, d.t2 || {});
     if (!Array.isArray(d.emails) || !d.emails.length) d.emails = [d.email || ''];
     d.ed = d.ed || {}; d.add = d.add || {}; d.pos = d.pos || {}; d.cl = Array.isArray(d.cl) ? d.cl : [];
@@ -2904,13 +2904,14 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     const n = c.parcelas.length, dt = QE.parseData(ct.dataAss) || new Date();
     const vz = function (v) { return v || '________'; };
     const docLinha = social ? 'CPF: ' + vz(ct.doc) + ', R.G. ' + vz(ct.rg) : 'CNPJ: ' + vz(ct.doc) + (ct.im ? ', Inscrição Municipal: ' + ct.im : '') + (ct.ie ? ', Inscrição Estadual: ' + ct.ie : '');
-    const contratante = '\u0001' + vz(ct.nome) + '\u0002, ' + docLinha + (social ? ', residente e domiciliado(a) em ' : ', ') + vz(ct.endTxt) + ', CEP: ' + vz(ct.cep) + ', e-mail: ' + vz(ct.emailTxt);
+    const repOn = !social && !!ct.repOn;
+    const contratante = '\u0001' + vz(ct.nome) + '\u0002, ' + docLinha + (repOn ? ', neste ato representada por \u0001' + vz(ct.rep.nome) + '\u0002, CPF: \u0001' + vz(ct.rep.cpf) + '\u0002' : '') + (social ? ', residente e domiciliado(a) em ' : ', ') + vz(ct.endTxt) + ', CEP: ' + vz(ct.cep) + ', e-mail: ' + vz(ct.emailTxt);
     const parcelas = c.parcelas.map(function (pc, i) {
       return '\u0001' + (n === 1 ? '- Pagamento único:' : (i === 0 ? '- Sinal:' : '- Parcela ' + i + ':')) + '\u0002\n' + '\u0001' + QE.rsExt(pc.valor) + ' a ser pago até o dia ' + (QE.fmtData(pc.data) || '__/__/____') + ';\u0002';
     }).join('\n\n');
     const wit = function (t) { return t || '________'; };
     const T = {
-      contratante: contratante, contratanteNome: vz(ct.nome), docAss: social ? 'CPF: ' + vz(ct.doc) + (ct.rg ? '\nRG: ' + ct.rg : '') : 'CNPJ: ' + vz(ct.doc), emails: vz(ct.emailTxt),
+      contratante: contratante, contratanteNome: vz(ct.nome), docAss: social ? 'CPF: ' + vz(ct.doc) + (ct.rg ? '\nRG: ' + ct.rg : '') : 'CNPJ: ' + vz(ct.doc) + (repOn ? '\n' + vz(ct.rep.nome) + ' – Representante Legal\nCPF: ' + vz(ct.rep.cpf) + (ct.rep.email ? '\nE-mail do representante: ' + ct.rep.email : '') : ''), emails: vz(ct.emailTxt),
       tipoUp: social ? ev.tag.toUpperCase() : 'CONFRATERNIZAÇÃO DE EMPRESA', tipoNm: social ? ev.tag : 'Confraternização de empresa',
       dataEvento: dataEv, valorTotal: QE.rsExt(c.total), parcelas: parcelas, qtd: String(P.qtd), acrescimo: String(xAcr),
       valorExcedente: QE.rsExt(exc), valorExcedente30: QE.rsExt(exc30), valorStaff: QE.rsExt(stf), valorStaffAdic: QE.rsExt(stfAd),
@@ -3105,9 +3106,10 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
   }
   async function mudarStatus(id, st) {
     const x = lista.find(function (y) { return y.id === id; }); if (!x || stOf(x) === st) return;
-    const antes = x.status; x.status = st;
-    try { await QE.db.salvar(id, { status: st }); toast('Status: ' + STATUS[st]); }
-    catch (e) { console.error(e); x.status = antes; toast('Não foi possível mudar o status.', true); }
+    const antes = x.status, antesSnap = x.orc && x.orc.cfgSnap, antesEm = x.orc && x.orc.cfgEm, sai = stOf(x) === 'novo' && x.orc && cfgOk; x.status = st;
+    if (sai) { x.orc.cfgSnap = QE.snapCfg(cfg); x.orc.cfgEm = QE.hoje(); }   // ao sair de Pendente, congela as tabelas de hoje
+    try { await QE.db.salvar(id, sai ? { status: st, orc: x.orc } : { status: st }); toast('Status: ' + STATUS[st]); }
+    catch (e) { console.error(e); x.status = antes; if (sai) { x.orc.cfgSnap = antesSnap; x.orc.cfgEm = antesEm; } toast('Não foi possível mudar o status.', true); }
     renderLista(); if (!$('#v-kanban').hidden) renderKanban();
   }
   /* ---------- Kanban ---------- */
@@ -3670,7 +3672,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       QE.db.excluir(curId).then(async function () { lista = await QE.db.listar(); dirty = false; view('lista'); renderLista(); toast('Solicitação excluída'); }).catch(function () { toast('Não foi possível excluir.', true); });
     }
   });
-  $('#edStatus').addEventListener('change', function () { cur.status = this.value; dirty = true; ctBtn(); });
+  $('#edStatus').addEventListener('change', function () { if (QE.normStatus(cur.status) === 'novo' && this.value !== 'novo' && cur.orc && cfgOk) { cur.orc.cfgSnap = QE.snapCfg(cfg); cur.orc.cfgEm = QE.hoje(); } cur.status = this.value; dirty = true; ctBtn(); refresh(); });
 
   /* Atualiza prévia, resumo, avisos e placeholders */
   function refresh() {
@@ -3713,7 +3715,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     const dj = $('#djsSel'); if (dj && document.activeElement !== dj) dj.value = String(Math.min(2, c.nDjs));
     const oi = $('#ouroInfo');
     if (oi) oi.textContent = c.upg > 0 ? 'Bar ' + (cur.orc.bar === 'ouro' ? 'Ouro' : 'Prata') + ': +' + QE.brl(c.upg) + ' somados ao subtotal do pacote e ao total (sem aparecer discriminado no PDF).' : '';
-    const ci = $('#congInfo'); if (ci) ci.textContent = 'Valores congelados em ' + (QE.fmtData(cur.orc.cfgEm) || 'hoje') + ': mudar as tabelas e preços não altera este orçamento, só os novos.';
+    const ci = $('#congInfo'); if (ci) ci.textContent = QE.normStatus(cur.status) === 'novo' ? 'Orçamento pendente: segue sempre as tabelas e preços atuais. Os valores só congelam quando o status sair de Pendente (ao enviar, por exemplo).' : 'Valores congelados em ' + (QE.fmtData(cur.orc.cfgEm) || 'hoje') + ': mudar as tabelas e preços não altera este orçamento, só os novos.';
     const dinfo = $('#descInfo'); if (dinfo) dinfo.textContent = c.desconto.val > 0 ? 'Desconto de ' + QE.brl(c.desconto.val) + ' aplicado sobre o total (antes da nota fiscal).' : '';
     const pn = $('[data-p="orc.parcelas"]'); if (pn && document.activeElement !== pn) pn.value = (cur.orc.parcelas === null || cur.orc.parcelas === undefined) ? '' : cur.orc.parcelas;
     const pb = $('#parBox');
@@ -4352,7 +4354,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     cur.versoes = cur.versoes || [];
     cur.versoes.unshift({ em: Date.now(), total: c.total, avista: c.avista, nome: QE.nomeArquivo(cur), dados: QE.snapshot(cur) });
     cur.versoes = cur.versoes.slice(0, 20);
-    if (QE.normStatus(cur.status) === 'novo') { cur.status = 'enviado'; $('#edStatus').value = 'enviado'; }
+    if (QE.normStatus(cur.status) === 'novo') { if (cur.orc && cfgOk) { cur.orc.cfgSnap = QE.snapCfg(cfg); cur.orc.cfgEm = QE.hoje(); } cur.status = 'enviado'; $('#edStatus').value = 'enviado'; }
     const ok = await salvar(true);
     const vb = $('#verBox'); if (vb) vb.innerHTML = buildVersoes();
     return ok;
@@ -5836,6 +5838,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       '<p class="hint" style="margin:6px 0 2px">' + (social ? 'Endereço de moradia' : 'Endereço') + '</p>' + I('rua', 'Rua') + '<div class="g2">' + I('num', 'Número') + I('bairro', 'Bairro') + '</div><div class="g2">' + I('cidade', 'Cidade') + I('uf', 'UF', 'SP', 'text', ' maxlength="2" style="text-transform:uppercase"') + '</div>' +
       (social ? '<div class="g2">' + I('cep', 'CEP', '00000-000', 'text', ' inputmode="numeric"') + '</div>' : '') +
       '<div class="f"><label>E-mail(s) do contratante</label><div id="ctMails">' + ctMailsHTML(ct) + '</div></div>' +
+      (social ? '' : '<label class="chk"><input type="checkbox" data-ct="repOn"' + (ct.repOn ? ' checked' : '') + '> Destacar representante legal da empresa (aparece no início e na assinatura)</label><div id="ctRep"' + (ct.repOn ? '' : ' hidden') + '>' + I('rep.nome', 'Nome do representante legal') + '<div class="g2">' + I('rep.cpf', 'CPF', '000.000.000-00', 'text', ' inputmode="numeric"') + I('rep.email', 'E-mail') + '</div><p class="hint" style="margin:0">Se ficar desmarcado, o contrato sai só com o nome da empresa, e quem assina por ela é definido na hora.</p></div>') +
       '<h4 class="sh">Assinatura</h4>' + I('dataAss', 'Data da assinatura', '', 'date') +
       '<h4 class="sh">Testemunhas</h4><p class="hint" style="margin:0 0 4px">Testemunha 1</p>' + I('t1.nome', 'Nome') + '<div class="g2">' + I('t1.cpf', 'CPF', '000.000.000-00') + I('t1.email', 'E-mail') + '</div>' +
       '<label class="chk"><input type="checkbox" data-ct="t2on"' + (ct.t2on ? ' checked' : '') + '> Adicionar 2ª testemunha (só aparece no contrato se marcado)</label>' +
@@ -5930,10 +5933,11 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     if (k === 'pctAcr' || k === 'staffAdic') v = v === '' ? null : Number(v);
     if (k === 'cep') { v = QE.mascCEP(v); t.value = v; }
     if (k === 'doc') { v = P_social() ? QE.mascCPF(v) : QE.mascCNPJ(v); t.value = v; }
-    if (k === 't1.cpf' || k === 't2.cpf') { v = QE.mascCPF(v); t.value = v; }
+    if (k === 't1.cpf' || k === 't2.cpf' || k === 'rep.cpf') { v = QE.mascCPF(v); t.value = v; }
     if (k === 'uf') { v = String(v).toUpperCase(); t.value = v; }
     setP(ct, k, v); dirty = true;
     if (k === 't2on') $('#ctT2').hidden = !v;
+    if (k === 'repOn') $('#ctRep').hidden = !v;
     if (k === 'nome') $('#ctTitulo').textContent = 'Contrato — ' + (v || cur.empresa || 'sem nome');
     clearTimeout(ctTimer); ctTimer = setTimeout(ctPreview, 250);
   }
