@@ -2436,7 +2436,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     let cards = '';
     const cardX = function (key, titulo, badge, body, bcls) { return exc[key] ? card(titulo, 'NÃO INCLUSO', body, 'gr', true) : card(titulo, badge, body, bcls); };
     cards += cardX('espaco', 'Espaço', 'INCLUSO', '<p>Espaço intimista em meio à natureza, equipado com lounges, mobiliário e estrutura completa para a realização do evento.</p>');
-    cards += cardX('buffet', 'Buffet', prem ? 'PREMIUM' : 'STANDARD', '<p>Cardápio ' + (prem ? 'Premium' : 'Standard') + ' (anexo) — ' + (cs.length > 1 ? 'opções escolhidas:' : 'opção escolhida:') + '</p>' + opts, 'gd');
+    cards += cardX('buffet', 'Buffet', prem ? 'PREMIUM' : 'STANDARD', '<p>Cardápio ' + (prem ? 'Premium' : 'Standard') + ' (anexo) — ' + (cs.length > 1 ? 'opções escolhidas:' : 'opção escolhida:') + '</p>' + (cs.length > 1 ? '<p><b>Incluso 1 das opções abaixo escolhidas</b></p>' : '') + opts, 'gd');
     cards += cardX('bebidas', 'Bebidas não alcoólicas', 'INCLUSO', '<p>Água, suco e refrigerante durante todo o evento.</p>');
     cards += cardX('chopp', 'Chopp ' + (c.troca ? c.troca.nome : 'Germânia'), 'INCLUSO', '<p><b style="font-weight:500">' + (barris.join(' + ') || '—') + '.</b> ' + (c.troca ? 'Troca da marca Germânia: a diferença de valor dos barris está em Serviços adicionais.' : 'Barris extras ficam em consignação e só são cobrados em caso de uso.') + '</p>');
     if (prem) {
