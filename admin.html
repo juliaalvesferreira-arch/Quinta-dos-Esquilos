@@ -1020,6 +1020,11 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
 .es-tb .es-ln input { font-size: 12.5px; padding-left: 4px; padding-right: 4px; }
 @media (min-width: 720px) { .es-th, .es-tb .es-ln { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 90px 90px 30px; gap: 4px; padding-left: 10px; padding-right: 10px; } .es-tb .es-ln input { font-size: 15px; } }
 
+.es-lbl { display: block; font-weight: 600; margin: 4px 0 6px; } .es-mr { background: var(--paper); border-radius: 10px; padding: 8px; margin-bottom: 8px; } .es-mr .f { margin-bottom: 6px; } .es-mr select, .es-mr input[list] { width: 100%; min-height: 42px; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; font: inherit; min-width: 0; } .es-mh { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .es-mh small { flex: 1 1 100%; color: var(--taupe); } .es-mh input[type=time] { flex: 1; min-width: 0; min-height: 38px; border: 1.5px solid var(--line); border-radius: 8px; padding: 2px 4px; background: #fff; } .es-mh .bg-x { margin-left: auto; }
+/* escala: outra função */
+.es-more { grid-column: 1 / -1; justify-self: start; background: none; border: 0; padding: 4px 0 0; color: var(--bark); font: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; } .es-i { grid-column: 1 / -1; color: var(--moss); font-size: .78rem; }
+.es-dup { grid-column: 1 / -1; background: var(--paper); border: 1.5px dashed var(--gold, #c2a068); border-radius: 10px; padding: 10px; } .es-dup b { display: block; margin-bottom: 6px; font-size: .86rem; } .es-dup select, .es-dup input { width: 100%; min-height: 42px; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; font: inherit; min-width: 0; } .es-dup .bg-acts { margin-bottom: 0; }
+.es-tb .es-ln > .es-more, .es-tb .es-ln > .es-i, .es-tb .es-ln > .es-dup { grid-column: 1 / -1; } .es-tb .es-ln > .es-more { justify-self: start; }
 /* gestão bar — refinamento mobile */
 #bgSub { display: flex; width: 100%; } #bgSub button { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 7px 2px; font-size: .72rem; line-height: 1.15; } #bgSub button i { font-style: normal; font-size: 1.15rem; line-height: 1.1; }
 .bg-dica { margin: 0 0 12px; color: var(--taupe); font-size: .86rem; line-height: 1.4; } .bg-dica:empty { display: none; }
@@ -5301,7 +5306,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
   /* ======================================================================
      Escala — funcionários por dia de evento
      ====================================================================== */
-  const ES = { c: null, ok: false, sub: 'eventos', ev: null, q: '', pass: false, pessoa: '', incl: {}, passP: false, selM: {}, msg: '', obs: '', padSel: {}, massa: { nome: '', funcao: '', sec: '', modo: 'evento', ini: '', fim: '' } };
+  const ES = { dup: null, c: null, ok: false, sub: 'eventos', ev: null, q: '', pass: false, pessoa: '', incl: {}, passP: false, selM: {}, msg: '', obs: '', padSel: {}, massa: { nome: '', roles: [{ sec: '', funcao: '', ini: '', fim: '' }], modo: 'evento', ini: '', fim: '' } };
   const ES_MES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'], ES_DIA = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
   const esId = function () { return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); };
   const esNz = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim(); };
@@ -5395,7 +5400,14 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
   }
   function esLinhaHTML(x, l) {
     const w = esConflito(x, l);
-    return '<div class="es-ln" data-esl="' + l.id + '"><input list="esFunc" data-esf="funcao" value="' + esc(l.funcao) + '" placeholder="Função" autocomplete="off" aria-label="Função"><input list="esPess" data-esf="nome" value="' + esc(l.nome) + '" placeholder="Nome" autocomplete="off" aria-label="Nome"><input type="time" data-esf="ini" value="' + esc(l.ini || '') + '" aria-label="Início"><input type="time" data-esf="fim" value="' + esc(l.fim || '') + '" aria-label="Fim"><button type="button" class="bg-x" data-esdel="' + l.id + '" aria-label="Remover linha">✕</button><small class="es-w">' + esc(w) + '</small></div>';
+    return '<div class="es-ln" data-esl="' + l.id + '"><input list="esFunc" data-esf="funcao" value="' + esc(l.funcao) + '" placeholder="Função" autocomplete="off" aria-label="Função"><input list="esPess" data-esf="nome" value="' + esc(l.nome) + '" placeholder="Nome" autocomplete="off" aria-label="Nome"><input type="time" data-esf="ini" value="' + esc(l.ini || '') + '" aria-label="Início"><input type="time" data-esf="fim" value="' + esc(l.fim || '') + '" aria-label="Fim"><button type="button" class="bg-x" data-esdel="' + l.id + '" aria-label="Remover linha">✕</button><small class="es-w">' + esc(w) + '</small>' + esMais(x, l) + '</div>';
+  }
+  function esMais(x, l) {
+    const outras = esEscala(x).linhas.filter(function (y) { return y.id !== l.id && l.nome && esNz(y.nome) === esNz(l.nome); });
+    const info = outras.length ? '<small class="es-i">↳ ' + esc(l.nome) + ' também em: ' + outras.map(function (y) { return esc([y.sec, y.funcao].filter(Boolean).join(' — ')); }).join('; ') + '</small>' : '';
+    if (ES.dup === l.id) return info + '<div class="es-dup"><b>Mais uma função para ' + esc(l.nome || 'esta pessoa') + '</b><div class="bg-g2"><select id="esDupSec">' + ES.c.secoes.map(function (z) { return '<option' + (z === l.sec ? '' : '') + '>' + esc(z) + '</option>'; }).join('') + '</select><input id="esDupFn" list="esFunc" placeholder="Função" autocomplete="off"></div><div class="bg-acts"><button type="button" class="btn sm pri" data-esb="dupok">Adicionar</button><button type="button" class="btn sm ghost" data-esb="dupno">Cancelar</button></div></div>';
+    if (!String(l.nome || '').trim()) return info;
+    return info + '<button type="button" class="es-more" data-esmais="' + l.id + '">＋ outra função desta pessoa</button>';
   }
   function esVEvento(x) {
     const e = esEscala(x), j = esJanela(x), sug = esPadSugerido(x), sel = ES.padSel[x.id] || (e.pad && ES.c.padroes.find(function (p) { return p.id === e.pad; }) ? e.pad : (sug ? sug.id : '')), n = esCont(x), secs = esSecoes(x), dm = esDM(x.dataEvento);
@@ -5414,13 +5426,15 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     const m = ES.massa, q = esNz(m.nome), evs = esEventos().filter(esProx).sort(porDataEv);
     return '<div class="bg-card"><h3>Escalar uma pessoa em vários eventos</h3><p class="hint" style="margin-top:0">Para quando a pessoa passou a disponibilidade de vários dias. Se o evento já tiver uma vaga aberta com essa função, ela é preenchida; senão, uma vaga nova é criada.</p>' +
       '<div class="f"><label>Nome</label><input id="esmNome" list="esPess" value="' + esc(m.nome) + '" placeholder="Nome da pessoa" autocomplete="off"></div>' +
-      '<div class="bg-g2"><div class="f"><label>Função</label><input id="esmFuncao" list="esFunc" value="' + esc(m.funcao) + '" placeholder="Ex.: Garçom" autocomplete="off"></div><div class="f"><label>Seção</label><select id="esmSec">' + ES.c.secoes.map(function (s) { return '<option' + ((m.sec || ES.c.secoes[0]) === s ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select></div></div>' +
+      '<label class="es-lbl">Função e seção' + (m.roles.length > 1 ? ' (a pessoa fará ' + m.roles.length + ')' : '') + '</label>' + m.roles.map(function (r, ix) {
+        return '<div class="es-mr"><div class="bg-g2"><div class="f"><select data-esmr="' + ix + ':sec">' + ES.c.secoes.map(function (z) { return '<option' + ((r.sec || ES.c.secoes[0]) === z ? ' selected' : '') + '>' + esc(z) + '</option>'; }).join('') + '</select></div><div class="f"><input list="esFunc" data-esmr="' + ix + ':funcao" value="' + esc(r.funcao) + '" placeholder="Função (ex.: Garçom)" autocomplete="off"></div></div><div class="es-mh"><small>Horário só desta função (opcional):</small><input type="time" data-esmr="' + ix + ':ini" value="' + esc(r.ini) + '"><span>às</span><input type="time" data-esmr="' + ix + ':fim" value="' + esc(r.fim) + '">' + (m.roles.length > 1 ? '<button type="button" class="bg-x" data-esmrdel="' + ix + '" aria-label="Remover esta função">✕</button>' : '') + '</div></div>';
+      }).join('') + '<button type="button" class="btn sm" data-esb="mrmais" style="margin-bottom:10px">＋ outra função / seção para esta pessoa</button>' +
       '<div class="f"><label>Horário do serviço</label><select id="esmModo"><option value="evento"' + (m.modo === 'evento' ? ' selected' : '') + '>O mesmo horário de cada evento</option><option value="custom"' + (m.modo === 'custom' ? ' selected' : '') + '>Um horário fixo para todos</option></select></div>' +
       (m.modo === 'custom' ? '<div class="es-ln" style="grid-template-columns:1fr"><div class="f3"><input type="time" id="esmIni" value="' + esc(m.ini) + '"><span>às</span><input type="time" id="esmFim" value="' + esc(m.fim) + '"></div></div>' : '') + '</div>' +
       '<div class="bg-h"><h3>Dias disponíveis (' + evs.filter(function (x) { return ES.selM[x.id]; }).length + ' marcados)</h3><span><button type="button" class="btn sm ghost" data-esb="mtodos">Todos</button> <button type="button" class="btn sm ghost" data-esb="mnenhum">Nenhum</button></span></div>' +
       (evs.length ? evs.map(function (x) {
-        const dm = esDM(x.dataEvento), ja = q && esEscala(x).linhas.some(function (l) { return esNz(l.nome) === q; });
-        return '<label class="bg-sel"><input type="checkbox" data-esm="' + esc(x.id) + '"' + (ES.selM[x.id] && !ja ? ' checked' : '') + (ja ? ' disabled' : '') + '><span><b>' + dm.d + ' ' + dm.m + ' · ' + esc(esNomeEv(x)) + '</b><small>' + esc(esDow(x.dataEvento)) + ' · ' + (bgQtdProp(x) || '?') + ' pessoas' + (ja ? ' · já escalada' : '') + '</small></span></label>';
+        const dm = esDM(x.dataEvento), ja = q && esEscala(x).linhas.filter(function (l) { return esNz(l.nome) === q; }).map(function (l) { return l.funcao || l.sec; });
+        return '<label class="bg-sel"><input type="checkbox" data-esm="' + esc(x.id) + '"' + (ES.selM[x.id] ? ' checked' : '') + '><span><b>' + dm.d + ' ' + dm.m + ' · ' + esc(esNomeEv(x)) + '</b><small>' + esc(esDow(x.dataEvento)) + ' · ' + (bgQtdProp(x) || '?') + ' pessoas' + (ja && ja.length ? ' · já escalada como ' + esc(ja.join(', ')) : '') + '</small></span></label>';
       }).join('') : '<p class="hint">Nenhum evento ganho / em contrato daqui para frente.</p>') +
       '<button type="button" class="btn pri bg-big" data-esb="massa">Escalar nos dias marcados</button>';
   }
@@ -5472,15 +5486,17 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       }).join('') + '</div><div class="bg-card"><div class="f"><label>Nova seção</label><input id="essNova" placeholder="Ex.: Recepção, Segurança…"></div><button type="button" class="btn pri" data-esb="snova">Criar seção</button></div>';
   }
   /* ---------- PDF por pessoa ---------- */
+  function esAgrupa(as) { const g = []; as.forEach(function (a) { let z = g.find(function (y) { return y.x.id === a.x.id; }); if (!z) { z = { x: a.x, ls: [] }; g.push(z); } z.ls.push(a.l); }); return g; }
+  const esHor = function (l) { return l.ini ? l.ini + ' às ' + l.fim : 'a combinar'; };
   function esPdfHtml(nome, as, obs) {
-    const ct = QE.CONTATOS, N = 8, pag = []; for (let i = 0; i < as.length; i += N) pag.push(as.slice(i, i + N));
+    const ct = QE.CONTATOS, N = 8, g = esAgrupa(as), pag = []; for (let i = 0; i < g.length; i += N) pag.push(g.slice(i, i + N));
     const linha = function (a) {
-      const dm = esDM(a.x.dataEvento);
-      return '<div class="es-r"><div class="es-dt"><b>' + dm.d + '</b><span>' + dm.m + ' · ' + esc(esDow(a.x.dataEvento)) + '</span></div><div class="es-in"><b>' + esc(a.x.empresa) + '</b><span>' + esc([a.l.funcao, a.l.sec].filter(Boolean).join(' — ')) + '</span></div><div class="es-hh"><small>Horário do serviço</small><b>' + (a.l.ini ? esc(a.l.ini) + ' às ' + esc(a.l.fim) : 'a combinar') + '</b></div></div>';
+      const dm = esDM(a.x.dataEvento), hs = a.ls.map(esHor).filter(function (h, i, ar) { return ar.indexOf(h) === i; }), um = hs.length === 1;
+      return '<div class="es-r"><div class="es-dt"><b>' + dm.d + '</b><span>' + dm.m + ' · ' + esc(esDow(a.x.dataEvento)) + '</span></div><div class="es-in"><b>' + esc(a.x.empresa) + '</b>' + a.ls.map(function (l) { return '<span>' + esc([l.funcao, l.sec].filter(Boolean).join(' — ')) + (um ? '' : ' · ' + esc(esHor(l))) + '</span>'; }).join('') + '</div>' + (um ? '<div class="es-hh"><small>Horário do serviço</small><b>' + esc(hs[0]) + '</b></div>' : '') + '</div>';
     };
     return pag.map(function (r, pi) {
       return '<section class="pg dcp es-pg"><div class="dc-hd"><img src="logo-marrom.png" alt=""><span>Escala de serviço</span></div><div class="es-pb">' +
-        (pi === 0 ? '<div class="dc-eb">Escala de serviço</div><div class="dc-rule"></div><h2 class="dc-t">' + esc(nome) + '</h2><p class="es-sub">' + as.length + ' dia' + (as.length === 1 ? '' : 's') + ' de serviço na Quinta dos Esquilos</p>' : '<div class="dc-eb">Escala de serviço — ' + esc(nome) + '</div><div class="dc-rule"></div>') +
+        (pi === 0 ? '<div class="dc-eb">Escala de serviço</div><div class="dc-rule"></div><h2 class="dc-t">' + esc(nome) + '</h2><p class="es-sub">' + g.length + ' dia' + (g.length === 1 ? '' : 's') + ' de serviço na Quinta dos Esquilos</p>' : '<div class="dc-eb">Escala de serviço — ' + esc(nome) + '</div><div class="dc-rule"></div>') +
         '<div class="es-rs">' + r.map(linha).join('') + '</div>' + (pi === pag.length - 1 && obs ? '<div class="es-obs"><b>Observações</b>' + esc(obs) + '</div>' : '') + '</div>' +
         '<div class="dc-ft"><span>QUINTA DOS ESQUILOS · ESPAÇO DE EVENTOS</span><span>' + esc(ct.telefone) + '</span><b>' + (pi + 1) + '/' + pag.length + '</b></div></section>';
     }).join('');
@@ -5493,7 +5509,7 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     try {
       const blob = await gerarPdfBlob(null, esPdfHtml(nome, as, ES.obs.trim())), base = 'Escala - ' + nome;
       if (!enviar) { baixarBlob(blob, base); toast('PDF baixado'); return; }
-      const dias = as.map(function (a) { return '• ' + QE.fmtData(a.x.dataEvento).slice(0, 5) + ' (' + esDow(a.x.dataEvento) + ') — ' + (a.l.ini ? a.l.ini + ' às ' + a.l.fim : 'horário a combinar') + (a.l.funcao ? ' — ' + a.l.funcao : '') + ' — ' + a.x.empresa; }).join('\n');
+      const dias = esAgrupa(as).map(function (a) { return '• ' + QE.fmtData(a.x.dataEvento).slice(0, 5) + ' (' + esDow(a.x.dataEvento) + ') — ' + a.x.empresa + '\n' + a.ls.map(function (l) { return '   ' + (l.funcao || l.sec) + ': ' + (l.ini ? l.ini + ' às ' + l.fim : 'horário a combinar'); }).join('\n'); }).join('\n');
       WA.modo = 'escala'; WA.blob = blob; WA.base = base; WA.nomeArq = base + '.pdf'; WA.registrado = true; WA.escNome = nome; WA.escTel = ($('#eeTel') && $('#eeTel').value) || '';
       WA.escMsg = 'Olá, ' + (nome.split(/\s+/)[0] || nome) + '! Tudo bem? Aqui é da Quinta dos Esquilos. Segue a sua escala de serviço:\n\n' + dias + (ES.obs.trim() ? '\n\n' + ES.obs.trim() : '') + '\n\nO PDF com todos os dias e horários vai em anexo. Qualquer dúvida, é só chamar!';
       waAbre();
@@ -5516,7 +5532,11 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     const t = e.target, ds = t.dataset;
     if (t.id === 'esBusca') { ES.q = t.value; const tmp = document.createElement('div'); tmp.innerHTML = esVEventos(); const n = tmp.querySelector('#esLista'), o = $('#esLista'); if (o && n) o.innerHTML = n.innerHTML; else esRender(); const f = $('#esBusca'); return; }
     if (ds.esf) { const r = esLinhaDe(t); if (!r.l) return; r.l[ds.esf] = t.value; esSalvaEv(r.x); if (ds.esf === 'ini' || ds.esf === 'fim') esAtualizaAvisos(); return; }
-    if (t.id === 'esmNome') { ES.massa.nome = t.value; return; } if (t.id === 'esmFuncao') { ES.massa.funcao = t.value; return; } if (t.id === 'esmIni') { ES.massa.ini = t.value; return; } if (t.id === 'esmFim') { ES.massa.fim = t.value; return; }
+    if (t.id === 'esmNome') { ES.massa.nome = t.value; return; } if (ds.esmr) {
+      const q = ds.esmr.split(':'), r = ES.massa.roles[+q[0]]; r[q[1]] = t.value;
+      if (q[1] === 'funcao' && !r.secManual) { const nz = esNz(t.value), hit = ES.c.padroes.reduce(function (a2, p) { return a2 || p.itens.find(function (i) { return esNz(i.funcao) === nz; }); }, null); if (hit && ES.c.secoes.indexOf(hit.sec) >= 0) { r.sec = hit.sec; const sel = document.querySelector('[data-esmr="' + q[0] + ':sec"]'); if (sel) sel.value = hit.sec; } }
+      if (q[1] === 'sec') r.secManual = true; return;
+    } if (t.id === 'esmIni') { ES.massa.ini = t.value; return; } if (t.id === 'esmFim') { ES.massa.fim = t.value; return; }
     if (t.id === 'eeTel') { t.value = QE.maskTel(t.value); return; } if (t.id === 'eeObs') { ES.obs = t.value; return; }
     if (ds.esp) { const q = ds.esp.split(':'), p = ES.c.pessoas.find(function (y) { return y.id === q[1]; }); if (!p) return; if (q[0] === 'tel') t.value = QE.maskTel(t.value); p[q[0]] = t.value; esSalvaCfg(); return; }
     if (t.id === 'espNovoTel') { t.value = QE.maskTel(t.value); return; }
@@ -5532,12 +5552,13 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
         if (p) { r.l.nome = p.nome; t.value = p.nome; if (!r.l.funcao && p.funcao) { r.l.funcao = p.funcao; r.el.querySelector('[data-esf="funcao"]').value = p.funcao; } }
         else esPergunta(nome, r.l.funcao);
       }
-      esSalvaEv(r.x); esAtualizaAvisos(); return;
+      esSalvaEv(r.x); esRender(); return;
     }
     if (ds.esf === 'funcao') { const r = esLinhaDe(t); if (r.l) { esFuncaoNova(t.value); esAtualizaFunc(); } return; }
     if (t.id === 'esPass') { ES.pass = t.checked; esRender(); return; }
     if (t.id === 'esPadSel') { if (ES.ev) ES.padSel[ES.ev] = t.value; return; }
-    if (t.id === 'esmSec') { ES.massa.sec = t.value; return; } if (t.id === 'esmModo') { ES.massa.modo = t.value; esRender(); return; }
+    if (ds.esmr) { const q = ds.esmr.split(':'); ES.massa.roles[+q[0]][q[1]] = t.value; return; }
+    if (t.id === 'esmModo') { ES.massa.modo = t.value; esRender(); return; }
     if (ds.esm !== undefined) { ES.selM[ds.esm] = t.checked; esRender(); return; }
     if (t.id === 'eePessoa') { ES.pessoa = t.value; ES.incl = {}; esRender(); return; }
     if (t.id === 'eePass') { ES.passP = t.checked; esRender(); return; }
@@ -5560,6 +5581,8 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
   $('#v-escala').addEventListener('click', function (e) {
     const t = e.target.closest('button'); if (!t) return; const ds = t.dataset, x = ES.ev ? lista.find(function (y) { return y.id === ES.ev; }) : null;
     if (ds.esabrir) { ES.ev = ds.esabrir; esRender(); window.scrollTo(0, 0); return; }
+    if (ds.esmrdel !== undefined) { ES.massa.roles.splice(+ds.esmrdel, 1); if (!ES.massa.roles.length) ES.massa.roles.push({ sec: '', funcao: '', ini: '', fim: '' }); esRender(); return; }
+    if (ds.esmais && x) { const l0 = esEscala(x).linhas.find(function (l) { return l.id === ds.esmais; }); if (!l0 || !String(l0.nome || '').trim()) return toast('Digite o nome da pessoa antes de adicionar outra função.', true); ES.dup = ds.esmais; esRender(); const f = $('#esDupFn'); if (f) f.focus(); return; }
     if (ds.esdel && x) { const e2 = esEscala(x); e2.linhas = e2.linhas.filter(function (l) { return l.id !== ds.esdel; }); esSalvaEv(x); esRender(); return; }
     if (ds.esadd && x) { const j = esJanela(x); esEscala(x).linhas.push({ id: esId(), sec: ds.esadd, funcao: '', nome: '', ini: j[0], fim: j[1] }); esSalvaEv(x); esRender(); const ls = $$('#esCorpo [data-esl]'); const u = ls[ls.length - 1]; const all = $$('#esCorpo [data-esl]'); const novo = all.filter(function (el) { return el.closest('#esCorpo') && esEscala(x).linhas.some(function (l) { return l.id === el.dataset.esl && l.sec === ds.esadd; }); }); const ult = novo[novo.length - 1]; if (ult) { const inp = ult.querySelector('[data-esf="funcao"]'); if (inp) { inp.focus(); } } return; }
     if (ds.espq) { const q = ds.espq.split(':'), p = ES.c.padroes.find(function (y) { return y.id === q[0]; }), it = p && p.itens[+q[1]]; if (it) { it.qtd = Math.max(0, (+it.qtd || 0) + (+q[2])); esSalvaCfg(); esRender(); } return; }
@@ -5570,7 +5593,14 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     if (ds.espsalva) { if (!esPessoa(ds.espsalva)) { const as = esAtrib(ds.espsalva, true); ES.c.pessoas.push({ id: esId(), nome: ds.espsalva, tel: '', funcao: (as[0] && as[0].l.funcao) || '' }); esSalvaCfg(); esRender(); toast('Salva na lista de pessoas.'); } return; }
     const b = ds.esb || ''; if (!b) return;
     if (b === 'retry') { esCarrega(); return; }
-    if (b === 'voltar') { ES.ev = null; esRender(); return; }
+    if (b === 'mrmais') { ES.massa.roles.push({ sec: '', funcao: '', ini: '', fim: '' }); esRender(); return; }
+    if (b === 'dupno') { ES.dup = null; esRender(); return; }
+    if (b === 'dupok' && x) {
+      const e2 = esEscala(x), i0 = e2.linhas.findIndex(function (l) { return l.id === ES.dup; }); if (i0 < 0) { ES.dup = null; esRender(); return; }
+      const l0 = e2.linhas[i0], sec = $('#esDupSec').value, fn = $('#esDupFn').value.trim(); if (!fn) return toast('Informe a função.', true);
+      esFuncaoNova(fn); e2.linhas.splice(i0 + 1, 0, { id: esId(), sec: sec, funcao: fn, nome: l0.nome, ini: l0.ini, fim: l0.fim }); ES.dup = null; esSalvaEv(x); esRender(); toast(l0.nome + ' agora também em ' + sec + ' — ' + fn + '. Ajuste o horário se for diferente.'); return;
+    }
+    if (b === 'voltar') { ES.dup = null; ES.ev = null; esRender(); return; }
     if (b === 'aplicar' && x) { const pid = $('#esPadSel').value, pad = ES.c.padroes.find(function (p) { return p.id === pid; }); if (!pad) return toast('Escolha um padrão.', true); const n = esAplica(x, pad); esRender(); toast(n ? n + ' vaga(s) acrescentada(s) pelo padrão.' : 'A escala já tem todas as vagas desse padrão.'); return; }
     if (b === 'horarios' && x) { const j = esJanela(x); if (!j[0]) return toast('Esse evento não tem horário definido na proposta.', true); esEscala(x).linhas.forEach(function (l) { l.ini = j[0]; l.fim = j[1]; }); esSalvaEv(x); esRender(); toast('Horário do evento aplicado a todos.'); return; }
     if (b === 'limpar' && x) { if (confirm('Limpar toda a escala deste evento (nomes e vagas)?')) { x.escala = { linhas: [] }; esSalvaEv(x); esRender(); } return; }
@@ -5578,20 +5608,25 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
     if (b === 'mtodos') { esEventos().filter(esProx).forEach(function (y) { ES.selM[y.id] = true; }); esRender(); return; }
     if (b === 'mnenhum') { ES.selM = {}; esRender(); return; }
     if (b === 'massa') {
-      const m = ES.massa, nome = m.nome.trim(), funcao = m.funcao.trim(), sec = m.sec || ES.c.secoes[0];
-      if (!nome) return toast('Digite o nome da pessoa.', true); if (!funcao) return toast('Informe a função.', true);
+      const m = ES.massa, nome = m.nome.trim(), roles = m.roles.map(function (r) { return { sec: r.sec || ES.c.secoes[0], funcao: r.funcao.trim(), ini: r.ini, fim: r.fim }; });
+      if (!nome) return toast('Digite o nome da pessoa.', true); if (roles.some(function (r) { return !r.funcao; })) return toast('Informe a função em todas as linhas.', true);
+      if (roles.some(function (r) { return (r.ini && !r.fim) || (!r.ini && r.fim); })) return toast('Horário próprio: preencha início e fim (ou deixe os dois vazios).', true);
       const evs = esEventos().filter(function (y) { return ES.selM[y.id]; }); if (!evs.length) return toast('Marque pelo menos um dia.', true);
       if (m.modo === 'custom' && (!m.ini || !m.fim)) return toast('Informe o horário fixo.', true);
-      const p = esPessoa(nome); let nomeFinal = nome; if (p) nomeFinal = p.nome; else esPergunta(nome, funcao);
-      esFuncaoNova(funcao); let nv = 0, pre = 0, pul = 0;
+      const p = esPessoa(nome); let nomeFinal = nome; if (p) nomeFinal = p.nome; else esPergunta(nome, roles[0].funcao);
+      roles.forEach(function (r) { esFuncaoNova(r.funcao); }); let nv = 0, pre = 0, pul = 0;
       evs.forEach(function (y) {
-        const e2 = esEscala(y); if (e2.linhas.some(function (l) { return esNz(l.nome) === esNz(nomeFinal); })) { pul++; return; }
-        const j = esJanela(y), ini = m.modo === 'custom' ? m.ini : j[0], fim = m.modo === 'custom' ? m.fim : j[1];
-        const slot = e2.linhas.find(function (l) { return !String(l.nome || '').trim() && esNz(l.funcao) === esNz(funcao) && l.sec === sec; }) || e2.linhas.find(function (l) { return !String(l.nome || '').trim() && esNz(l.funcao) === esNz(funcao); });
-        if (slot) { slot.nome = nomeFinal; slot.ini = ini; slot.fim = fim; pre++; } else { e2.linhas.push({ id: esId(), sec: sec, funcao: funcao, nome: nomeFinal, ini: ini, fim: fim }); nv++; }
-        esSalvaEv(y);
+        const e2 = esEscala(y), j = esJanela(y); let mexeu = false;
+        roles.forEach(function (r) {
+          if (e2.linhas.some(function (l) { return esNz(l.nome) === esNz(nomeFinal) && l.sec === r.sec && esNz(l.funcao) === esNz(r.funcao); })) { pul++; return; }
+          const ini = r.ini || (m.modo === 'custom' ? m.ini : j[0]), fim = r.ini ? r.fim : (m.modo === 'custom' ? m.fim : j[1]);
+          const slot = e2.linhas.find(function (l) { return !String(l.nome || '').trim() && esNz(l.funcao) === esNz(r.funcao) && l.sec === r.sec; }) || e2.linhas.find(function (l) { return !String(l.nome || '').trim() && esNz(l.funcao) === esNz(r.funcao); });
+          if (slot) { slot.nome = nomeFinal; slot.ini = ini; slot.fim = fim; pre++; } else { e2.linhas.push({ id: esId(), sec: r.sec, funcao: r.funcao, nome: nomeFinal, ini: ini, fim: fim }); nv++; }
+          mexeu = true;
+        });
+        if (mexeu) esSalvaEv(y);
       });
-      ES.selM = {}; esRender(); toast(nomeFinal + ' escalada: ' + pre + ' vaga(s) aberta(s) preenchida(s), ' + nv + ' nova(s)' + (pul ? ', ' + pul + ' dia(s) já tinham o nome dela (pulados)' : '') + '.'); return;
+      ES.selM = {}; esRender(); toast(nomeFinal + ' escalada: ' + pre + ' vaga(s) aberta(s) preenchida(s), ' + nv + ' nova(s)' + (pul ? ', ' + pul + ' já existia(m) (pulada(s))' : '') + '.'); return;
     }
     if (b === 'pnova') { const nome = $('#espNovoNome').value.trim(); if (!nome) return toast('Digite o nome.', true); if (esPessoa(nome)) return toast('Essa pessoa já está na lista.', true); ES.c.pessoas.push({ id: esId(), nome: nome, tel: $('#espNovoTel').value.trim(), funcao: $('#espNovoFunc').value.trim() }); esFuncaoNova($('#espNovoFunc').value); esSalvaCfg(); esRender(); toast('Pessoa cadastrada.'); return; }
     if (b.indexOf('ver:') === 0) { const p = ES.c.pessoas.find(function (y) { return y.id === b.slice(4); }); if (p) { ES.pessoa = p.nome; ES.incl = {}; ES.sub = 'enviar'; esRender(); window.scrollTo(0, 0); } return; }
