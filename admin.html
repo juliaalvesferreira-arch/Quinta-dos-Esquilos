@@ -5066,7 +5066,8 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       '<div class="bg-acts"><button type="button" class="btn" data-bg="copiar">Copiar</button><button type="button" class="btn" data-bg="zap">WhatsApp</button><button type="button" class="btn" data-bg="imprimir">Imprimir</button></div>' +
       (falta.length || feitos.length ? '<h3 class="bg-t2">Lista de compras</h3><p class="hint" style="margin:0 0 6px">Toque no círculo para marcar o item inteiro como comprado, ou em “comprei só uma parte” para digitar quanto comprou. A quantidade entra no estoque na hora e o que faltar continua na lista.</p><div class="bg-lista">' + lst(falta.concat(feitos)) + '</div>' : '<p class="bg-okmsg">✓ O estoque já cobre todos os eventos marcados.</p>') +
       (falta.length > 1 ? '<button type="button" class="btn bg-big" data-bg="lancar">Comprei tudo → marcar todos</button>' : '') +
-      (feitos.length && !falta.length ? '<button type="button" class="btn pri bg-big" data-bg="limpar">Finalizar compra (limpar marcações)</button>' : '') +
+      (feitos.length ? '<button type="button" class="btn pri bg-big" data-bg="limpar">Finalizar compra e guardar no histórico</button>' : '') +
+      (!feitos.length && ok.length && !falta.length ? '<div class="bg-dica" style="margin-top:10px">Fechou a lista sem querer? <button type="button" class="bg-lk" data-bg="recuperar">↶ Recuperar lista</button></div>' : '') +
       (c.ignorados.length ? '<details class="bg-det"><summary>Removidos da lista (' + c.ignorados.length + ')</summary><div class="bg-lista">' + c.ignorados.map(function (l) { return '<div class="bg-it ok"><div class="n"><b>' + esc(l.it.nome) + '</b><small>precisaria de ' + bgFmt(l.nec) + ' ' + esc(l.it.un) + ' · você tem ' + bgFmt(l.est) + '</small></div><button type="button" class="btn sm" data-bgunign="' + l.it.id + '">Voltar para a lista</button></div>'; }).join('') + '</div></details>' : '') +
       (ok.length ? '<details class="bg-det"><summary>Itens cobertos pelo estoque (' + ok.length + ')</summary><div class="bg-lista">' + lst(ok) + '</div></details>' : '');
     return h;
@@ -5167,7 +5168,19 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       '<div class="bg-lista">' + bgPorCat(its).map(function (g) { return '<details class="bg-cd" open><summary>' + esc(g.cat) + ' <span>' + g.itens.filter(function (i) { return bgN(e.consumo && e.consumo[i.id]) > 0; }).length + '/' + g.itens.length + '</span></summary>' + g.itens.map(function (i) { return '<div class="bg-row"><div class="n"><b>' + esc(i.nome) + '</b><small>' + esc(i.un) + '</small></div>' + bgStep('data-bgcons', i.id, bgN(e.consumo && e.consumo[i.id]), i) + '</div>'; }).join('') + '</details>'; }).join('') + '</div>' +
       '<div class="bg-card bg-sticky">' + (e.manual ? '' : '<label class="chk"><input type="checkbox" id="bgBaixa"' + (e.baixa ? ' disabled' : '') + '> Também dar baixa no estoque' + (e.baixa ? ' (já feita neste evento)' : '') + '</label>') + '<button type="button" class="btn pri bg-big" data-bg="salvacons">Salvar consumo no histórico</button></div>';
   }
-  function bgVHist() {
+  function bgHistListas() {
+    const ls = BG.d.listas || [];
+    const dt = function (t) { const d = new Date(t); return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
+    return '<h3 class="bg-t2">Listas de compras finalizadas (' + ls.length + ')</h3>' + (ls.length ? '<div class="bg-card">' + ls.map(function (L) {
+      const cats = {}; L.linhas.forEach(function (l) { (cats[l.cat || 'Outros'] = cats[l.cat || 'Outros'] || []).push(l); });
+      const tot = L.linhas.filter(function (l) { return l.comprado > 0; }).length;
+      return '<details class="bg-det"><summary><b>' + dt(L.em) + '</b> · ' + esc((L.eventos || []).map(function (e) { return e.nome; }).join(', ') || 'sem eventos') + ' · ' + tot + ' item(ns) comprado(s)</summary><div class="bg-lista">' +
+        Object.keys(cats).map(function (c) { return '<div class="bg-cat">' + esc(c) + '</div>' + cats[c].map(function (l) { return '<div class="bg-it ' + (l.comprado >= l.nec ? 'feito' : l.comprado > 0 ? 'falta' : 'ok') + '"><div class="n"><b>' + esc(l.nome) + '</b><small>' + esc(l.det || '') + '</small></div><div class="buy"><b>' + bgFmt(l.comprado) + '<i> / ' + bgFmt(l.nec) + '</i></b><small>' + esc(l.un) + '</small></div></div>'; }).join(''); }).join('') +
+        '</div><div class="bg-acts"><button type="button" class="btn sm" data-bglcop="' + L.id + '">Copiar</button><button type="button" class="btn sm" data-bglrei="' + L.id + '">↶ Reabrir esta lista</button><button type="button" class="btn sm ghost" data-bgldel="' + L.id + '">🗑 Excluir</button></div></details>';
+    }).join('') + '</div>' : '<p class="hint">Quando você tocar em “Finalizar compra” na aba Compras, a lista fica guardada aqui.</p>');
+  }
+  function bgVHist() { const e = BG.ev ? bgEv(BG.ev) : null; return bgVHist0() + (e ? '' : bgHistListas()); }
+  function bgVHist0() {
     const e = BG.ev ? bgEv(BG.ev) : null; if (e) return bgVConsumo(e);
     const pac = BG.sugP, r = bgMedias(pac);
     return '<div class="bg-card"><h3>Registrar consumo de um evento</h3><input type="search" id="bgHQ" class="bg-busca" placeholder="🔍 Buscar evento pelo nome ou data…" value="' + esc(BG.hq || '') + '" autocomplete="off"><div id="bgHEvList" class="bg-evs">' + bgHtmlHEv() + '</div></div>' +
@@ -5316,7 +5329,29 @@ details.box > .in { grid-template-columns: minmax(0, 1fr); } .in > * { min-width
       else if (cp) { BG.d.estoque[ds.bgchk] = Math.max(0, Math.round((bgN(BG.d.estoque[ds.bgchk]) - cp.q) * 100) / 100); delete BG.d.comp[ds.bgchk]; }
       bgSalva(); bgRender(); return;
     }
-    if (ds.bg === 'limpar') { BG.d.comp = {}; BG.d.ign = {}; bgSalva(); bgRender(); toast('Marcações limpas. O estoque foi mantido.'); return; }
+    if (ds.bg === 'limpar') {
+      const c = bgConsol(), comp0 = BG.d.comp || {};
+      if (!confirm('Finalizar esta compra? A lista fica guardada no Histórico e a tela de compras é limpa. O estoque é mantido.')) return;
+      const linhas = c.linhas.filter(function (l) { return comp0[l.it.id] || l.nec > 0; }).map(function (l) { return { id: l.it.id, nome: l.it.nome, un: l.it.un, cat: l.it.cat, nec: l.nec, comprado: comp0[l.it.id] ? comp0[l.it.id].q : 0, det: l.det.join(' · ') }; });
+      const evs = c.evs.map(function (e) { return { id: e.id, nome: e.nome, data: e.data, qtd: e.qtd, pacote: e.pacote }; });
+      BG.d.listas = BG.d.listas || []; BG.d.listas.unshift({ id: bgId(), em: Date.now(), eventos: evs, linhas: linhas, comp: JSON.parse(JSON.stringify(comp0)), ign: JSON.parse(JSON.stringify(BG.d.ign || {})) });
+      BG.d.comp = {}; BG.d.ign = {}; bgSalva(); bgRender(); toast('Lista guardada no Histórico. Para desfazer: Histórico → Reabrir esta lista.'); return;
+    }
+    if (ds.bg === 'recuperar') {
+      const c = bgConsol(), cand = c.linhas.filter(function (l) { return l.comprar <= 0 && l.nec > 0 && !(BG.d.comp || {})[l.it.id]; });
+      if (!cand.length) return toast('Nada para recuperar.', true);
+      if (!confirm('Marcar de volta os ' + cand.length + ' itens cobertos pelo estoque como “comprados”? (O estoque não muda. Se algum item você já tinha antes, desmarque depois.)')) return;
+      BG.d.comp = BG.d.comp || {}; cand.forEach(function (l) { BG.d.comp[l.it.id] = { q: l.nec }; }); bgSalva(); bgRender(); toast('Lista recuperada.'); return;
+    }
+    if (ds.bglrei) { const L = (BG.d.listas || []).filter(function (x) { return x.id === ds.bglrei; })[0]; if (!L) return;
+      if (!confirm('Reabrir esta lista na aba Compras? As marcações atuais serão substituídas.')) return;
+      BG.d.comp = JSON.parse(JSON.stringify(L.comp || {})); BG.d.ign = JSON.parse(JSON.stringify(L.ign || {}));
+      BG.d.eventos.forEach(function (e) { BG.selC[e.id] = (L.eventos || []).some(function (x) { return x.id === e.id; }); });
+      BG.d.listas = BG.d.listas.filter(function (x) { return x.id !== L.id; }); BG.sub = 'compras'; bgSalva(); bgRender(); toast('Lista reaberta.'); return; }
+    if (ds.bgldel) { if (confirm('Excluir esta lista do histórico?')) { BG.d.listas = (BG.d.listas || []).filter(function (x) { return x.id !== ds.bgldel; }); bgSalva(); bgRender(); } return; }
+    if (ds.bglcop) { const L = (BG.d.listas || []).filter(function (x) { return x.id === ds.bglcop; })[0]; if (!L) return;
+      const tx = 'Lista de compras — ' + new Date(L.em).toLocaleDateString('pt-BR') + '\n' + (L.eventos || []).map(function (e) { return '• ' + e.nome; }).join('\n') + '\n\n' + L.linhas.map(function (l) { return '- ' + l.nome + ': ' + bgFmt(l.comprado) + ' / ' + bgFmt(l.nec) + ' ' + l.un; }).join('\n');
+      (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(tx) : Promise.reject()).then(function () { toast('Lista copiada.'); }).catch(function () { window.prompt('Copie a lista:', tx); }); return; }
     if (ds.bg === 'lancar') {
       const c = bgConsol(), falta = c.linhas.filter(function (l) { return l.comprar > 0; }); if (!falta.length) return toast('Nada a comprar.', true);
       if (!confirm('Marcar os ' + falta.length + ' itens como comprados e somar ao estoque?')) return;
